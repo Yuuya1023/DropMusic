@@ -1,0 +1,28 @@
+PODS:
+  - Alamofire (4.5.1)
+  - SwiftyDropbox (4.6.0):
+    - Alamofire (~> 4.5.0)
+  - TwitterCore (3.2.0)
+  - TwitterKit (3.4.0):
+    - TwitterCore (>= 3.1.0)
+
+DEPENDENCIES:
+  - SwiftyDropbox
+  - TwitterKit
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - SwiftyDropbox
+    - TwitterCore
+    - TwitterKit
+
+SPEC CHECKSUMS:
+  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  SwiftyDropbox: 8af645e744de6f17b4e9fdeba21365b8dc55a542
+  TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
+  TwitterKit: bc7bd086b9b724a1d888745a054e1d0b1ecc4f3f
+
+PODFILE CHECKSUM: a8b0cc4af9b08d8d4da8530bcd37a1135cfd53f8
+
+COCOAPODS: 1.5.3

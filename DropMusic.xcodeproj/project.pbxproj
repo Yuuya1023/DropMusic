@@ -1,0 +1,483 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0502797C214180C90094CC40 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 0502797B21417FC10094CC40 /* play.png */; };
+		050279802142AFA50094CC40 /* PlayListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797D2142AFA40094CC40 /* PlayListVC.swift */; };
+		050279812142AFA50094CC40 /* FileListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797E2142AFA40094CC40 /* FileListVC.swift */; };
+		050279822142AFA50094CC40 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797F2142AFA50094CC40 /* SettingsVC.swift */; };
+		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
+		05A016B4213ED0A40057B459 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootVC.swift */; };
+		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
+		05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */; };
+		05A016C6214164300057B459 /* MusicPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016C5214164300057B459 /* MusicPlayerVC.swift */; };
+		05A016CB214167840057B459 /* MusicPlayerV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016CA214167840057B459 /* MusicPlayerV.swift */; };
+		648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0502797B21417FC10094CC40 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		0502797D2142AFA40094CC40 /* PlayListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListVC.swift; sourceTree = "<group>"; };
+		0502797E2142AFA40094CC40 /* FileListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListVC.swift; sourceTree = "<group>"; };
+		0502797F2142AFA50094CC40 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		05A016B3213ED0A40057B459 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
+		05A016BA213ED0AA0057B459 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		05A016BD213ED0AA0057B459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		05A016BF213ED0AA0057B459 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05A016C5214164300057B459 /* MusicPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerVC.swift; sourceTree = "<group>"; };
+		05A016CA214167840057B459 /* MusicPlayerV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerV.swift; sourceTree = "<group>"; };
+		33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.release.xcconfig"; sourceTree = "<group>"; };
+		4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.debug.xcconfig"; sourceTree = "<group>"; };
+		D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05A016AB213ED0A40057B459 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0502797821417F6E0094CC40 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				0502797B21417FC10094CC40 /* play.png */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		050848F521417EC300D365C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0502797821417F6E0094CC40 /* ui */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		05A016A5213ED0A40057B459 = {
+			isa = PBXGroup;
+			children = (
+				05A016B0213ED0A40057B459 /* DropMusic */,
+				050848F521417EC300D365C7 /* Resources */,
+				05A016AF213ED0A40057B459 /* Products */,
+				66B9959940F605930F982B27 /* Pods */,
+				796D1EF9D724E63419863BE1 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		05A016AF213ED0A40057B459 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05A016AE213ED0A40057B459 /* DropMusic.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		05A016B0213ED0A40057B459 /* DropMusic */ = {
+			isa = PBXGroup;
+			children = (
+				05A016C82141670D0057B459 /* View */,
+				05A016C72141645C0057B459 /* ViewController */,
+				05A016B1213ED0A40057B459 /* AppDelegate.swift */,
+				05A016BA213ED0AA0057B459 /* Assets.xcassets */,
+				05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */,
+				05A016BF213ED0AA0057B459 /* Info.plist */,
+			);
+			path = DropMusic;
+			sourceTree = "<group>";
+		};
+		05A016C72141645C0057B459 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				05A016B3213ED0A40057B459 /* RootVC.swift */,
+				05A016C5214164300057B459 /* MusicPlayerVC.swift */,
+				0502797E2142AFA40094CC40 /* FileListVC.swift */,
+				0502797D2142AFA40094CC40 /* PlayListVC.swift */,
+				0502797F2142AFA50094CC40 /* SettingsVC.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		05A016C82141670D0057B459 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				05A016C9214167180057B459 /* MusicPlayer */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		05A016C9214167180057B459 /* MusicPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				05A016CA214167840057B459 /* MusicPlayerV.swift */,
+			);
+			path = MusicPlayer;
+			sourceTree = "<group>";
+		};
+		66B9959940F605930F982B27 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */,
+				33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		796D1EF9D724E63419863BE1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		05A016AD213ED0A40057B459 /* DropMusic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05A016C2213ED0AA0057B459 /* Build configuration list for PBXNativeTarget "DropMusic" */;
+			buildPhases = (
+				1F9AB30924ADBD1E7478EBBA /* [CP] Check Pods Manifest.lock */,
+				05A016AA213ED0A40057B459 /* Sources */,
+				05A016AB213ED0A40057B459 /* Frameworks */,
+				05A016AC213ED0A40057B459 /* Resources */,
+				E972D711799F4E6DA4FC8A05 /* [CP] Embed Pods Frameworks */,
+				77027347F72CF0AAC86FC3C3 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DropMusic;
+			productName = DropMusic;
+			productReference = 05A016AE213ED0A40057B459 /* DropMusic.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		05A016A6213ED0A40057B459 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = n.yuuya;
+				TargetAttributes = {
+					05A016AD213ED0A40057B459 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 05A016A9213ED0A40057B459 /* Build configuration list for PBXProject "DropMusic" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 05A016A5213ED0A40057B459;
+			productRefGroup = 05A016AF213ED0A40057B459 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				05A016AD213ED0A40057B459 /* DropMusic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		05A016AC213ED0A40057B459 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */,
+				05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */,
+				0502797C214180C90094CC40 /* play.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1F9AB30924ADBD1E7478EBBA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DropMusic-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		77027347F72CF0AAC86FC3C3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic-resources.sh",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E972D711799F4E6DA4FC8A05 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox/SwiftyDropbox.framework",
+				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		05A016AA213ED0A40057B459 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				050279802142AFA50094CC40 /* PlayListVC.swift in Sources */,
+				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
+				050279812142AFA50094CC40 /* FileListVC.swift in Sources */,
+				05A016CB214167840057B459 /* MusicPlayerV.swift in Sources */,
+				05A016C6214164300057B459 /* MusicPlayerVC.swift in Sources */,
+				05A016B4213ED0A40057B459 /* RootVC.swift in Sources */,
+				050279822142AFA50094CC40 /* SettingsVC.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05A016BD213ED0AA0057B459 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		05A016C0213ED0AA0057B459 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		05A016C1213ED0AA0057B459 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		05A016C3213ED0AA0057B459 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6BQK829PNM;
+				INFOPLIST_FILE = DropMusic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		05A016C4213ED0AA0057B459 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6BQK829PNM;
+				INFOPLIST_FILE = DropMusic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05A016A9213ED0A40057B459 /* Build configuration list for PBXProject "DropMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05A016C0213ED0AA0057B459 /* Debug */,
+				05A016C1213ED0AA0057B459 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05A016C2213ED0AA0057B459 /* Build configuration list for PBXNativeTarget "DropMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05A016C3213ED0AA0057B459 /* Debug */,
+				05A016C4213ED0AA0057B459 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 05A016A6213ED0A40057B459 /* Project object */;
+}
