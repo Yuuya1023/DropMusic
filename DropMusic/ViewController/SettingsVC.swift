@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftyDropbox
 
 class SettingsViewController: UIViewController {
     
@@ -14,6 +15,13 @@ class SettingsViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor.yellow
         
+        do{
+            let button = UIButton()
+            button.frame = CGRect(x: 200, y: 100, width: 60, height: 60)
+            button.setTitle("logout", for: UIControlState.normal)
+            button.addTarget(self, action: #selector(logout(_:)), for: UIControlEvents.touchUpInside)
+            self.view.addSubview(button)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -21,5 +29,10 @@ class SettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @objc func logout(_ sender: UIButton) {
+        DropboxClientsManager.unlinkClients()
+        NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT), object: nil)
+    }
     
 }

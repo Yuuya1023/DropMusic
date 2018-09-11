@@ -6,18 +6,26 @@
 //
 
 import UIKit
+import SwiftyDropbox
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var _rootViewController: RootViewController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // DropBox.
+        DropboxClientsManager.setupWithAppKey(DROPBOX_APP_KEY)
+        
+        _rootViewController = RootViewController()
+        
+        // ViewController.
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = RootViewController()
+        self.window?.rootViewController = _rootViewController
         self.window?.makeKeyAndVisible()
 
         return true
@@ -45,6 +53,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        if let authResult = DropboxClientsManager.handleRedirectURL(url) {
+            switch authResult {
+            case .success:
+                print("Success! User is logged into Dropbox.")
+                NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_IN), object: nil)
+            case .cancel:
+                print("Authorization flow was manually canceled by user!")
+            case .error(_, let description):
+                print("Error: \(description)")
+            }
+        }
+        return true
+    }
 }
 

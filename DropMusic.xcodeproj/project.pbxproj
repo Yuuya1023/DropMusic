@@ -11,6 +11,11 @@
 		050279802142AFA50094CC40 /* PlayListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797D2142AFA40094CC40 /* PlayListVC.swift */; };
 		050279812142AFA50094CC40 /* FileListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797E2142AFA40094CC40 /* FileListVC.swift */; };
 		050279822142AFA50094CC40 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797F2142AFA50094CC40 /* SettingsVC.swift */; };
+		050279842142BDA70094CC40 /* global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279832142BDA70094CC40 /* global.swift */; };
+		050279862146B2600094CC40 /* DropBoxLinkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279852146B25F0094CC40 /* DropBoxLinkVC.swift */; };
+		050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279872146B3040094CC40 /* DropBoxRootVC.swift */; };
+		0502798B214809580094CC40 /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798A214809580094CC40 /* AudioData.swift */; };
+		0502798D21480BA00094CC40 /* FileListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798C21480B9F0094CC40 /* FileListV.swift */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootVC.swift */; };
 		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
@@ -25,6 +30,11 @@
 		0502797D2142AFA40094CC40 /* PlayListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListVC.swift; sourceTree = "<group>"; };
 		0502797E2142AFA40094CC40 /* FileListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListVC.swift; sourceTree = "<group>"; };
 		0502797F2142AFA50094CC40 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		050279832142BDA70094CC40 /* global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global.swift; sourceTree = "<group>"; };
+		050279852146B25F0094CC40 /* DropBoxLinkVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxLinkVC.swift; sourceTree = "<group>"; };
+		050279872146B3040094CC40 /* DropBoxRootVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxRootVC.swift; sourceTree = "<group>"; };
+		0502798A214809580094CC40 /* AudioData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioData.swift; sourceTree = "<group>"; };
+		0502798C21480B9F0094CC40 /* FileListV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListV.swift; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05A016B3213ED0A40057B459 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -58,6 +68,14 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		05027989214809300094CC40 /* Object */ = {
+			isa = PBXGroup;
+			children = (
+				0502798A214809580094CC40 /* AudioData.swift */,
+			);
+			path = Object;
+			sourceTree = "<group>";
+		};
 		050848F521417EC300D365C7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -88,9 +106,11 @@
 		05A016B0213ED0A40057B459 /* DropMusic */ = {
 			isa = PBXGroup;
 			children = (
+				05027989214809300094CC40 /* Object */,
 				05A016C82141670D0057B459 /* View */,
 				05A016C72141645C0057B459 /* ViewController */,
 				05A016B1213ED0A40057B459 /* AppDelegate.swift */,
+				050279832142BDA70094CC40 /* global.swift */,
 				05A016BA213ED0AA0057B459 /* Assets.xcassets */,
 				05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */,
 				05A016BF213ED0AA0057B459 /* Info.plist */,
@@ -103,7 +123,9 @@
 			children = (
 				05A016B3213ED0A40057B459 /* RootVC.swift */,
 				05A016C5214164300057B459 /* MusicPlayerVC.swift */,
+				050279872146B3040094CC40 /* DropBoxRootVC.swift */,
 				0502797E2142AFA40094CC40 /* FileListVC.swift */,
+				050279852146B25F0094CC40 /* DropBoxLinkVC.swift */,
 				0502797D2142AFA40094CC40 /* PlayListVC.swift */,
 				0502797F2142AFA50094CC40 /* SettingsVC.swift */,
 			);
@@ -113,6 +135,7 @@
 		05A016C82141670D0057B459 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0502798C21480B9F0094CC40 /* FileListV.swift */,
 				05A016C9214167180057B459 /* MusicPlayer */,
 			);
 			path = View;
@@ -280,12 +303,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				050279842142BDA70094CC40 /* global.swift in Sources */,
 				050279802142AFA50094CC40 /* PlayListVC.swift in Sources */,
+				0502798B214809580094CC40 /* AudioData.swift in Sources */,
 				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
+				0502798D21480BA00094CC40 /* FileListV.swift in Sources */,
+				050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListVC.swift in Sources */,
 				05A016CB214167840057B459 /* MusicPlayerV.swift in Sources */,
 				05A016C6214164300057B459 /* MusicPlayerVC.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootVC.swift in Sources */,
+				050279862146B2600094CC40 /* DropBoxLinkVC.swift in Sources */,
 				050279822142AFA50094CC40 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,7 +461,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -452,7 +480,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

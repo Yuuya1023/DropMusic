@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftyDropbox
 
 class RootViewController: UITabBarController {
 
@@ -21,15 +22,15 @@ class RootViewController: UITabBarController {
         
         
         // タブバーの設定.
-        let fileList = FileListViewController()
-        let playList = PlayListViewController()
-        let settings = SettingsViewController()
+        let vc1 = DropBoxRootViewController()
+        let vc2 = PlayListViewController()
+        let vc3 = SettingsViewController()
         
-        fileList.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
-        playList.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.bookmarks, tag: 2)
-        settings.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.downloads, tag: 3)
+        vc1.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
+        vc2.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.bookmarks, tag: 2)
+        vc3.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.downloads, tag: 3)
         
-        let tabs = NSArray(objects: fileList, playList, settings)
+        let tabs = NSArray(objects: vc1, vc2, vc3)
         self.setViewControllers(tabs as! [UIViewController], animated: false)
     }
 
