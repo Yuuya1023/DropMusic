@@ -77,12 +77,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         for v in _pathList {
             ret += "/" + v
         }
-        print(ret)
         return ret
-    }
-    
-    public func getPathCount() -> (Int){
-        return _pathList.count
     }
     
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
@@ -108,13 +103,35 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if ((_datas[indexPath.row] as? Files.FolderMetadata) != nil) {
+        let meta: Files.Metadata = _datas[indexPath.row]
+        if meta is Files.FolderMetadata {
+            // フォルダ.
 //            NotificationCenter.default.post(name: Notification.Name("FileListTapped"), object: _datas[indexPath.row])
             
             var l: [String] = _pathList
-            l.append(_datas[indexPath.row].name)
+            l.append(meta.name)
             self.navigationController?.pushViewController(FileListViewController(pathList: l),
                                                           animated: true)
+        }
+        else if meta is Files.FileMetadata {
+            // ファイル.
+            let file = meta as! Files.FileMetadata
+            print(file)
+            
+            let audioData = AudioData(_id: file.id,
+                                      _storageType: .DropBox,
+                                      _name: file.name,
+                                      _path: file.pathLower!,
+                                      _hash: file.contentHash!,
+                                      _extension: NSString(string: file.name).pathExtension)
+            
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
+                print("exist")
+                AudioPlayManager.sharedManager.play(audioData: audioData)
+            }
+            else {
+                DownloadFileManager.sharedManager.download(audioData: audioData)
+            }
         }
     }
 }

@@ -25,12 +25,14 @@ class RootViewController: UITabBarController {
         let vc1 = DropBoxRootViewController()
         let vc2 = PlayListViewController()
         let vc3 = SettingsViewController()
+        let vc4 = MusicPlayerViewControlloer()
         
         vc1.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
         vc2.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.bookmarks, tag: 2)
         vc3.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.downloads, tag: 3)
+        vc4.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.favorites, tag: 4)
         
-        let tabs = NSArray(objects: vc1, vc2, vc3)
+        let tabs = NSArray(objects: vc1, vc2, vc3, vc4)
         self.setViewControllers(tabs as! [UIViewController], animated: false)
     }
 

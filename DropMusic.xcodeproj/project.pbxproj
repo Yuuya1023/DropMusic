@@ -16,6 +16,8 @@
 		050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279872146B3040094CC40 /* DropBoxRootVC.swift */; };
 		0502798B214809580094CC40 /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798A214809580094CC40 /* AudioData.swift */; };
 		0502798D21480BA00094CC40 /* FileListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798C21480B9F0094CC40 /* FileListV.swift */; };
+		0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798E21492ED20094CC40 /* DownloadFileManager.swift */; };
+		05027991214959750094CC40 /* AudioPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027990214959750094CC40 /* AudioPlayManager.swift */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootVC.swift */; };
 		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
@@ -35,6 +37,8 @@
 		050279872146B3040094CC40 /* DropBoxRootVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxRootVC.swift; sourceTree = "<group>"; };
 		0502798A214809580094CC40 /* AudioData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioData.swift; sourceTree = "<group>"; };
 		0502798C21480B9F0094CC40 /* FileListV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListV.swift; sourceTree = "<group>"; };
+		0502798E21492ED20094CC40 /* DownloadFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileManager.swift; sourceTree = "<group>"; };
+		05027990214959750094CC40 /* AudioPlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayManager.swift; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05A016B3213ED0A40057B459 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -110,6 +114,8 @@
 				05A016C82141670D0057B459 /* View */,
 				05A016C72141645C0057B459 /* ViewController */,
 				05A016B1213ED0A40057B459 /* AppDelegate.swift */,
+				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
+				05027990214959750094CC40 /* AudioPlayManager.swift */,
 				050279832142BDA70094CC40 /* global.swift */,
 				05A016BA213ED0AA0057B459 /* Assets.xcassets */,
 				05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */,
@@ -201,6 +207,11 @@
 				TargetAttributes = {
 					05A016AD213ED0A40057B459 = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -305,11 +316,13 @@
 			files = (
 				050279842142BDA70094CC40 /* global.swift in Sources */,
 				050279802142AFA50094CC40 /* PlayListVC.swift in Sources */,
+				0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */,
 				0502798B214809580094CC40 /* AudioData.swift in Sources */,
 				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
 				0502798D21480BA00094CC40 /* FileListV.swift in Sources */,
 				050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListVC.swift in Sources */,
+				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,
 				05A016CB214167840057B459 /* MusicPlayerV.swift in Sources */,
 				05A016C6214164300057B459 /* MusicPlayerVC.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootVC.swift in Sources */,
