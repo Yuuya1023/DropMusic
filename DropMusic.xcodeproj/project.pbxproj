@@ -15,9 +15,14 @@
 		050279862146B2600094CC40 /* DropBoxLinkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279852146B25F0094CC40 /* DropBoxLinkVC.swift */; };
 		050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279872146B3040094CC40 /* DropBoxRootVC.swift */; };
 		0502798B214809580094CC40 /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798A214809580094CC40 /* AudioData.swift */; };
-		0502798D21480BA00094CC40 /* FileListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798C21480B9F0094CC40 /* FileListV.swift */; };
+		0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798C21480B9F0094CC40 /* FileListViewCell.swift */; };
 		0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798E21492ED20094CC40 /* DownloadFileManager.swift */; };
 		05027991214959750094CC40 /* AudioPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027990214959750094CC40 /* AudioPlayManager.swift */; };
+		05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027992214BDCE30094CC40 /* DropboxFileListManager.swift */; };
+		05027995214BE87E0094CC40 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027994214BE87E0094CC40 /* FileInfo.swift */; };
+		056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */; };
+		056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C9214BFFA400A5E497 /* icon_cell_question.png */; };
+		056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootVC.swift */; };
 		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
@@ -36,9 +41,14 @@
 		050279852146B25F0094CC40 /* DropBoxLinkVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxLinkVC.swift; sourceTree = "<group>"; };
 		050279872146B3040094CC40 /* DropBoxRootVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxRootVC.swift; sourceTree = "<group>"; };
 		0502798A214809580094CC40 /* AudioData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioData.swift; sourceTree = "<group>"; };
-		0502798C21480B9F0094CC40 /* FileListV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListV.swift; sourceTree = "<group>"; };
+		0502798C21480B9F0094CC40 /* FileListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewCell.swift; sourceTree = "<group>"; };
 		0502798E21492ED20094CC40 /* DownloadFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileManager.swift; sourceTree = "<group>"; };
 		05027990214959750094CC40 /* AudioPlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayManager.swift; sourceTree = "<group>"; };
+		05027992214BDCE30094CC40 /* DropboxFileListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropboxFileListManager.swift; sourceTree = "<group>"; };
+		05027994214BE87E0094CC40 /* FileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
+		056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_audio.png; sourceTree = "<group>"; };
+		056AF8C9214BFFA400A5E497 /* icon_cell_question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_question.png; sourceTree = "<group>"; };
+		056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_folder.png; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05A016B3213ED0A40057B459 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -67,6 +77,9 @@
 		0502797821417F6E0094CC40 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */,
+				056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */,
+				056AF8C9214BFFA400A5E497 /* icon_cell_question.png */,
 				0502797B21417FC10094CC40 /* play.png */,
 			);
 			path = ui;
@@ -76,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				0502798A214809580094CC40 /* AudioData.swift */,
+				05027994214BE87E0094CC40 /* FileInfo.swift */,
 			);
 			path = Object;
 			sourceTree = "<group>";
@@ -114,6 +128,7 @@
 				05A016C82141670D0057B459 /* View */,
 				05A016C72141645C0057B459 /* ViewController */,
 				05A016B1213ED0A40057B459 /* AppDelegate.swift */,
+				05027992214BDCE30094CC40 /* DropboxFileListManager.swift */,
 				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
 				05027990214959750094CC40 /* AudioPlayManager.swift */,
 				050279832142BDA70094CC40 /* global.swift */,
@@ -141,7 +156,7 @@
 		05A016C82141670D0057B459 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0502798C21480B9F0094CC40 /* FileListV.swift */,
+				0502798C21480B9F0094CC40 /* FileListViewCell.swift */,
 				05A016C9214167180057B459 /* MusicPlayer */,
 			);
 			path = View;
@@ -239,8 +254,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */,
+				056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */,
 				05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */,
 				0502797C214180C90094CC40 /* play.png in Resources */,
+				056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */,
+				056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,7 +337,8 @@
 				0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */,
 				0502798B214809580094CC40 /* AudioData.swift in Sources */,
 				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
-				0502798D21480BA00094CC40 /* FileListV.swift in Sources */,
+				05027995214BE87E0094CC40 /* FileInfo.swift in Sources */,
+				0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */,
 				050279882146B3040094CC40 /* DropBoxRootVC.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListVC.swift in Sources */,
 				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,
@@ -327,6 +346,7 @@
 				05A016C6214164300057B459 /* MusicPlayerVC.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootVC.swift in Sources */,
 				050279862146B2600094CC40 /* DropBoxLinkVC.swift in Sources */,
+				05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */,
 				050279822142AFA50094CC40 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

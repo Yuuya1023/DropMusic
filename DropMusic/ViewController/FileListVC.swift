@@ -14,7 +14,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     var _pathList: [String] = []
     
     var _tableView: UITableView = UITableView()
-    var _datas: Array<Files.Metadata> = []
+    var _datas: Array<FileInfo> = []
     
     
     
@@ -42,6 +42,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
+        _tableView.register(FileListViewCell.self, forCellReuseIdentifier: NSStringFromClass(FileListViewCell.self))
         
         self.view.addSubview(_tableView)
         
@@ -56,20 +57,40 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     func load(){
-        if let client = DropboxClientsManager.authorizedClient {
-            client.files.listFolder(path: makePath()).response { response, error in
-                if let metadata = response {
-                    self._datas = []
-//                    print("Entries: \(metadata.entries)")
-                    for entry in metadata.entries {
-                        self._datas.append(entry)
+        let path = makePath()
+        if let list = DropboxFileListManager.sharedManager.get(pathLower: path) {
+            // キャッシュから.
+            self._datas = list
+            sortAndReloadList()
+        }
+        else {
+            if let client = DropboxClientsManager.authorizedClient {
+                client.files.listFolder(path: path).response { response, error in
+                    if let metadata = response {
+                        self._datas = []
+//                        print("Entries: \(metadata.entries)")
+                        for entry in metadata.entries {
+                            let info = FileInfo(metadata: entry)
+                            if info.isFolder() || info.isAudioFile() {
+                                // フォルダか音声ファイルのみ.
+                                self._datas.append(FileInfo(metadata: entry))
+                            }
+                        }
+                    } else {
+                        print(error!)
                     }
-                    self._tableView.reloadData()
-                } else {
-                    print(error!)
+                    // 登録.
+                    DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
+                    // 更新.
+                    self.sortAndReloadList()
                 }
             }
         }
+    }
+    
+    func sortAndReloadList() {
+        self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
+        self._tableView.reloadData()
     }
     
     func makePath() -> (String) {
@@ -85,7 +106,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-//        print("もどった")
+
     }
 
 
@@ -95,35 +116,48 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         return _datas.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-            ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
+        let temp = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(FileListViewCell.self))
+            ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(FileListViewCell.self))
+        let c = temp as! FileListViewCell
         
-        cell.textLabel?.text = _datas[indexPath.row].name
-
-        return cell
+        let fileInfo = _datas[indexPath.row]
+        c.nameLabel.text = fileInfo.name()
+        
+        var iconName = "icon_cell_question.png"
+        if fileInfo.isFolder() {
+            iconName = "icon_cell_folder.png"
+        }
+        else if fileInfo.isAudioFile() {
+            iconName = "icon_cell_audio.png"
+        }
+        c.icon.image = UIImage(named: iconName)
+        
+        if DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo) {
+            c.progress.progress = 1
+        }
+        else {
+            c.progress.progress = 0
+        }
+        
+        return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let meta: Files.Metadata = _datas[indexPath.row]
-        if meta is Files.FolderMetadata {
+        let fileInfo = _datas[indexPath.row]
+        if fileInfo.isFolder() {
             // フォルダ.
-//            NotificationCenter.default.post(name: Notification.Name("FileListTapped"), object: _datas[indexPath.row])
-            
             var l: [String] = _pathList
-            l.append(meta.name)
+            l.append(fileInfo.name())
             self.navigationController?.pushViewController(FileListViewController(pathList: l),
                                                           animated: true)
         }
-        else if meta is Files.FileMetadata {
+        else if fileInfo.isFile() {
             // ファイル.
-            let file = meta as! Files.FileMetadata
-            print(file)
-            
-            let audioData = AudioData(_id: file.id,
+            let audioData = AudioData(_id: fileInfo.id()!,
                                       _storageType: .DropBox,
-                                      _name: file.name,
-                                      _path: file.pathLower!,
-                                      _hash: file.contentHash!,
-                                      _extension: NSString(string: file.name).pathExtension)
+                                      _name: fileInfo.name(),
+                                      _path: fileInfo.pathLower(),
+                                      _hash: fileInfo.contentHash()!,
+                                      _extension: fileInfo.fileExtension()!)
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 print("exist")

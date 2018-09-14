@@ -62,6 +62,16 @@ class DownloadFileManager  {
         return FileManager.default.fileExists(atPath: cachePath+"/"+fileName)
     }
     
+    func isExistAudioFile(fileInfo: FileInfo) -> (Bool){
+        if fileInfo.isFile() {
+            let cachePath = getCachePath(storageType: .DropBox, add: "/audio")
+            let fileName = fileInfo.localFileName()!
+            
+            return FileManager.default.fileExists(atPath: cachePath+"/"+fileName)
+        }
+        return false
+    }
+    
 //    func removeAllDownloadTask(){
 //        for queue in _downloadQueue {
 //            queue._request?.cancel()
@@ -124,8 +134,8 @@ class DownloadFileManager  {
                                                                 print("Downloaded file url: \(url)")
                                                                 // キューから消す.
                                                                 self.removeQueue(audioData: audioData)
-                                                                
-                                                                AudioPlayManager.sharedManager.play(audioData: audioData)
+
+//                                                                AudioPlayManager.sharedManager.play(audioData: audioData)
                                                             } else {
                                                                 print(error!)
                                                             }
