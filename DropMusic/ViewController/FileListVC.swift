@@ -58,9 +58,10 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     func load(){
         let path = makePath()
-        if let list = DropboxFileListManager.sharedManager.get(pathLower: path) {
+        let cacheData = DropboxFileListManager.sharedManager.get(pathLower: path)
+        if cacheData != nil && cacheData?.count != 0 {
             // キャッシュから.
-            self._datas = list
+            self._datas = cacheData!
             sortAndReloadList()
         }
         else {
@@ -78,11 +79,16 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                         }
                     } else {
                         print(error!)
+                        self.navigationController?.popViewController(animated: true)
+                        return
                     }
-                    // 登録.
-                    DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
-                    // 更新.
-                    self.sortAndReloadList()
+                    
+                    if self._datas.count != 0 {
+                        // 登録.
+                        DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
+                        // 更新.
+                        self.sortAndReloadList()
+                    }
                 }
             }
         }

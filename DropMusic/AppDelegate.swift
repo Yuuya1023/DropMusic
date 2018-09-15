@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftyDropbox
+import TwitterKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // DropBox.
         DropboxClientsManager.setupWithAppKey(DROPBOX_APP_KEY)
+        // Twitter.
+        TWTRTwitter.sharedInstance().start(withConsumerKey: TWITTER_CONSUMER_KEY,
+                                           consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
         
         _rootViewController = RootViewController()
         
@@ -64,6 +68,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case .error(_, let description):
                 print("Error: \(description)")
             }
+        }
+        if TWTRTwitter.sharedInstance().application(app, open: url, options: options) {
+            return true
         }
         return true
     }

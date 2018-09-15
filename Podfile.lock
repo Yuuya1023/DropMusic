@@ -7,7 +7,7 @@ PODS:
     - TwitterCore (>= 3.1.0)
 
 DEPENDENCIES:
-  - SwiftyDropbox
+  - SwiftyDropbox (= 4.6.0)
   - TwitterKit
 
 SPEC REPOS:
@@ -23,6 +23,6 @@ SPEC CHECKSUMS:
   TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
   TwitterKit: bc7bd086b9b724a1d888745a054e1d0b1ecc4f3f
 
-PODFILE CHECKSUM: a8b0cc4af9b08d8d4da8530bcd37a1135cfd53f8
+PODFILE CHECKSUM: 3c74e2690d143dd9654cffa5c04ccd67726e01a6
 
 COCOAPODS: 1.5.3
