@@ -19,8 +19,7 @@ class FileListViewCell: UITableViewCell {
         nameLabel.textAlignment = .left
         contentView.addSubview(nameLabel)
         
-        let image = UIImage(named: "icon_cell_question.png")
-        icon = UIImageView(image: image)
+        icon = UIImageView(image: UIImage())
         contentView.addSubview(icon)
         
         progress = UIProgressView()
@@ -35,6 +34,19 @@ class FileListViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+    
+    func updateObserber(identifier: String) {
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(setProgress(notification:)),
+                                               name: NSNotification.Name(rawValue: identifier),
+                                               object: nil)
+    }
+    
+    @objc func setProgress(notification: Notification) {
+        let p = notification.object as! NSNumber
+        self.progress.progress = Float(truncating: p)
     }
     
     override func layoutSubviews() {

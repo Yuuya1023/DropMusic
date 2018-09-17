@@ -58,16 +58,18 @@ class DownloadFileManager  {
     func isExistAudioFile(audioData: AudioData) -> (Bool){
         let cachePath = getCachePath(storageType: audioData._storageType, add: "/audio")
         let fileName = audioData.localFileName()
+        let savePath = cachePath+"/"+fileName
         
-        return FileManager.default.fileExists(atPath: cachePath+"/"+fileName)
+        return FileManager.default.fileExists(atPath: savePath)
     }
     
     func isExistAudioFile(fileInfo: FileInfo) -> (Bool){
         if fileInfo.isFile() {
             let cachePath = getCachePath(storageType: .DropBox, add: "/audio")
             let fileName = fileInfo.localFileName()!
+            let savePath = cachePath+"/"+fileName
             
-            return FileManager.default.fileExists(atPath: cachePath+"/"+fileName)
+            return FileManager.default.fileExists(atPath: savePath)
         }
         return false
     }
@@ -107,11 +109,14 @@ class DownloadFileManager  {
         }
         
         if let client = DropboxClientsManager.authorizedClient {
+            // 保存パス.
+            let cachePath = self.getCachePath(storageType: audioData._storageType, add: "/audio")
+            let fileName = audioData.localFileName()
+            let savePath = cachePath+"/"+fileName
+            
             // 保存先.
             let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-                let cachePath = self.getCachePath(storageType: audioData._storageType, add: "/audio")
-                let fileName = audioData.localFileName()
-                return URL(fileURLWithPath: cachePath+"/"+fileName)
+                return URL(fileURLWithPath: savePath)
             }
             
             // 積む.
@@ -119,19 +124,23 @@ class DownloadFileManager  {
                                                     _request: client.files.download(path: audioData.fullPath(), destination: destination)
                                                         .progress { progressData in
                                                             
-                                                            print("bytesRead = totalUnitCount: \(progressData.totalUnitCount)")
-                                                            print("totalBytesRead = completedUnitCount: \(progressData.completedUnitCount)")
-                                                            
-                                                            print("totalBytesExpectedToRead (Has to sub): \(progressData.totalUnitCount - progressData.completedUnitCount)")
-                                                            
-                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
+//                                                            print("bytesRead = totalUnitCount: \(progressData.totalUnitCount)")
+//                                                            print("totalBytesRead = completedUnitCount: \(progressData.completedUnitCount)")
+//
+//                                                            print("totalBytesExpectedToRead (Has to sub): \(progressData.totalUnitCount - progressData.completedUnitCount)")
+//
+//                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
+                                                            // ダウンロードの進捗を通知.
+                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData._name), object: progressData.fractionCompleted)
                                                         }
                                                         .response { response, error in
                                                             
                                                             if let (metadata, url) = response {
-                                                                print("*** Download file ***")
-                                                                print("Downloaded file name: \(metadata.name)")
-                                                                print("Downloaded file url: \(url)")
+//                                                                print("*** Download file ***")
+//                                                                print("Downloaded file name: \(metadata.name)")
+//                                                                print("Downloaded file url: \(url)")
+                                                                
+                                                                try! FileManager.default.setAttributes([FileAttributeKey.protectionKey: FileProtectionType.none], ofItemAtPath: savePath)
                                                                 // キューから消す.
                                                                 self.removeQueue(audioData: audioData)
 
@@ -146,5 +155,6 @@ class DownloadFileManager  {
     func cancel(audioData: AudioData){
         removeQueue(audioData: audioData)
     }
+    
     
 }

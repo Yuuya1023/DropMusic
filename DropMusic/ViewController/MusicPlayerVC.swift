@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import TwitterKit
+import MediaPlayer
 
 class MusicPlayerViewControlloer: UIViewController {
     
@@ -17,9 +18,16 @@ class MusicPlayerViewControlloer: UIViewController {
     var _artistLabel: UILabel = UILabel()
     var _artwork: UIImageView = UIImageView()
     
+    var _playButton: UIButton = UIButton()
+    var _seakBar: UISlider = UISlider()
+    var _currentTimeLabel: UILabel = UILabel()
+    var _durationLabel: UILabel = UILabel()
+    
     var _repeatButton: UIButton = UIButton()
     var _playlistButton: UIButton = UIButton()
     var _twitterButton: UIButton = UIButton()
+    
+    var _timer: Timer = Timer()
     
     
     override func viewDidLoad() {
@@ -27,21 +35,46 @@ class MusicPlayerViewControlloer: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor.white
         
-        _titleLabel.frame = CGRect(x:0, y:350, width:self.view.bounds.width, height:30)
+        
+        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 125, y:30, width:250, height:250)
+        _artwork.contentMode = .scaleAspectFit
+        self.view.addSubview(_artwork)
+        
+        _titleLabel.frame = CGRect(x:0, y:280, width:self.view.bounds.width, height:30)
         _titleLabel.textAlignment = .center
         _titleLabel.font = UIFont.systemFont(ofSize: 30)
         self.view.addSubview(_titleLabel)
         
-        _artistLabel.frame = CGRect(x:0, y:390, width:self.view.bounds.width, height:30)
+        _artistLabel.frame = CGRect(x:0, y:320, width:self.view.bounds.width, height:30)
         _artistLabel.textAlignment = .center
         self.view.addSubview(_artistLabel)
         
-        _albumLabel.frame = CGRect(x:0, y:410, width:self.view.bounds.width, height:30)
+        _albumLabel.frame = CGRect(x:0, y:340, width:self.view.bounds.width, height:30)
         _albumLabel.textAlignment = .center
         self.view.addSubview(_albumLabel)
         
-        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 125, y:50, width:250, height:250)
-        self.view.addSubview(_artwork)
+        _seakBar.frame = CGRect(x:self.view.bounds.width/2 - 120, y:380, width:240, height:5)
+        _seakBar.setThumbImage(UIColor.blue.circleImage(width: 20, height: 20), for: .normal)
+        self.view.addSubview(_seakBar)
+        
+        _currentTimeLabel.frame = CGRect(x:0, y:367, width:40, height:30)
+        _currentTimeLabel.font = UIFont.systemFont(ofSize: 12)
+        _currentTimeLabel.textAlignment = .center
+        _currentTimeLabel.textColor = UIColor.gray
+        _currentTimeLabel.text = "0:00"
+        self.view.addSubview(_currentTimeLabel)
+        
+        _durationLabel.frame = CGRect(x:280, y:367, width:40, height:30)
+        _durationLabel.font = UIFont.systemFont(ofSize: 12)
+        _durationLabel.textAlignment = .center
+        _durationLabel.textColor = UIColor.gray
+        _durationLabel.text = "0:00"
+        self.view.addSubview(_durationLabel)
+        
+        _playButton.setImage(UIImage(named: "play.png"), for: .normal)
+        _playButton.frame = CGRect(x:self.view.bounds.width/2 - 20, y:400, width:40, height:40)
+        _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
+        self.view.addSubview(_playButton)
         
         let y = 460
         _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
@@ -59,6 +92,13 @@ class MusicPlayerViewControlloer: UIViewController {
         _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
         self.view.addSubview(_twitterButton)
         
+        
+        // 進捗の監視.
+        _timer = Timer.scheduledTimer(timeInterval: 1.0,
+                                      target: self,
+                                      selector: #selector(selectorProgressCheck),
+                                      userInfo: nil,
+                                      repeats: true)
     }
     
     
@@ -66,33 +106,7 @@ class MusicPlayerViewControlloer: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        _titleLabel.text = ""
-        _albumLabel.text = ""
-        _artistLabel.text = ""
-        _artwork.image = UIImage()
-        
-        let assetData = AudioPlayManager.sharedManager._assetData
-        if assetData == nil {
-            return
-        }
-        
-        let metadata: Array = assetData!.commonMetadata
-        
-        for item in metadata {
-            switch item.commonKey {
-            case AVMetadataKey.commonKeyTitle:
-                _titleLabel.text = item.stringValue
-            case AVMetadataKey.commonKeyAlbumName:
-                _albumLabel.text = item.stringValue
-            case AVMetadataKey.commonKeyArtist:
-                _artistLabel.text = item.stringValue
-            case AVMetadataKey.commonKeyArtwork:
-                _artwork.image = UIImage(data: item.dataValue!)
-            default:
-                break
-            }
-        }
-        
+        layoutUpdate()
     }
     
     override func didReceiveMemoryWarning() {
@@ -100,10 +114,54 @@ class MusicPlayerViewControlloer: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: -
+    func layoutUpdate() {
+        let audioManager = AudioPlayManager.sharedManager
+        let assetData = audioManager._assetData
+        if assetData == nil {
+            return
+        }
+        
+        // 曲情報.
+        _titleLabel.text = audioManager._title
+        _albumLabel.text = audioManager._album
+        _artistLabel.text = audioManager._artist
+        if audioManager._artwork == nil {
+            _artwork.image = UIImage()
+        }
+        else {
+            _artwork.image = audioManager._artwork
+        }
+        let min = audioManager._duration/60
+        let sec = audioManager._duration%60
+        _durationLabel.text = String(min) + ":" + String(format: "%02d", sec)
+        
+        // 再生ボタン.
+        layoutPlayButton()
+    }
+    
+    func layoutPlayButton() {
+        if AudioPlayManager.sharedManager.isPlaying() {
+            _playButton.setImage(UIImage(named: "pause.png"), for: .normal)
+        }
+        else {
+            _playButton.setImage(UIImage(named: "play.png"), for: .normal)
+        }
+    }
     
     
     
     // MARK: -
+    @objc func selectorPlayButton(_ sender: UIButton) {
+        if AudioPlayManager.sharedManager.isPlaying() {
+            AudioPlayManager.sharedManager.pause()
+        }
+        else {
+            AudioPlayManager.sharedManager.play()
+        }
+        layoutPlayButton()
+    }
+    
     @objc func selectorRepeatButton(_ sender: UIButton) {
         let next: AudioPlayManager.RepeatType
         let type = AudioPlayManager.sharedManager._repeatType
@@ -129,14 +187,17 @@ class MusicPlayerViewControlloer: UIViewController {
     }
     
     @objc func selectorTwitterButton(_ sender: UIButton) {
-        if !AudioPlayManager.sharedManager.isPlaying() {
+        if AudioPlayManager.sharedManager._assetData == nil {
             return
         }
         
         func tweet() {
             let twitter = TWTRComposer()
-            twitter.setText( _titleLabel.text! + " - " + _albumLabel.text! + " #DJさとし")
-            twitter.setImage(_artwork.image)
+            twitter.setText( _titleLabel.text! + " - " + _artistLabel.text! + "\n#DJさとし")
+            if _artwork.image != nil {
+                let image = _artwork.image?.resizeImage(reSize: CGSize(width: 128, height: 128))
+                twitter.setImage(image)
+            }
             twitter.show(from: self, completion: nil)
         }
         
@@ -150,6 +211,19 @@ class MusicPlayerViewControlloer: UIViewController {
                 tweet()
             }
         }
+    }
     
+    @objc func selectorProgressCheck() {
+        let player = AudioPlayManager.sharedManager._audioPlayer
+        if player != nil {
+            let current = Double((player?.currentTime)!)
+            let duration = Double(AudioPlayManager.sharedManager._duration)
+            let v = current/duration
+            _seakBar.setValue(Float(v), animated: true)
+            
+            let min = Int(current)/60
+            let sec = Int(current)%60
+            _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
+        }
     }
 }

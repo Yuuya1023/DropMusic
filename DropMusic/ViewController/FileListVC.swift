@@ -143,6 +143,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else {
             c.progress.progress = 0
+            c.updateObserber(identifier: fileInfo.name())
         }
         
         return c
@@ -166,8 +167,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                       _extension: fileInfo.fileExtension()!)
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
-                print("exist")
-                AudioPlayManager.sharedManager.play(audioData: audioData)
+                AudioPlayManager.sharedManager.set(audioData: audioData)
+                AudioPlayManager.sharedManager.play()
             }
             else {
                 DownloadFileManager.sharedManager.download(audioData: audioData)
