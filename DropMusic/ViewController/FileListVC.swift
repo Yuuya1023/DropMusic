@@ -35,7 +35,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         self.navigationController?.delegate = self
         
         //
-        _tableView = UITableView(frame: self.view.bounds, style: .plain)
+        var bounds = self.view.bounds
+        bounds.size.height = bounds.size.height - 98
+        _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.autoresizingMask = [
             .flexibleWidth,
             .flexibleHeight

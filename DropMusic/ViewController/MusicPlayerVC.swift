@@ -12,6 +12,7 @@ import MediaPlayer
 
 class MusicPlayerViewControlloer: UIViewController {
     
+    var _effectView: UIVisualEffectView!
     
     var _titleLabel: UILabel = UILabel()
     var _albumLabel: UILabel = UILabel()
@@ -33,38 +34,41 @@ class MusicPlayerViewControlloer: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = UIColor.clear
         
+        _effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+        _effectView.frame = self.view.bounds
+        self.view.addSubview(_effectView)
         
-        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 125, y:30, width:250, height:250)
+        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 125, y:80, width:250, height:250)
         _artwork.contentMode = .scaleAspectFit
         self.view.addSubview(_artwork)
         
-        _titleLabel.frame = CGRect(x:0, y:280, width:self.view.bounds.width, height:30)
+        _titleLabel.frame = CGRect(x:0, y:330, width:self.view.bounds.width, height:30)
         _titleLabel.textAlignment = .center
         _titleLabel.font = UIFont.systemFont(ofSize: 30)
         self.view.addSubview(_titleLabel)
         
-        _artistLabel.frame = CGRect(x:0, y:320, width:self.view.bounds.width, height:30)
+        _artistLabel.frame = CGRect(x:0, y:370, width:self.view.bounds.width, height:30)
         _artistLabel.textAlignment = .center
         self.view.addSubview(_artistLabel)
         
-        _albumLabel.frame = CGRect(x:0, y:340, width:self.view.bounds.width, height:30)
+        _albumLabel.frame = CGRect(x:0, y:390, width:self.view.bounds.width, height:30)
         _albumLabel.textAlignment = .center
         self.view.addSubview(_albumLabel)
         
-        _seakBar.frame = CGRect(x:self.view.bounds.width/2 - 120, y:380, width:240, height:5)
+        _seakBar.frame = CGRect(x:self.view.bounds.width/2 - 120, y:430, width:240, height:5)
         _seakBar.setThumbImage(UIColor.blue.circleImage(width: 20, height: 20), for: .normal)
         self.view.addSubview(_seakBar)
         
-        _currentTimeLabel.frame = CGRect(x:0, y:367, width:40, height:30)
+        _currentTimeLabel.frame = CGRect(x:0, y:417, width:40, height:30)
         _currentTimeLabel.font = UIFont.systemFont(ofSize: 12)
         _currentTimeLabel.textAlignment = .center
         _currentTimeLabel.textColor = UIColor.gray
         _currentTimeLabel.text = "0:00"
         self.view.addSubview(_currentTimeLabel)
         
-        _durationLabel.frame = CGRect(x:280, y:367, width:40, height:30)
+        _durationLabel.frame = CGRect(x:280, y:417, width:40, height:30)
         _durationLabel.font = UIFont.systemFont(ofSize: 12)
         _durationLabel.textAlignment = .center
         _durationLabel.textColor = UIColor.gray
@@ -72,11 +76,11 @@ class MusicPlayerViewControlloer: UIViewController {
         self.view.addSubview(_durationLabel)
         
         _playButton.setImage(UIImage(named: "play.png"), for: .normal)
-        _playButton.frame = CGRect(x:self.view.bounds.width/2 - 20, y:400, width:40, height:40)
+        _playButton.frame = CGRect(x:self.view.bounds.width/2 - 20, y:450, width:40, height:40)
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
         self.view.addSubview(_playButton)
         
-        let y = 460
+        let y = 510
         _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
         _repeatButton.frame = CGRect(x:30, y:y, width:40, height:40)
         _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
@@ -99,6 +103,14 @@ class MusicPlayerViewControlloer: UIViewController {
                                       selector: #selector(selectorProgressCheck),
                                       userInfo: nil,
                                       repeats: true)
+        // イヤホン接続監視.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(selectorAudioSessionRouteChanged),
+                                               name: NSNotification.Name.AVAudioSessionRouteChange,
+                                               object: nil)
+        
+        // 進捗の更新.
+        selectorProgressCheck()
     }
     
     
@@ -224,6 +236,22 @@ class MusicPlayerViewControlloer: UIViewController {
             let min = Int(current)/60
             let sec = Int(current)%60
             _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
+        }
+    }
+    
+    @objc func selectorAudioSessionRouteChanged(_ notification: Notification) {
+        let reasonObj = (notification as NSNotification).userInfo![AVAudioSessionRouteChangeReasonKey] as! NSNumber
+        if let reason = AVAudioSessionRouteChangeReason(rawValue: reasonObj.uintValue) {
+            switch reason {
+            case .newDeviceAvailable:
+                break
+            case .oldDeviceUnavailable:
+                AudioPlayManager.sharedManager.pause()
+                layoutPlayButton()
+                break
+            default:
+                break
+            }
         }
     }
 }

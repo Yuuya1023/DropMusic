@@ -25,15 +25,22 @@ class RootViewController: UITabBarController {
         let vc1 = DropBoxRootViewController()
         let vc2 = PlayListViewController()
         let vc3 = SettingsViewController()
-        let vc4 = MusicPlayerViewControlloer()
         
         vc1.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
         vc2.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.bookmarks, tag: 2)
         vc3.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.downloads, tag: 3)
-        vc4.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.favorites, tag: 4)
         
-        let tabs = NSArray(objects: vc1, vc2, vc3, vc4)
-        self.setViewControllers(tabs as! [UIViewController], animated: false)
+        let tabs = NSArray(objects: vc1, vc2, vc3)
+        self.setViewControllers(tabs as? [UIViewController], animated: false)
+        
+        let statusView = AudioPlayStatusView(x: 0, y : self.view.bounds.height-98)
+        self.view.addSubview(statusView)
+        
+        // 曲監視.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(selectorShowAudioPlayer),
+                                               name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),
+                                               object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,6 +48,19 @@ class RootViewController: UITabBarController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    
+    
+    @objc private func selectorShowAudioPlayer(notification: Notification) {
+        let modalViewController = MusicPlayerViewControlloer()
+        modalViewController.modalPresentationStyle = .custom
+        modalViewController.transitioningDelegate = self
+        present(modalViewController, animated: true, completion: nil)
+    }
 }
 
+
+extension RootViewController: UIViewControllerTransitioningDelegate {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return AudioPlayerPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}

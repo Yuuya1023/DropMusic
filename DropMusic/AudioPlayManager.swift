@@ -56,6 +56,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
                                                selector: #selector(handleSecondaryAudio),
                                                name: .AVAudioSessionSilenceSecondaryAudioHint,
                                                object: AVAudioSession.sharedInstance())
+        
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(ViewController.handleInterruption(_:)),
+//                                               name: NSNotification.Name.AVAudioSessionInterruption,
+//                                               object: nil)
     }
     
     var _repeatType: RepeatType = .one {
@@ -114,14 +119,10 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
-            
-            // AVAudioPlayerのデリゲートをセット
+            _audioPlayer.currentTime = 0
             _audioPlayer.delegate = self
-
-            // 音声の再生
             _audioPlayer.prepareToPlay()
-            
-            //
+
             _duration = Int(_audioPlayer.duration)
             
             settingRpeat()
@@ -137,7 +138,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             if _artwork != nil {
                 MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _artwork!)
             }
-            
+            // 曲が変更されたことを通知.
+            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
             
         } catch {
         }
