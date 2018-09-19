@@ -7,15 +7,15 @@
 
 import UIKit
 import Foundation
-
+import MarqueeLabel
 
 
 class AudioPlayStatusView: UIView {
     
     var _effectView: UIVisualEffectView!
     var _artwork: UIImageView!
-    var _titleLabel: UILabel!
-    var _detailLabel: UILabel!
+    var _titleLabel: MarqueeLabel!
+    var _detailLabel: MarqueeLabel!
 
     var _timer: Timer!
     
@@ -26,7 +26,7 @@ class AudioPlayStatusView: UIView {
     public init(x: CGFloat, y: CGFloat) {
         super.init(frame: CGRect(x: x, y: y, width: UIScreen.main.bounds.size.width, height: 50))
         
-        self.backgroundColor = UIColor.blue
+        self.backgroundColor = UIColor.gray
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                                        action: #selector(selectorTouchLayer(_:)))
         self.addGestureRecognizer(tapGesture)
@@ -39,13 +39,16 @@ class AudioPlayStatusView: UIView {
         _artwork.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
         self.addSubview(_artwork)
         
-        _titleLabel = UILabel()
-        _titleLabel.frame = CGRect(x: 50, y: 6, width: 200, height: 20)
+        _titleLabel = MarqueeLabel(frame: CGRect(x: 50, y: 6, width: 270, height: 20),
+                                   duration: 10,
+                                   fadeLength: 10)
         self.addSubview(_titleLabel)
         
-        _detailLabel = UILabel()
-        _detailLabel.frame = CGRect(x: 50, y: 25, width: 200, height: 20)
+        _detailLabel = MarqueeLabel(frame: CGRect(x: 50, y: 25, width: 270, height: 20),
+                                    duration: 10,
+                                    fadeLength: 10)
         _detailLabel.font = UIFont.systemFont(ofSize: 12)
+        _detailLabel.textColor = UIColor(displayP3Red: 90/255, green: 90/255, blue: 255/255, alpha: 1)
         self.addSubview(_detailLabel)
         
         
@@ -78,7 +81,6 @@ class AudioPlayStatusView: UIView {
 //    }
     
     @objc func selectorTouchLayer(_ sender: UITapGestureRecognizer) {
-        print("touch")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),
                                         object: nil)
     }

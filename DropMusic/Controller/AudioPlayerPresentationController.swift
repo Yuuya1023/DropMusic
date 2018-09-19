@@ -19,7 +19,7 @@ class AudioPlayerPresentationController: UIPresentationController {
 //        guard let containerView = containerView else {
 //            return
 //        }
-        closeButton.frame = CGRect(x: 270, y: 35, width: 30, height: 30)
+        closeButton.frame = CGRect(x: 270, y: 30, width: 30, height: 30)
         closeButton.setImage(UIImage(named: "down.png"), for: .normal)
         closeButton.addTarget(self, action: #selector(overlayViewDidTouch(_:)), for: .touchUpInside)
         presentedViewController.view?.addSubview(closeButton)

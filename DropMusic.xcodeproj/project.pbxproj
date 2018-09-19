@@ -20,7 +20,6 @@
 		05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027992214BDCE30094CC40 /* DropboxFileListManager.swift */; };
 		05027995214BE87E0094CC40 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05027994214BE87E0094CC40 /* FileInfo.swift */; };
 		0533A59D214D72AE006E625A /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 0533A59B214D72AE006E625A /* play.png */; };
-		0533A59E214D72AE006E625A /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 0533A59C214D72AE006E625A /* pause.png */; };
 		0533A5A2214D7B8B006E625A /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5A1214D7B8B006E625A /* UIImage+Resize.swift */; };
 		0533A5C0214EAAE3006E625A /* appicon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0533A5AE214EAAE2006E625A /* appicon-60@2x.png */; };
 		0533A5C1214EAAE3006E625A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0533A5AF214EAAE2006E625A /* appicon.png */; };
@@ -47,6 +46,7 @@
 		0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */; };
 		05617F4A215273620025F07E /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F49215273610025F07E /* close.png */; };
 		05617F4C215273B30025F07E /* down.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F4B215273B30025F07E /* down.png */; };
+		05617F50215290250025F07E /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F4F215290250025F07E /* pause.png */; };
 		056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */; };
 		056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C9214BFFA400A5E497 /* icon_cell_question.png */; };
 		056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */; };
@@ -77,7 +77,6 @@
 		05027992214BDCE30094CC40 /* DropboxFileListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropboxFileListManager.swift; sourceTree = "<group>"; };
 		05027994214BE87E0094CC40 /* FileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
 		0533A59B214D72AE006E625A /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
-		0533A59C214D72AE006E625A /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		0533A5A1214D7B8B006E625A /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		0533A5AE214EAAE2006E625A /* appicon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon-60@2x.png"; sourceTree = "<group>"; };
 		0533A5AF214EAAE2006E625A /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
@@ -105,6 +104,8 @@
 		0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPresentationController.swift; sourceTree = "<group>"; };
 		05617F49215273610025F07E /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		05617F4B215273B30025F07E /* down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down.png; sourceTree = "<group>"; };
+		05617F4F215290250025F07E /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		05617F562152967A0025F07E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_audio.png; sourceTree = "<group>"; };
 		056AF8C9214BFFA400A5E497 /* icon_cell_question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_question.png; sourceTree = "<group>"; };
 		056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_folder.png; sourceTree = "<group>"; };
@@ -150,7 +151,7 @@
 				056AF8C9214BFFA400A5E497 /* icon_cell_question.png */,
 				05617F4B215273B30025F07E /* down.png */,
 				05617F49215273610025F07E /* close.png */,
-				0533A59C214D72AE006E625A /* pause.png */,
+				05617F4F215290250025F07E /* pause.png */,
 				0533A59B214D72AE006E625A /* play.png */,
 			);
 			path = ui;
@@ -325,6 +326,7 @@
 		796D1EF9D724E63419863BE1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05617F562152967A0025F07E /* QuartzCore.framework */,
 				D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */,
 			);
 			name = Frameworks;
@@ -416,13 +418,13 @@
 				0533A5C5214EAAE3006E625A /* appicon-72@2x.png in Resources */,
 				056AF8DB214D4C9D00A5E497 /* icon_twitter.png in Resources */,
 				05617F4C215273B30025F07E /* down.png in Resources */,
-				0533A59E214D72AE006E625A /* pause.png in Resources */,
 				056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */,
 				0533A5C2214EAAE3006E625A /* appicon-60@3x.png in Resources */,
 				0533A5C6214EAAE3006E625A /* iTunesArtwork@2x in Resources */,
 				0533A5C9214EAAE3006E625A /* appicon-Small-40@2x.png in Resources */,
 				05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */,
 				056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */,
+				05617F50215290250025F07E /* pause.png in Resources */,
 				056AF8D7214D416600A5E497 /* icon_repeat_one.png in Resources */,
 				0533A5CB214EAAE3006E625A /* appicon-Small.png in Resources */,
 				056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */,
@@ -478,6 +480,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox/SwiftyDropbox.framework",
 				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
 				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
@@ -485,6 +488,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",

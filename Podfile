@@ -8,5 +8,6 @@ target 'DropMusic' do
   # Pods for DropMusic
   pod 'SwiftyDropbox', '4.6.0'
   pod 'TwitterKit', '3.4.0'
+  pod 'MarqueeLabel/Swift', '3.2.0'
   
 end
