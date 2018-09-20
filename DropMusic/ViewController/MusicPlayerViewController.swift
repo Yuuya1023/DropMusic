@@ -147,8 +147,8 @@ class MusicPlayerViewControlloer: UIViewController {
         }
         
         // 曲情報.
-        _titleLabel.text = audioManager._title + "    "
-        _artistLabel.text = audioManager._artist + " - " + audioManager._album + "    "
+        _titleLabel.text = audioManager._title
+        _artistLabel.text = audioManager._artist + " - " + audioManager._album
         if audioManager._artwork == nil {
             _artwork.image = UIImage()
         }

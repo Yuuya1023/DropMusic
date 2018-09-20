@@ -1,5 +1,5 @@
 //
-//  DropBoxRootViewController.swift
+//  DropBoxRootNavigactionController.swift
 //  DropMusic
 //
 //  Copyright © 2018年 n.yuuya. All rights reserved.
@@ -8,7 +8,7 @@
 import UIKit
 import SwiftyDropbox
 
-class DropBoxRootViewController: UINavigationController, UINavigationControllerDelegate {
+class DropBoxRootNavigactionController: UINavigationController, UINavigationControllerDelegate {
     
     var _currentFolder: String = ""
     
@@ -44,11 +44,6 @@ class DropBoxRootViewController: UINavigationController, UINavigationControllerD
                                                selector: #selector(notificationLogout(notification:)),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DROPBOX_LOGGED_OUT),
                                                object: nil)
-        // セルタップ通知.
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(notificationCellTapped(notification:)),
-                                               name: NSNotification.Name(rawValue: "FileListTapped"),
-                                               object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,17 +72,6 @@ class DropBoxRootViewController: UINavigationController, UINavigationControllerD
         self.setViewControllers(controllers as! [UIViewController],
                                 animated: false)
     }
-    
-    @objc private func notificationCellTapped(notification: Notification) {
-        var obj :Files.Metadata = notification.object as! Files.Metadata
-        print("notificationCellTapped")
-        
-        let vc = FileListViewController(pathList: [])
-        self.pushViewController(vc,
-                                animated: true)
-    }
-    
-    
     
     
 }

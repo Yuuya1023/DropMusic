@@ -26,7 +26,7 @@ class AudioPlayStatusView: UIView {
     public init(x: CGFloat, y: CGFloat) {
         super.init(frame: CGRect(x: x, y: y, width: UIScreen.main.bounds.size.width, height: 50))
         
-        self.backgroundColor = UIColor.gray
+        self.backgroundColor = UIColor.clear
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                                        action: #selector(selectorTouchLayer(_:)))
         self.addGestureRecognizer(tapGesture)

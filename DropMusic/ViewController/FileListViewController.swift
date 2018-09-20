@@ -33,11 +33,14 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         // Do any additional setup after loading the view, typically from a nib.
         self.title = _pathList.last
         self.navigationController?.delegate = self
+        self.view.backgroundColor = UIColor.white
+//        self.view.backgroundColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/355, alpha: 1)
         
         //
         var bounds = self.view.bounds
         bounds.size.height = bounds.size.height
         _tableView = UITableView(frame: bounds, style: .plain)
+        _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
             .flexibleWidth,
             .flexibleHeight

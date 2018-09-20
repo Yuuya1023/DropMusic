@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    var _rootViewController: RootViewController?
+    var _rootViewController: RootTabBarController!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TWTRTwitter.sharedInstance().start(withConsumerKey: TWITTER_CONSUMER_KEY,
                                            consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
         
-        _rootViewController = RootViewController()
+        _rootViewController = RootTabBarController()
         
         // ViewController.
         self.window = UIWindow(frame: UIScreen.main.bounds)

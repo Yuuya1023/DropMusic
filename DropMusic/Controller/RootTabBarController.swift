@@ -1,5 +1,5 @@
 //
-//  RootVC.swift
+//  RootTabBarController.swift
 //  DropMusic
 //
 //  Copyright © 2018年 n.yuuya. All rights reserved.
@@ -8,7 +8,7 @@
 import UIKit
 import SwiftyDropbox
 
-class RootViewController: UITabBarController {
+class RootTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +18,13 @@ class RootViewController: UITabBarController {
 //        UITabBar.appearance().tintColor = UIColor.yellow
         
         // 背景色.
-        UITabBar.appearance().barTintColor = UIColor(red: 66/255, green: 74/255, blue: 93/255, alpha: 1.0)
+        UITabBar.appearance().barTintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/355, alpha: 1)
+
         
         
         // タブバーの設定.
-        let vc1 = DropBoxRootViewController()
-        let vc2 = PlayListViewController()
+        let vc1 = DropBoxRootNavigactionController()
+        let vc2 = UINavigationController(rootViewController: PlayListViewController())
         let vc3 = SettingsViewController()
         
         vc1.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
@@ -59,7 +60,7 @@ class RootViewController: UITabBarController {
 }
 
 
-extension RootViewController: UIViewControllerTransitioningDelegate {
+extension RootTabBarController: UIViewControllerTransitioningDelegate {
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return AudioPlayerPresentationController(presentedViewController: presented, presenting: presenting)
     }
