@@ -47,12 +47,17 @@
 		05617F4A215273620025F07E /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F49215273610025F07E /* close.png */; };
 		05617F4C215273B30025F07E /* down.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F4B215273B30025F07E /* down.png */; };
 		05617F50215290250025F07E /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F4F215290250025F07E /* pause.png */; };
+		05617F5F2153C99B0025F07E /* PlayListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F5E2153C99B0025F07E /* PlayListViewCell.swift */; };
+		05617F612153CC690025F07E /* PlayListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F602153CC690025F07E /* PlayListData.swift */; };
+		05617F662153DD1C0025F07E /* tab_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F622153DD1B0025F07E /* tab_settings.png */; };
+		05617F672153DD1C0025F07E /* tab_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F632153DD1B0025F07E /* tab_playlist.png */; };
+		05617F682153DD1C0025F07E /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F642153DD1B0025F07E /* twitter.png */; };
+		05617F692153DD1C0025F07E /* tab_cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F652153DD1C0025F07E /* tab_cloud.png */; };
 		056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */; };
 		056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C9214BFFA400A5E497 /* icon_cell_question.png */; };
 		056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */; };
 		056AF8D7214D416600A5E497 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8D4214D416600A5E497 /* icon_repeat_one.png */; };
 		056AF8D9214D416600A5E497 /* icon_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8D6214D416600A5E497 /* icon_repeat.png */; };
-		056AF8DB214D4C9D00A5E497 /* icon_twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8DA214D4C9D00A5E497 /* icon_twitter.png */; };
 		056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8DC214D4DF100A5E497 /* icon_playlist.png */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootTabBarController.swift */; };
@@ -105,12 +110,17 @@
 		05617F4B215273B30025F07E /* down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down.png; sourceTree = "<group>"; };
 		05617F4F215290250025F07E /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		05617F562152967A0025F07E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		05617F5E2153C99B0025F07E /* PlayListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListViewCell.swift; sourceTree = "<group>"; };
+		05617F602153CC690025F07E /* PlayListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListData.swift; sourceTree = "<group>"; };
+		05617F622153DD1B0025F07E /* tab_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_settings.png; sourceTree = "<group>"; };
+		05617F632153DD1B0025F07E /* tab_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_playlist.png; sourceTree = "<group>"; };
+		05617F642153DD1B0025F07E /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
+		05617F652153DD1C0025F07E /* tab_cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_cloud.png; sourceTree = "<group>"; };
 		056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_audio.png; sourceTree = "<group>"; };
 		056AF8C9214BFFA400A5E497 /* icon_cell_question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_question.png; sourceTree = "<group>"; };
 		056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_folder.png; sourceTree = "<group>"; };
 		056AF8D4214D416600A5E497 /* icon_repeat_one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one.png; sourceTree = "<group>"; };
 		056AF8D6214D416600A5E497 /* icon_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat.png; sourceTree = "<group>"; };
-		056AF8DA214D4C9D00A5E497 /* icon_twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_twitter.png; sourceTree = "<group>"; };
 		056AF8DC214D4DF100A5E497 /* icon_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlist.png; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -139,9 +149,12 @@
 		0502797821417F6E0094CC40 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				05617F652153DD1C0025F07E /* tab_cloud.png */,
+				05617F632153DD1B0025F07E /* tab_playlist.png */,
+				05617F622153DD1B0025F07E /* tab_settings.png */,
+				05617F642153DD1B0025F07E /* twitter.png */,
 				0533A5DD21514973006E625A /* no_image.gif */,
 				056AF8DC214D4DF100A5E497 /* icon_playlist.png */,
-				056AF8DA214D4C9D00A5E497 /* icon_twitter.png */,
 				056AF8D6214D416600A5E497 /* icon_repeat.png */,
 				056AF8D4214D416600A5E497 /* icon_repeat_one.png */,
 				056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */,
@@ -160,6 +173,7 @@
 			children = (
 				0502798A214809580094CC40 /* AudioData.swift */,
 				05027994214BE87E0094CC40 /* FileInfo.swift */,
+				05617F602153CC690025F07E /* PlayListData.swift */,
 			);
 			path = Object;
 			sourceTree = "<group>";
@@ -294,8 +308,8 @@
 			isa = PBXGroup;
 			children = (
 				05A016C5214164300057B459 /* MusicPlayerViewController.swift */,
-				0502797E2142AFA40094CC40 /* FileListViewController.swift */,
 				050279852146B25F0094CC40 /* DropBoxLinkViewController.swift */,
+				0502797E2142AFA40094CC40 /* FileListViewController.swift */,
 				0502797D2142AFA40094CC40 /* PlayListViewController.swift */,
 				0502797F2142AFA50094CC40 /* SettingsViewController.swift */,
 			);
@@ -306,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				0502798C21480B9F0094CC40 /* FileListViewCell.swift */,
+				05617F5E2153C99B0025F07E /* PlayListViewCell.swift */,
 				0533A5D921513E09006E625A /* AudioPlayStatusView.swift */,
 			);
 			path = View;
@@ -396,11 +411,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0533A5C3214EAAE3006E625A /* appicon-Small-50@2x.png in Resources */,
+				05617F662153DD1C0025F07E /* tab_settings.png in Resources */,
 				0533A5CE214EAAE3006E625A /* iTunesArtwork in Resources */,
 				0533A5C4214EAAE3006E625A /* appicon-72.png in Resources */,
 				056AF8D9214D416600A5E497 /* icon_repeat.png in Resources */,
 				0533A5CF214EAAE3006E625A /* appicon-76@2x.png in Resources */,
 				0533A5C1214EAAE3006E625A /* appicon.png in Resources */,
+				05617F682153DD1C0025F07E /* twitter.png in Resources */,
 				0533A5CD214EAAE3006E625A /* appicon@2x.png in Resources */,
 				0533A59D214D72AE006E625A /* play.png in Resources */,
 				0533A5D1214EAAE3006E625A /* appicon-Small@3x.png in Resources */,
@@ -411,9 +428,10 @@
 				0533A5C8214EAAE3006E625A /* appicon-Small-40.png in Resources */,
 				0533A5CC214EAAE3006E625A /* appicon-Small@2x.png in Resources */,
 				05617F4A215273620025F07E /* close.png in Resources */,
+				05617F672153DD1C0025F07E /* tab_playlist.png in Resources */,
 				0533A5DE21514973006E625A /* no_image.gif in Resources */,
 				0533A5C5214EAAE3006E625A /* appicon-72@2x.png in Resources */,
-				056AF8DB214D4C9D00A5E497 /* icon_twitter.png in Resources */,
+				05617F692153DD1C0025F07E /* tab_cloud.png in Resources */,
 				05617F4C215273B30025F07E /* down.png in Resources */,
 				056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */,
 				0533A5C2214EAAE3006E625A /* appicon-60@3x.png in Resources */,
@@ -515,9 +533,11 @@
 				050279882146B3040094CC40 /* DropBoxRootNavigactionController.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListViewController.swift in Sources */,
 				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,
+				05617F612153CC690025F07E /* PlayListData.swift in Sources */,
 				05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */,
 				050279862146B2600094CC40 /* DropBoxLinkViewController.swift in Sources */,
+				05617F5F2153C99B0025F07E /* PlayListViewCell.swift in Sources */,
 				0533A5A2214D7B8B006E625A /* UIImage+Resize.swift in Sources */,
 				05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */,
 				0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */,

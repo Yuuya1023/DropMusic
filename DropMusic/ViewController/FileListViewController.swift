@@ -13,7 +13,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
 //    var _path: String = ""
     var _pathList: [String] = []
     
-    var _tableView: UITableView = UITableView()
+    var _tableView: UITableView!
     var _datas: Array<FileInfo> = []
     
     

@@ -25,11 +25,18 @@ class RootTabBarController: UITabBarController {
         // タブバーの設定.
         let vc1 = DropBoxRootNavigactionController()
         let vc2 = UINavigationController(rootViewController: PlayListViewController())
-        let vc3 = SettingsViewController()
+        let vc3 = UINavigationController(rootViewController:  SettingsViewController())
         
-        vc1.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: 1)
-        vc2.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.bookmarks, tag: 2)
-        vc3.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.downloads, tag: 3)
+        let size = CGSize(width: 25, height: 25)
+        vc1.tabBarItem = UITabBarItem(title: "Cloud",
+                                      image: UIImage(named: "tab_cloud.png")?.resizeImage(reSize: size),
+                                      tag: 1)
+        vc2.tabBarItem = UITabBarItem(title: "Playlist",
+                                      image: UIImage(named: "tab_playlist.png")?.resizeImage(reSize: size),
+                                      tag: 2)
+        vc3.tabBarItem = UITabBarItem(title: "Settings",
+                                      image: UIImage(named: "tab_settings.png")?.resizeImage(reSize: size),
+                                      tag: 3)
         
         let tabs = NSArray(objects: vc1, vc2, vc3)
         self.setViewControllers(tabs as? [UIViewController], animated: false)
@@ -37,7 +44,7 @@ class RootTabBarController: UITabBarController {
         let statusView = AudioPlayStatusView(x: 0, y : self.view.bounds.height-98)
         self.view.addSubview(statusView)
         
-        // 曲監視.
+        // プレイヤー表示.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(selectorShowAudioPlayer),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),

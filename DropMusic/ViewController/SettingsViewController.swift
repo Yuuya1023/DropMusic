@@ -13,7 +13,8 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = UIColor.yellow
+//        self.view.backgroundColor = UIColor.white
+        self.title = "Settings"
         
         do{
             let button = UIButton()

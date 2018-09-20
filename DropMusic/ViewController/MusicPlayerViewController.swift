@@ -98,7 +98,7 @@ class MusicPlayerViewControlloer: UIViewController {
             _playlistButton.addTarget(self, action: #selector(selectorPlaylistButton(_:)), for: .touchUpInside)
             self.view.addSubview(_playlistButton)
             
-            _twitterButton.setImage(UIImage(named: "icon_twitter.png"), for: .normal)
+            _twitterButton.setImage(UIImage(named: "twitter.png"), for: .normal)
             _twitterButton.frame = CGRect(x:250, y:y, width:40, height:40)
             _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
             let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
