@@ -242,6 +242,16 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		05617F5D2153C8AD0025F07E /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				05027990214959750094CC40 /* AudioPlayManager.swift */,
+				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
+				05027992214BDCE30094CC40 /* DropboxFileListManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		05A016A5213ED0A40057B459 = {
 			isa = PBXGroup;
 			children = (
@@ -264,20 +274,18 @@
 		05A016B0213ED0A40057B459 /* DropMusic */ = {
 			isa = PBXGroup;
 			children = (
+				05617F5D2153C8AD0025F07E /* Manager */,
 				0533A59F214D7B60006E625A /* Extension */,
 				05027989214809300094CC40 /* Object */,
 				05A016C82141670D0057B459 /* View */,
 				05A016C72141645C0057B459 /* ViewController */,
 				0533A5DF21514BDB006E625A /* Controller */,
 				05A016B1213ED0A40057B459 /* AppDelegate.swift */,
-				05027992214BDCE30094CC40 /* DropboxFileListManager.swift */,
-				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
-				05027990214959750094CC40 /* AudioPlayManager.swift */,
 				050279832142BDA70094CC40 /* global.swift */,
+				0533A5D821506479006E625A /* BridgingHeader.h */,
 				05A016BA213ED0AA0057B459 /* Assets.xcassets */,
 				05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */,
 				05A016BF213ED0AA0057B459 /* Info.plist */,
-				0533A5D821506479006E625A /* BridgingHeader.h */,
 			);
 			path = DropMusic;
 			sourceTree = "<group>";
