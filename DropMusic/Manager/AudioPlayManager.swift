@@ -77,7 +77,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     func set(audioData: AudioData) {
-        let cachePath = DownloadFileManager.sharedManager.getCachePath(storageType: audioData._storageType, add: "/audio")
+        let cachePath = DownloadFileManager.sharedManager.getCachePath(storageType: audioData.storageType, add: "/audio")
         let fileName = audioData.localFileName()
         let url = URL(fileURLWithPath: cachePath+"/"+fileName)
         

@@ -7,9 +7,13 @@
 
 import Foundation
 
-struct PlayListData {
+struct PlayListData: Codable {
     
-    var _name: String = ""
-    var _audioList: Array<AudioData> = []
+    var id: String = ""
+    var name: String = ""
+    var audioList: Array<AudioData> = []
     
+    func tracks() -> (Int) {
+        return audioList.count
+    }
 }

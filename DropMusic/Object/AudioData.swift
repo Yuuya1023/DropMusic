@@ -7,38 +7,33 @@
 
 //import UIKit
 
-struct AudioData {
+struct AudioData: Codable {
     
-    enum StorageType {
-        case DropBox
+    enum StorageType:Int,Codable {
+        case DropBox = 1
     }
 
-    var _id: String
-    var _storageType: StorageType
-    var _name: String
-    var _path: String
-    var _hash: String
-    var _extension: String
+    var id: String
+    var storageType: StorageType
+    var name: String
+    var path: String
+    var hash: String
+    var extensionString: String
     
     func isEqualData(audioData: AudioData?) ->(Bool){
-        return _id == audioData?._id
+        return id == audioData?.id
     }
     
     func localFileName() ->(String){
-        var id = _id
-        if let range = id.range(of: "id:") {
-            id.replaceSubrange(range, with: "")
+        var _id = self.id
+        if let range = _id.range(of: "id:") {
+            _id.replaceSubrange(range, with: "")
         }
-        return id + "." + _extension
+        return _id + "." + extensionString
     }
     
-//    func localSavePath() ->(String){
-//        
-//        return ""
-//    }
-    
     func fullPath() -> (String){
-        return _path
+        return self.path
     }
     
 }

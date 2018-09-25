@@ -26,7 +26,7 @@ class FileListViewCell: UITableViewCell {
         
         progress = UIProgressView()
         progress.progress = 0.0
-        progress.trackTintColor = UIColor.white
+        progress.trackTintColor = UIColor.clear
         contentView.addSubview(progress)
     }
     

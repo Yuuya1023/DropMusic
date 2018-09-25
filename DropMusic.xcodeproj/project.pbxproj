@@ -53,6 +53,8 @@
 		05617F672153DD1C0025F07E /* tab_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F632153DD1B0025F07E /* tab_playlist.png */; };
 		05617F682153DD1C0025F07E /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F642153DD1B0025F07E /* twitter.png */; };
 		05617F692153DD1C0025F07E /* tab_cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F652153DD1C0025F07E /* tab_cloud.png */; };
+		05617F6B2156786B0025F07E /* PlayListManageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F6A2156786B0025F07E /* PlayListManageData.swift */; };
+		05617F6D215A87E20025F07E /* PlayListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F6C215A87E20025F07E /* PlayListManager.swift */; };
 		056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */; };
 		056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8C9214BFFA400A5E497 /* icon_cell_question.png */; };
 		056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */; };
@@ -116,6 +118,8 @@
 		05617F632153DD1B0025F07E /* tab_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_playlist.png; sourceTree = "<group>"; };
 		05617F642153DD1B0025F07E /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		05617F652153DD1C0025F07E /* tab_cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_cloud.png; sourceTree = "<group>"; };
+		05617F6A2156786B0025F07E /* PlayListManageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManageData.swift; sourceTree = "<group>"; };
+		05617F6C215A87E20025F07E /* PlayListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManager.swift; sourceTree = "<group>"; };
 		056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_audio.png; sourceTree = "<group>"; };
 		056AF8C9214BFFA400A5E497 /* icon_cell_question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_question.png; sourceTree = "<group>"; };
 		056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_cell_folder.png; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 				0502798A214809580094CC40 /* AudioData.swift */,
 				05027994214BE87E0094CC40 /* FileInfo.swift */,
 				05617F602153CC690025F07E /* PlayListData.swift */,
+				05617F6A2156786B0025F07E /* PlayListManageData.swift */,
 			);
 			path = Object;
 			sourceTree = "<group>";
@@ -262,6 +267,7 @@
 				05027990214959750094CC40 /* AudioPlayManager.swift */,
 				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
 				05027992214BDCE30094CC40 /* DropboxFileListManager.swift */,
+				05617F6C215A87E20025F07E /* PlayListManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -525,11 +531,13 @@
 				050279802142AFA50094CC40 /* PlayListViewController.swift in Sources */,
 				0533A5DA21513E09006E625A /* AudioPlayStatusView.swift in Sources */,
 				0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */,
+				05617F6D215A87E20025F07E /* PlayListManager.swift in Sources */,
 				0502798B214809580094CC40 /* AudioData.swift in Sources */,
 				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
 				0533A5D4215003D7006E625A /* UIColor+UIImage.swift in Sources */,
 				05027995214BE87E0094CC40 /* FileInfo.swift in Sources */,
 				0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */,
+				05617F6B2156786B0025F07E /* PlayListManageData.swift in Sources */,
 				050279882146B3040094CC40 /* DropBoxRootNavigactionController.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListViewController.swift in Sources */,
 				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,

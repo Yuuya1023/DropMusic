@@ -33,6 +33,7 @@ class DropBoxRootNavigactionController: UINavigationController, UINavigationCont
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+//        UINavigationBar.appearance().barTintColor = UIColor.gray
         
         // ログイン.
         NotificationCenter.default.addObserver(self,

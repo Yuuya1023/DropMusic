@@ -56,7 +56,7 @@ class DownloadFileManager  {
     }
     
     func isExistAudioFile(audioData: AudioData) -> (Bool){
-        let cachePath = getCachePath(storageType: audioData._storageType, add: "/audio")
+        let cachePath = getCachePath(storageType: audioData.storageType, add: "/audio")
         let fileName = audioData.localFileName()
         let savePath = cachePath+"/"+fileName
         
@@ -110,7 +110,7 @@ class DownloadFileManager  {
         
         if let client = DropboxClientsManager.authorizedClient {
             // 保存パス.
-            let cachePath = self.getCachePath(storageType: audioData._storageType, add: "/audio")
+            let cachePath = self.getCachePath(storageType: audioData.storageType, add: "/audio")
             let fileName = audioData.localFileName()
             let savePath = cachePath+"/"+fileName
             
@@ -131,7 +131,7 @@ class DownloadFileManager  {
 //
 //                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
                                                             // ダウンロードの進捗を通知.
-                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData._name), object: progressData.fractionCompleted)
+                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.name), object: progressData.fractionCompleted)
                                                         }
                                                         .response { response, error in
                                                             

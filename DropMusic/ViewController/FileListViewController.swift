@@ -33,8 +33,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         // Do any additional setup after loading the view, typically from a nib.
         self.title = _pathList.last
         self.navigationController?.delegate = self
+//        self.navigationController?.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
-//        self.view.backgroundColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/355, alpha: 1)
+//        self.view.backgroundColor = UIColor(displayP3Red: 20/255, green: 30/255, blue: 80/255, alpha: 1)
         
         //
         var bounds = self.view.bounds
@@ -165,12 +166,12 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else if fileInfo.isFile() {
             // ファイル.
-            let audioData = AudioData(_id: fileInfo.id()!,
-                                      _storageType: .DropBox,
-                                      _name: fileInfo.name(),
-                                      _path: fileInfo.pathLower(),
-                                      _hash: fileInfo.contentHash()!,
-                                      _extension: fileInfo.fileExtension()!)
+            let audioData = AudioData(id: fileInfo.id()!,
+                                      storageType: .DropBox,
+                                      name: fileInfo.name(),
+                                      path: fileInfo.pathLower(),
+                                      hash: fileInfo.contentHash()!,
+                                      extensionString: fileInfo.fileExtension()!)
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 AudioPlayManager.sharedManager.set(audioData: audioData)
