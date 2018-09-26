@@ -60,6 +60,12 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
             return URL(fileURLWithPath: path)
         }
         
+        // tempがあれば削除しておく.
+        do {
+            try FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempPlaylistFilePath))
+        }
+        catch {}
+        
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
                 if let (metadata, url) = response {
@@ -71,7 +77,6 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
                         if Int(tempData!.version)! > Int(localFile!.version)! {
                             // サーバーの方が上の場合はtempを使う.
                             pManager.setManageData(data: tempData!)
-                            // 保存.
                             pManager.save()
                         }
                         else {
@@ -83,25 +88,33 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
                         pManager.setManageData(data: tempData!)
                         pManager.save()
                     }
-                    // tempを削除.
-                    try! FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempPlaylistFilePath))
+                    // 表示更新.
                     self.updateScrollView()
                 } else {
                     print(error!)
-                
+//                    if let callError = error {
+//                        switch callError {
+//                        case .clientError(let _clientError):
+//                            print(_clientError)
+//                        case .routeError(let _routeError):
+//                            print("route error")
+//                        default :
+//                            print("unknown error")
+//                        }
+//                    }
                     // エラー判定したい.
 //                    print(error?.description)
                     
-                    // プレイリストファイルがなかったら作成してアップロード.
-                    self.createPlaylist()
-                    
-//                    // tempを削除.
-//                    do {
-//                        try FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempPlaylistFilePath))
-//                    }
-//                    catch {
-//                        print("delete error")
-//                    }
+                    if localFile != nil {
+                        // ローカルにある場合はとりあえず読み込んでおく.
+                        pManager.setManageData(data: localFile!)
+                        // 表示更新.
+                        self.updateScrollView()
+                    }
+                    else {
+                        // プレイリストファイルがなかったら作成してアップロード.
+                        self.createPlaylist()
+                    }
                 }
             }
         }
@@ -124,7 +137,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     // プレイリストの初回作成.
     func createPlaylist(){
-        let playlist = PlayListManageData()
+        let playlist = PlayListManager.sharedManager._manageData
         
         let encoder = JSONEncoder()
         let data = try! encoder.encode(playlist)
@@ -132,7 +145,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         if let client = DropboxClientsManager.authorizedClient {
             client.files.upload(path: self._playlistFilePath+JSON_NAME_PLAYLIST, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
                     if let metadata = response {
-                        print("Uploaded file name: \(metadata.name)")
+                        // 成功したら再チェック.
+                        self.checkPlaylistFile()
                     } else {
                         print(error!)
                     }
@@ -165,7 +179,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+//        print(indexPath.row)
         
         if PlayListManager.sharedManager._manageData.playlists.count > indexPath.row {
             
