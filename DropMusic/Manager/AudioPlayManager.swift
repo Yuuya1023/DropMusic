@@ -16,14 +16,35 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     var _audioPlayer: AVAudioPlayer!
     
+    enum AudioSelectType {
+        case None
+        case Cloud
+        case Playlist
+    }
+    
     enum RepeatType {
-        case one
-        case list
+        case One
+        case List
+    }
+    
+    enum ShuffleType {
+        case None
+        case List
     }
     
     var _playing: AudioData?
-    var _history: [AudioData] = []
-    var _queue: [AudioData] = []
+    var _audioSelect: AudioSelectType = .None
+    var _audioSelectPath: String = ""
+    var _audioList: Array<AudioData> = []
+    
+    var _history: Array<AudioData> = []
+    var _queue: Array<AudioData> = []
+    
+    var _repeatType: RepeatType = .One {
+        didSet(p){
+            self.settingRpeat()
+        }
+    }
     
     var _assetData: AVAsset?
     
@@ -63,17 +84,23 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
 //                                               object: nil)
     }
     
-    var _repeatType: RepeatType = .one {
-        didSet(p){
-            self.settingRpeat()
-        }
-    }
-    
     func isPlaying() -> (Bool) {
         if _audioPlayer != nil {
             return _audioPlayer.isPlaying
         }
         return false
+    }
+    
+    func set(selectType: AudioSelectType, selectPath: String, audioList: Array<AudioData>, playIndex: Int) {
+        if _audioSelect != selectType || _audioSelectPath != selectPath {
+            // 選択した場所が変わった場合はそこのリストを保存しておく.
+            _audioSelect = selectType
+            _audioSelectPath = selectPath
+            _audioList = audioList
+        }
+        
+        // 再生.
+        set(audioData: audioList[playIndex])
     }
     
     func set(audioData: AudioData) {
@@ -163,9 +190,9 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     func settingRpeat() {
         switch _repeatType {
-        case .one:
+        case .One:
             _audioPlayer?.numberOfLoops = 0
-        case .list:
+        case .List:
             _audioPlayer?.numberOfLoops = 0
             // キューの生成.
         }
@@ -193,14 +220,17 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     // MARK: -
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         switch _repeatType {
-        case .one:
+        case .One:
             _audioPlayer.currentTime = 0
             _audioPlayer.play()
-        case .list:
+        case .List:
             // 次へ.
             print("next")
         }
         
+        if _artwork != nil {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _artwork!)
+        }
         MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: 0.0)
     }
     

@@ -10,16 +10,30 @@
 struct AudioData: Codable {
     
     enum StorageType:Int,Codable {
+        case None = 0
         case DropBox = 1
     }
 
-    var id: String
-    var storageType: StorageType
-    var name: String
-    var path: String
-    var hash: String
-    var extensionString: String
+    var id: String = ""
+    var storageType: StorageType = .None
+    var path: String = ""
+    var extensionString: String = ""
     
+    // MARK: - static
+    static func createFromFileInfo(fileInfo: FileInfo) -> (AudioData?) {
+        if !fileInfo.isFile() { return nil }
+        
+        var ret: AudioData = AudioData()
+        ret.id = fileInfo.id()!
+        ret.storageType = .DropBox
+        ret.path = fileInfo.pathLower()
+        ret.extensionString = fileInfo.fileExtension()!
+        
+        return ret
+    }
+    
+    
+    // MARK: -
     func isEqualData(audioData: AudioData?) ->(Bool){
         return id == audioData?.id
     }

@@ -217,16 +217,16 @@ class MusicPlayerViewControlloer: UIViewController {
         let next: AudioPlayManager.RepeatType
         let type = AudioPlayManager.sharedManager._repeatType
         switch type {
-        case .one:
-            next = .list
-        case .list:
-            next = .one
+        case .One:
+            next = .List
+        case .List:
+            next = .One
         }
         
         switch next {
-        case .one:
+        case .One:
             _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
-        case .list:
+        case .List:
             _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
         }
         

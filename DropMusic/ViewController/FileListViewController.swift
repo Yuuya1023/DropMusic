@@ -150,7 +150,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else {
             c.progress.progress = 0
-            c.updateObserber(identifier: fileInfo.name())
+            if fileInfo.isFile() {
+                c.updateObserber(identifier: fileInfo.id()!)
+            }
         }
         
         return c
@@ -168,13 +170,21 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             // ファイル.
             let audioData = AudioData(id: fileInfo.id()!,
                                       storageType: .DropBox,
-                                      name: fileInfo.name(),
                                       path: fileInfo.pathLower(),
-                                      hash: fileInfo.contentHash()!,
                                       extensionString: fileInfo.fileExtension()!)
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
-                AudioPlayManager.sharedManager.set(audioData: audioData)
+                // AudioDataのリストを作成する.
+                var list: Array<AudioData> = []
+                for i in 0 ..< _datas.count {
+                    list.append(AudioData.createFromFileInfo(fileInfo: _datas[i])!)
+                }
+                // 再生.
+//                AudioPlayManager.sharedManager.set(audioData: audioData)
+                AudioPlayManager.sharedManager.set(selectType: .Cloud,
+                                                   selectPath: makePath(),
+                                                   audioList: list,
+                                                   playIndex: indexPath.row)
                 AudioPlayManager.sharedManager.play()
             }
             else {

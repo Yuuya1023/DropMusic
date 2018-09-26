@@ -37,8 +37,10 @@ class DownloadFileManager  {
     public func getCachePath(storageType: AudioData.StorageType, add: String) ->(String){
         var storageTypePath = ""
         switch storageType {
-            case .DropBox:
-                storageTypePath = "/dropbox"
+        case .None:
+            break
+        case .DropBox:
+            storageTypePath = "/dropbox"
 //            default: break
         }
         
@@ -131,7 +133,7 @@ class DownloadFileManager  {
 //
 //                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
                                                             // ダウンロードの進捗を通知.
-                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.name), object: progressData.fractionCompleted)
+                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id), object: progressData.fractionCompleted)
                                                         }
                                                         .response { response, error in
                                                             
