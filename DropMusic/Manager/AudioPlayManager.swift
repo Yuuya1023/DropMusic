@@ -112,11 +112,10 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     func set(audioData: AudioData, isRefresh: Bool) {
-        let cachePath = DownloadFileManager.sharedManager.getCachePath(storageType: audioData.storageType, add: "/audio")
-        let fileName = audioData.localFileName()
-        let url = URL(fileURLWithPath: cachePath+"/"+fileName)
+        let cachePath = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData)
+        let url = URL(fileURLWithPath: cachePath)
         
-        if !FileManager.default.fileExists(atPath: cachePath+"/"+fileName) {
+        if !FileManager.default.fileExists(atPath: cachePath) {
             return
         }
         
@@ -133,7 +132,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         _playing = audioData
         
         // 曲情報の取得.
-        _metadata.set(atPath: cachePath+"/"+fileName)
+        _metadata.set(atPath: cachePath)
         
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)

@@ -11,7 +11,14 @@ class FileListViewCell: UITableViewCell {
     var nameLabel: UILabel!
     var icon: UIImageView!
     var progress: UIProgressView!
+    var isAudioFile: Bool = false
     
+    var index: Int = 0
+    var longpressTarget: NSObject? = nil
+    var longpressSelector: Selector? = nil
+    
+    
+    // MARK: - 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.clear
@@ -28,6 +35,12 @@ class FileListViewCell: UITableViewCell {
         progress.progress = 0.0
         progress.trackTintColor = UIColor.clear
         contentView.addSubview(progress)
+        
+        // 長押し.
+        let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(selectorLongpressLayer(_:)))
+        self.addGestureRecognizer(tapGesture)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -38,19 +51,41 @@ class FileListViewCell: UITableViewCell {
         super.prepareForReuse()
     }
     
+    
+    // MARK: -
     func updateObserber(identifier: String) {
         NotificationCenter.default.removeObserver(self)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(setProgress(notification:)),
-                                               name: NSNotification.Name(rawValue: identifier),
-                                               object: nil)
+        if isAudioFile {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(setProgress(notification:)),
+                                                   name: NSNotification.Name(rawValue: identifier),
+                                                   object: nil)
+        }
     }
     
+    
+    
+    // MARK: -
     @objc func setProgress(notification: Notification) {
         let p = notification.object as! NSNumber
         self.progress.progress = Float(truncating: p)
     }
     
+    @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
+        if isAudioFile {
+            switch sender.state {
+            case .began:
+                if longpressTarget != nil && longpressSelector != nil {
+                    longpressTarget?.perform(longpressSelector, with: self)
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    
+    // MARK: -
     override func layoutSubviews() {
         super.layoutSubviews()
         nameLabel.frame = CGRect(x: 50, y: 0, width: frame.width - 55, height: frame.height)

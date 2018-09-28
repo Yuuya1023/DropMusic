@@ -57,21 +57,27 @@ class DownloadFileManager  {
         return ""
     }
     
-    func isExistAudioFile(audioData: AudioData) -> (Bool){
-        let cachePath = getCachePath(storageType: audioData.storageType, add: "/audio")
-        let fileName = audioData.localFileName()
-        let savePath = cachePath+"/"+fileName
+    func getFileCachePath(audioData: AudioData) -> (String) {
+        let cachePath: String! = self.getCachePath(storageType: audioData.storageType, add: "/audio")
+        let fileName: String! = audioData.localFileName()
         
-        return FileManager.default.fileExists(atPath: savePath)
+        return cachePath+"/"+fileName
+    }
+    
+    func getFileCachePath(fileInfo: FileInfo) -> (String) {
+        let cachePath: String! = self.getCachePath(storageType: .DropBox, add: "/audio")
+        let fileName: String! = fileInfo.localFileName()
+        
+        return cachePath+"/"+fileName
+    }
+    
+    func isExistAudioFile(audioData: AudioData) -> (Bool){
+        return FileManager.default.fileExists(atPath: getFileCachePath(audioData: audioData))
     }
     
     func isExistAudioFile(fileInfo: FileInfo) -> (Bool){
         if fileInfo.isFile() {
-            let cachePath = getCachePath(storageType: .DropBox, add: "/audio")
-            let fileName = fileInfo.localFileName()!
-            let savePath = cachePath+"/"+fileName
-            
-            return FileManager.default.fileExists(atPath: savePath)
+            return FileManager.default.fileExists(atPath: getFileCachePath(fileInfo: fileInfo))
         }
         return false
     }
@@ -112,9 +118,7 @@ class DownloadFileManager  {
         
         if let client = DropboxClientsManager.authorizedClient {
             // 保存パス.
-            let cachePath = self.getCachePath(storageType: audioData.storageType, add: "/audio")
-            let fileName = audioData.localFileName()
-            let savePath = cachePath+"/"+fileName
+            let savePath = getFileCachePath(audioData: audioData)
             
             // 保存先.
             let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
@@ -133,7 +137,8 @@ class DownloadFileManager  {
 //
 //                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
                                                             // ダウンロードの進捗を通知.
-                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id), object: progressData.fractionCompleted)
+                                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
+                                                                                            object: progressData.fractionCompleted)
                                                         }
                                                         .response { response, error in
                                                             

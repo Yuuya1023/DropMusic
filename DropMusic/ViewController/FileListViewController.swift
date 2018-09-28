@@ -10,7 +10,6 @@ import SwiftyDropbox
 
 class FileListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
-//    var _path: String = ""
     var _pathList: [String] = []
     
     var _tableView: UITableView!
@@ -18,7 +17,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
-    
+    // MARK: -
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -62,6 +61,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     
+    
+    // MARK: -
     func load(){
         let path = makePath()
         let cacheData = DropboxFileListManager.sharedManager.get(pathLower: path)
@@ -100,11 +101,13 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
     }
     
+    
     func sortAndReloadList() {
         self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
         self._tableView.reloadData()
         self._tableView.contentSize.height = self._tableView.contentSize.height+49
     }
+    
     
     func makePath() -> (String) {
         var ret: String = ""
@@ -114,6 +117,63 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         return ret
     }
     
+    
+    @objc func showActionSheet(_ sender: FileListViewCell) {
+        let fileInfo = _datas[sender.index]
+        let isExist = DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo)
+        
+        func deleteCache() {
+            do {
+                let path = DownloadFileManager.sharedManager.getFileCachePath(fileInfo: fileInfo)
+                try FileManager.default.removeItem(at: URL(fileURLWithPath: path))
+            }
+            catch {}
+        }
+        
+        let alert: UIAlertController = UIAlertController(title: fileInfo.name(),
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+        // ダウンロード.
+        let downloadAction:UIAlertAction =
+            UIAlertAction(title: isExist ? "Download again": "Download",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if isExist {
+                                deleteCache()
+                                sender.progress.progress = 0
+                            }
+                            let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
+                            DownloadFileManager.sharedManager.download(audioData: d)
+            })
+        // キャッシュ削除.
+        let deleteCacheAction:UIAlertAction =
+            UIAlertAction(title: "Delete Cache",
+                          style: .destructive,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            deleteCache()
+                            sender.progress.progress = 0
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        alert.addAction(downloadAction)
+        alert.addAction(deleteCacheAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    // MARK: NavigationController Delegate.
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
 //        print("もどった")
     }
@@ -124,7 +184,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
 
 
     
-    
+    // MARK: - TableViewController Delegate.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _datas.count
     }
@@ -132,8 +192,10 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         let temp = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(FileListViewCell.self))
             ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(FileListViewCell.self))
         let c = temp as! FileListViewCell
-        
         let fileInfo = _datas[indexPath.row]
+        
+        c.index = indexPath.row
+        c.isAudioFile = fileInfo.isAudioFile()
         c.nameLabel.text = fileInfo.name()
         
         var iconName = "icon_cell_question.png"
@@ -150,10 +212,14 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else {
             c.progress.progress = 0
-            if fileInfo.isFile() {
-                c.updateObserber(identifier: fileInfo.id()!)
-            }
         }
+        
+        if fileInfo.isFile() {
+            c.updateObserber(identifier: fileInfo.id()!)
+        }
+        
+        c.longpressTarget = self
+        c.longpressSelector = #selector(showActionSheet(_:))
         
         return c
     }
