@@ -92,7 +92,7 @@ class AudioPlayStatusView: UIView {
                                         object: nil)
     }
     
-    @objc func selectorDidChangeAudio(_ sender: UIButton) {
+    @objc func selectorDidChangeAudio(_ notification: Notification) {
         let audioManager = AudioPlayManager.sharedManager
         if audioManager._artwork == nil {
             _artwork.image = UIImage(named: "no_image.gif")

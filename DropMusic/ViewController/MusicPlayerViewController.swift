@@ -20,11 +20,15 @@ class MusicPlayerViewControlloer: UIViewController {
     var _artwork: UIImageView = UIImageView()
     
     var _playButton: UIButton = UIButton()
+    var _nextButton: UIButton = UIButton()
+    var _backButton: UIButton = UIButton()
+    
     var _seakBar: UISlider = UISlider()
     var _currentTimeLabel: UILabel = UILabel()
     var _durationLabel: UILabel = UILabel()
     
     var _repeatButton: UIButton = UIButton()
+    var _shuffleButton: UIButton = UIButton()
     var _playlistButton: UIButton = UIButton()
     var _twitterButton: UIButton = UIButton()
     
@@ -81,10 +85,22 @@ class MusicPlayerViewControlloer: UIViewController {
             self.view.addSubview(_durationLabel)
         }
         
-        _playButton.setImage(UIImage(named: "play.png"), for: .normal)
-        _playButton.frame = CGRect(x:self.view.bounds.width/2 - 20, y:450, width:40, height:40)
-        _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
-        self.view.addSubview(_playButton)
+        do {
+            _playButton.setImage(UIImage(named: "play.png"), for: .normal)
+            _playButton.frame = CGRect(x:self.view.bounds.width/2 - 15, y:450, width:40, height:40)
+            _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
+            self.view.addSubview(_playButton)
+
+            _nextButton.setImage(UIImage(named: "icon_next.png"), for: .normal)
+            _nextButton.frame = CGRect(x:self.view.bounds.width/2 + 50, y:455, width:30, height:30)
+            _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
+            self.view.addSubview(_nextButton)
+            
+            _backButton.setImage(UIImage(named: "icon_back.png"), for: .normal)
+            _backButton.frame = CGRect(x:self.view.bounds.width/2 - 80, y:455, width:30, height:30)
+            _backButton.addTarget(self, action: #selector(selectorBackButton(_:)), for: .touchUpInside)
+            self.view.addSubview(_backButton)
+        }
         
         do {
             let y = 510
@@ -92,6 +108,11 @@ class MusicPlayerViewControlloer: UIViewController {
             _repeatButton.frame = CGRect(x:30, y:y, width:40, height:40)
             _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
             self.view.addSubview(_repeatButton)
+            
+            _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
+            _shuffleButton.frame = CGRect(x:110, y:y, width:40, height:40)
+            _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
+            self.view.addSubview(_shuffleButton)
             
             _playlistButton.setImage(UIImage(named: "icon_playlist.png"), for: .normal)
             _playlistButton.frame = CGRect(x:180, y:y, width:40, height:40)
@@ -119,6 +140,11 @@ class MusicPlayerViewControlloer: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(selectorAudioSessionRouteChanged),
                                                name: NSNotification.Name.AVAudioSessionRouteChange,
+                                               object: nil)
+        // 曲監視.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(selectorDidChangeAudio),
+                                               name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
         
         // 進捗の更新.
@@ -213,6 +239,16 @@ class MusicPlayerViewControlloer: UIViewController {
         layoutPlayButton()
     }
     
+    @objc func selectorNextButton(_ sender: UIButton) {
+        AudioPlayManager.sharedManager.playNext()
+        layoutUpdate()
+    }
+    
+    @objc func selectorBackButton(_ sender: UIButton) {
+        AudioPlayManager.sharedManager.playBack()
+        layoutUpdate()
+    }
+    
     @objc func selectorRepeatButton(_ sender: UIButton) {
         let next: AudioPlayManager.RepeatType
         let type = AudioPlayManager.sharedManager._repeatType
@@ -229,8 +265,26 @@ class MusicPlayerViewControlloer: UIViewController {
         case .List:
             _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
         }
-        
         AudioPlayManager.sharedManager._repeatType = next
+    }
+    
+    @objc func selectorShuffleButton(_ sender: UIButton) {
+        let next: AudioPlayManager.ShuffleType
+        let type = AudioPlayManager.sharedManager._shuffleType
+        switch type {
+        case .None:
+            next = .List
+        case .List:
+            next = .None
+        }
+        
+        switch next {
+        case .None:
+            _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
+        case .List:
+            _shuffleButton.setImage(UIImage(named: "icon_shuffle.png"), for: .normal)
+        }
+        AudioPlayManager.sharedManager._shuffleType = next
     }
     
     @objc func selectorPlaylistButton(_ sender: UIButton) {
@@ -273,5 +327,10 @@ class MusicPlayerViewControlloer: UIViewController {
                 break
             }
         }
+    }
+    
+    
+    @objc func selectorDidChangeAudio(_ notification: Notification) {
+        layoutUpdate()
     }
 }
