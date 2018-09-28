@@ -18,7 +18,7 @@ class FileListViewCell: UITableViewCell {
     var longpressSelector: Selector? = nil
     
     
-    // MARK: - 
+    // MARK: -
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.clear
@@ -53,6 +53,32 @@ class FileListViewCell: UITableViewCell {
     
     
     // MARK: -
+    func set(fileInfo: FileInfo!) {
+        isAudioFile = fileInfo.isAudioFile()
+        nameLabel.text = fileInfo.name()
+        
+        var iconName = "icon_cell_question.png"
+        if fileInfo.isFolder() {
+            iconName = "icon_cell_folder.png"
+        }
+        else if fileInfo.isAudioFile() {
+            iconName = "icon_cell_audio.png"
+        }
+        icon.image = UIImage(named: iconName)
+        
+        if DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo) {
+            progress.progress = 1
+        }
+        else {
+            progress.progress = 0
+        }
+        
+        if fileInfo.isFile() {
+            updateObserber(identifier: fileInfo.id()!)
+        }
+    }
+    
+    
     func updateObserber(identifier: String) {
         NotificationCenter.default.removeObserver(self)
         if isAudioFile {

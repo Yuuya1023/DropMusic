@@ -15,16 +15,18 @@ struct AudioData: Codable {
     }
 
     var id: String = ""
+    var fileName: String = ""
     var storageType: StorageType = .None
     var path: String = ""
     var extensionString: String = ""
     
     // MARK: - static
     static func createFromFileInfo(fileInfo: FileInfo) -> (AudioData?) {
-        if !fileInfo.isFile() { return nil }
-        
         var ret: AudioData = AudioData()
+        if !fileInfo.isFile() { return ret }
+        
         ret.id = fileInfo.id()!
+        ret.fileName = fileInfo.name()
         ret.storageType = .DropBox
         ret.path = fileInfo.pathLower()
         ret.extensionString = fileInfo.fileExtension()!

@@ -148,7 +148,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             })
         // キャッシュ削除.
         let deleteCacheAction:UIAlertAction =
-            UIAlertAction(title: "Delete Cache",
+            UIAlertAction(title: "Delete cache",
                           style: .destructive,
                           handler:{
                             (action:UIAlertAction!) -> Void in
@@ -175,11 +175,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     // MARK: NavigationController Delegate.
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-//        print("もどった")
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-
     }
 
 
@@ -194,30 +192,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         let c = temp as! FileListViewCell
         let fileInfo = _datas[indexPath.row]
         
+        c.set(fileInfo: fileInfo)
         c.index = indexPath.row
-        c.isAudioFile = fileInfo.isAudioFile()
-        c.nameLabel.text = fileInfo.name()
-        
-        var iconName = "icon_cell_question.png"
-        if fileInfo.isFolder() {
-            iconName = "icon_cell_folder.png"
-        }
-        else if fileInfo.isAudioFile() {
-            iconName = "icon_cell_audio.png"
-        }
-        c.icon.image = UIImage(named: iconName)
-        
-        if DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo) {
-            c.progress.progress = 1
-        }
-        else {
-            c.progress.progress = 0
-        }
-        
-        if fileInfo.isFile() {
-            c.updateObserber(identifier: fileInfo.id()!)
-        }
-        
         c.longpressTarget = self
         c.longpressSelector = #selector(showActionSheet(_:))
         
@@ -234,10 +210,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else if fileInfo.isFile() {
             // ファイル.
-            let audioData = AudioData(id: fileInfo.id()!,
-                                      storageType: .DropBox,
-                                      path: fileInfo.pathLower(),
-                                      extensionString: fileInfo.fileExtension()!)
+            let audioData: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // AudioDataのリストを作成する.
