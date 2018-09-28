@@ -71,6 +71,7 @@
 		05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */; };
 		05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016C5214164300057B459 /* MusicPlayerViewController.swift */; };
 		05E10897215D12BB001CC35F /* Array+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10896215D12BB001CC35F /* Array+Shuffle.swift */; };
+		05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10898215E7287001CC35F /* AudioMetadata.swift */; };
 		648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,7 @@
 		05A016BF213ED0AA0057B459 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05A016C5214164300057B459 /* MusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewController.swift; sourceTree = "<group>"; };
 		05E10896215D12BB001CC35F /* Array+Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Shuffle.swift"; sourceTree = "<group>"; };
+		05E10898215E7287001CC35F /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
 		33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.release.xcconfig"; sourceTree = "<group>"; };
 		4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.debug.xcconfig"; sourceTree = "<group>"; };
 		D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				0502798A214809580094CC40 /* AudioData.swift */,
+				05E10898215E7287001CC35F /* AudioMetadata.swift */,
 				05027994214BE87E0094CC40 /* FileInfo.swift */,
 				05617F602153CC690025F07E /* PlayListData.swift */,
 				05617F6A2156786B0025F07E /* PlayListManageData.swift */,
@@ -578,6 +581,7 @@
 				05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */,
 				0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */,
 				050279822142AFA50094CC40 /* SettingsViewController.swift in Sources */,
+				05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -56,12 +56,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    var _assetData: AVAsset?
-    
-    var _title: String = ""
-    var _album: String = ""
-    var _artist: String = ""
-    var _artwork: UIImage? = nil
+    var _metadata: AudioMetadata = AudioMetadata()
     var _duration: Int = 0
     
     
@@ -121,16 +116,15 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         let fileName = audioData.localFileName()
         let url = URL(fileURLWithPath: cachePath+"/"+fileName)
         
+        if !FileManager.default.fileExists(atPath: cachePath+"/"+fileName) {
+            return
+        }
+        
         // 同じのだったら再生しない.
         if _playing != nil {
             if (_playing?.isEqualData(audioData: audioData))! {
                 return
             }
-        }
-        
-        _assetData = AVAsset(url: url)
-        if _assetData == nil {
-            return
         }
         
         // 履歴に追加.
@@ -139,25 +133,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         _playing = audioData
         
         // 曲情報の取得.
-        _title = ""
-        _album = ""
-        _artist = ""
-        _artwork = nil
-        let metadata: Array = _assetData!.commonMetadata
-        for item in metadata {
-            switch item.commonKey {
-            case AVMetadataKey.commonKeyTitle:
-                _title = item.stringValue!
-            case AVMetadataKey.commonKeyAlbumName:
-                _album = item.stringValue!
-            case AVMetadataKey.commonKeyArtist:
-                _artist = item.stringValue!
-            case AVMetadataKey.commonKeyArtwork:
-                _artwork = UIImage(data: item.dataValue!)
-            default:
-                break
-            }
-        }
+        _metadata.set(atPath: cachePath+"/"+fileName)
         
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
@@ -172,13 +148,13 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             
             // コントロールセンターの表示.
             MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-                MPMediaItemPropertyTitle: _title,
-                MPMediaItemPropertyArtist : _artist,
-                MPMediaItemPropertyAlbumTitle: _album,
+                MPMediaItemPropertyTitle: _metadata.title,
+                MPMediaItemPropertyArtist : _metadata.artist,
+                MPMediaItemPropertyAlbumTitle: _metadata.album,
                 MPMediaItemPropertyPlaybackDuration : NSNumber(value: _duration) //シークバー
             ]
-            if _artwork != nil {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _artwork!)
+            if _metadata.artwork != nil {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _metadata.artwork!)
             }
             // 曲が変更されたことを通知.
             NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
@@ -346,8 +322,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             _audioPlayer.currentTime = 0
             _audioPlayer.play()
             
-            if _artwork != nil {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _artwork!)
+            if _metadata.artwork != nil {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _metadata.artwork!)
             }
             MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: 0.0)
         case .List:

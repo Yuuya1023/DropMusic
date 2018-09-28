@@ -94,14 +94,14 @@ class AudioPlayStatusView: UIView {
     
     @objc func selectorDidChangeAudio(_ notification: Notification) {
         let audioManager = AudioPlayManager.sharedManager
-        if audioManager._artwork == nil {
+        if audioManager._metadata.artwork == nil {
             _artwork.image = UIImage(named: "no_image.gif")
         }
         else {
-            _artwork.image = audioManager._artwork
+            _artwork.image = audioManager._metadata.artwork
         }
-        _titleLabel.text = audioManager._title
-        _detailLabel.text = audioManager._artist + " - " + audioManager._album
+        _titleLabel.text = audioManager._metadata.title
+        _detailLabel.text = audioManager._metadata.artist + " - " + audioManager._metadata.album
     }
     
     @objc func selectorCheckAudioInformation(_ sender: UIButton) {

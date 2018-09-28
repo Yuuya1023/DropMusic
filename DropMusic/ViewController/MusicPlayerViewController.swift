@@ -167,19 +167,15 @@ class MusicPlayerViewControlloer: UIViewController {
     // MARK: -
     func layoutUpdate() {
         let audioManager = AudioPlayManager.sharedManager
-        let assetData = audioManager._assetData
-        if assetData == nil {
-            return
-        }
         
         // 曲情報.
-        _titleLabel.text = audioManager._title
-        _artistLabel.text = audioManager._artist + " - " + audioManager._album
-        if audioManager._artwork == nil {
+        _titleLabel.text = audioManager._metadata.title
+        _artistLabel.text = audioManager._metadata.artist + " - " + audioManager._metadata.album
+        if audioManager._metadata.artwork == nil {
             _artwork.image = UIImage()
         }
         else {
-            _artwork.image = audioManager._artwork
+            _artwork.image = audioManager._metadata.artwork
         }
         let min = audioManager._duration/60
         let sec = audioManager._duration%60
@@ -201,13 +197,10 @@ class MusicPlayerViewControlloer: UIViewController {
     
     func postTwitter(withImage: Bool) {
         let audioManager = AudioPlayManager.sharedManager
-        if audioManager._assetData == nil {
-            return
-        }
         
         func tweet() {
             let twitter = TWTRComposer()
-            twitter.setText( audioManager._title + " - " + audioManager._artist + "\n#DJさとし")
+            twitter.setText( audioManager._metadata.title + " - " + audioManager._metadata.artist + "\n#DJさとし")
             if withImage && _artwork.image != nil {
                 let image = _artwork.image?.resizeImage(reSize: CGSize(width: 128, height: 128))
                 twitter.setImage(image)
