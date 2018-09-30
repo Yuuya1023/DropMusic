@@ -9,11 +9,10 @@ import Foundation
 import UIKit
 
 class AudioPlayerPresentationController: UIPresentationController {
-    // 呼び出し元のView Controller の上に重ねるオーバレイView
-//    var overlayView = UIView()
+    
     var closeButton = UIButton()
-    
-    
+    var swipe: UISwipeGestureRecognizer? = nil
+//    UISwipeGestureRecognizer
     // 表示トランジション開始前に呼ばれる
     override func presentationTransitionWillBegin() {
 //        guard let containerView = containerView else {
@@ -21,9 +20,12 @@ class AudioPlayerPresentationController: UIPresentationController {
 //        }
         closeButton.frame = CGRect(x: 270, y: 30, width: 30, height: 30)
         closeButton.setImage(UIImage(named: "down.png"), for: .normal)
-        closeButton.addTarget(self, action: #selector(overlayViewDidTouch(_:)), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(selectorTouchCloseButton(_:)), for: .touchUpInside)
         presentedViewController.view?.addSubview(closeButton)
         
+        swipe = UISwipeGestureRecognizer(target: self, action: #selector(selectorSwipe(_:)))
+        swipe?.direction = .down
+        presentedViewController.view?.addGestureRecognizer(swipe!)
         // トランジションを実行
 //        presentedViewController.transitionCoordinator?.animate(alongsideTransition: {[weak self] context in
 //            self?.closeButton.alpha = 0.7
@@ -41,6 +43,7 @@ class AudioPlayerPresentationController: UIPresentationController {
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
             closeButton.removeFromSuperview()
+            presentedViewController.view?.removeGestureRecognizer(swipe!)
         }
     }
     
@@ -72,8 +75,12 @@ class AudioPlayerPresentationController: UIPresentationController {
     override func containerViewDidLayoutSubviews() {
     }
     
-    // overlayViewをタップした時に呼ばれる
-    @objc func overlayViewDidTouch(_ sender: UIButton) {
+    // MARK: -
+    @objc func selectorTouchCloseButton(_ sender: UIButton) {
+        presentedViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func selectorSwipe(_ sender: UISwipeGestureRecognizer) {
         presentedViewController.dismiss(animated: true, completion: nil)
     }
     

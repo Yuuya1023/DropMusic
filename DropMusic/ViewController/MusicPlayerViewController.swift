@@ -48,11 +48,14 @@ class MusicPlayerViewControlloer: UIViewController {
         _artwork.contentMode = .scaleAspectFit
         _artwork.layer.shadowOpacity = 0.5
         _artwork.layer.shadowOffset = CGSize(width: 10, height: 10)
+//        _artwork.layer.cornerRadius = 20.0
+//        _artwork.clipsToBounds = true
         self.view.addSubview(_artwork)
         
         _titleLabel = MarqueeLabel(frame: CGRect(x:0, y:340, width:self.view.bounds.width, height:35),
                                    duration: 10,
                                    fadeLength: 10)
+        _titleLabel.animationDelay = 2.0
         _titleLabel.textAlignment = .center
         _titleLabel.font = UIFont.systemFont(ofSize: 30)
         self.view.addSubview(_titleLabel)
@@ -60,6 +63,7 @@ class MusicPlayerViewControlloer: UIViewController {
         _artistLabel = MarqueeLabel(frame: CGRect(x:0, y:370, width:self.view.bounds.width, height:30),
                                    duration: 10,
                                    fadeLength: 10)
+        _artistLabel.animationDelay = 2.0
         _artistLabel.textAlignment = .center
         _artistLabel.textColor = UIColor(displayP3Red: 90/255, green: 90/255, blue: 255/255, alpha: 1)
         self.view.addSubview(_artistLabel)
@@ -201,8 +205,8 @@ class MusicPlayerViewControlloer: UIViewController {
         func tweet() {
             let twitter = TWTRComposer()
             twitter.setText( audioManager._metadata.title + " - " + audioManager._metadata.artist + "\n#DJさとし")
-            if withImage && _artwork.image != nil {
-                let image = _artwork.image?.resizeImage(reSize: CGSize(width: 128, height: 128))
+            if withImage && audioManager._metadata.artwork != nil {
+                let image = audioManager._metadata.artwork?.resizeImage(reSize: CGSize(width: 128, height: 128))
                 twitter.setImage(image)
             }
             twitter.show(from: self, completion: nil)

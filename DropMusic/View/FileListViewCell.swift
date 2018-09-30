@@ -26,6 +26,7 @@ class FileListViewCell: UITableViewCell {
         
         nameLabel = UILabel(frame: CGRect.zero)
         nameLabel.textAlignment = .left
+        nameLabel.adjustsFontSizeToFitWidth = true
         contentView.addSubview(nameLabel)
         
         icon = UIImageView(image: UIImage())
@@ -114,7 +115,7 @@ class FileListViewCell: UITableViewCell {
     // MARK: -
     override func layoutSubviews() {
         super.layoutSubviews()
-        nameLabel.frame = CGRect(x: 50, y: 0, width: frame.width - 55, height: frame.height)
+        nameLabel.frame = CGRect(x: 45, y: 0, width: frame.width - 50, height: frame.height)
         icon.frame = CGRect(x: 5, y: 5, width: frame.height - 10, height: frame.height - 10)
         progress.frame = CGRect(x: 0, y: frame.height-2.5, width: frame.width, height: frame.height - 5)
     }

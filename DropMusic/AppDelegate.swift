@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Twitter.
         TWTRTwitter.sharedInstance().start(withConsumerKey: TWITTER_CONSUMER_KEY,
                                            consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
+        // プレイリスト.
+        PlayListManager.sharedManager.checkPlaylistFile()
         
         _rootViewController = RootTabBarController()
         
