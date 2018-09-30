@@ -23,7 +23,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         self.title = "Playlist"
         
         var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height
+        bounds.size.height = bounds.size.height-98
         _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
@@ -71,7 +71,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
-    // MARK: -
+    // MARK: - Selector
     @objc func selectorLoagingCheck() {
         if PlayListManager.sharedManager.isLoaded {
             _timer.invalidate()
@@ -91,6 +91,17 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     
+    @objc func showEdit(_ sender: PlayListViewCell) {
+        let vc = PlayListEditViewController()
+        vc.modalPresentationStyle = .custom
+        vc.transitioningDelegate = self
+        vc.rootViewController = self
+        vc.setPlaylistId(id: PlayListManager.sharedManager.playlistManageData.playlists[sender.index].id)
+        present(vc, animated: true, completion: nil)
+    }
+    
+    
+    
     // MARK: - TableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return PlayListManager.sharedManager.playlistManageData.playlists.count+1
@@ -100,6 +111,9 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
             ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(PlayListViewCell.self))
         let c = temp as! PlayListViewCell
         
+        c.index = indexPath.row
+        c.longpressTarget = self
+        c.longpressSelector = #selector(showEdit(_:))
         if PlayListManager.sharedManager.playlistManageData.playlists.count > indexPath.row {
             let playList = PlayListManager.sharedManager.playlistManageData.playlists[indexPath.row]
             c.nameLabel.text = playList.name
@@ -107,6 +121,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else {
             c.nameLabel.text = "+"
+            c.tracksLabel.text = ""
         }
         return c
     }
@@ -114,15 +129,26 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
 //        print(indexPath.row)
         
         if PlayListManager.sharedManager.playlistManageData.playlists.count > indexPath.row {
-//            var alert = PlaylistEditAlertController()
-//            var vc = PlayListViewController()
-//            present(vc, animated: true, completion: nil)
+            // 曲一覧へ.
         }
         else {
             // 追加.
-            PlayListManager.sharedManager.addPlaylist()
-            PlayListManager.sharedManager.save()
+            PlayListManager.sharedManager.addPlaylist(isSave: true)
             updateScrollView()
         }
     }
+}
+
+
+
+
+// MARK: -
+extension PlayListViewController: UIViewControllerTransitioningDelegate {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return PlayListEditPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+    
+//    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//
+//    }
 }

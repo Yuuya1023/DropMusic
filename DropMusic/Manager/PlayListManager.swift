@@ -41,25 +41,69 @@ class PlayListManager {
     }
     
     
+    
+    // MARK: -
+    func getPlaylistData(id: String) -> (PlayListData?) {
+        for i in 0..<_manageData.playlists.count {
+            let d: PlayListData = _manageData.playlists[i]
+            if d.id == id {
+                return d
+            }
+        }
+        return nil
+    }
+    
     //
-    func addPlaylist() {
+    func addPlaylist(isSave: Bool = false) {
         let latestId = String(Int(_manageData.latestId)!+1)
         _manageData.playlists.append(PlayListData(id: latestId,
                                                   name: "Playlist_" + String(Int(_manageData.latestId)!+1),
                                                   audioList: []))
         _manageData.latestId = latestId
-        _manageData.version = String(Int(_manageData.version)!+1)
+        if isSave {
+            save()
+        }
     }
     
     
     //
-    func deletePlaylist(id: String) {
-        
+    func updatePlaylist(id: String, name: String, isSave: Bool = false) {
+        for i in 0..<_manageData.playlists.count {
+            var d: PlayListData = _manageData.playlists[i]
+            if d.id == id {
+                if d.name != name {
+                    d.name = name
+                    _manageData.playlists[i] = d
+                    if isSave {
+                        save()
+                    }
+                }
+                return
+            }
+        }
+    }
+    
+    
+    //
+    func deletePlaylist(id: String, isSave: Bool = false) {
+        for i in 0..<_manageData.playlists.count {
+            let d: PlayListData = _manageData.playlists[i]
+            if d.id == id {
+                _manageData.playlists.remove(at: i)
+                if isSave {
+                    save()
+                }
+                return
+            }
+        }
     }
     
     
     //
     func save() {
+        // 保存する時にバージョンをあげる.
+        _manageData.version = String(Int(_manageData.version)!+1)
+        
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(_manageData)

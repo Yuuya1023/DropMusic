@@ -41,7 +41,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         
         //
         var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height
+        bounds.size.height = bounds.size.height-98
         _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
@@ -116,7 +116,6 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     func sortAndReloadList() {
         self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
         self._tableView.reloadData()
-        self._tableView.contentSize.height = self._tableView.contentSize.height+49
         _isLoading = false
         _refreshControll.endRefreshing()
     }

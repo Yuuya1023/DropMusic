@@ -72,6 +72,8 @@
 		05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016C5214164300057B459 /* MusicPlayerViewController.swift */; };
 		05E10897215D12BB001CC35F /* Array+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10896215D12BB001CC35F /* Array+Shuffle.swift */; };
 		05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10898215E7287001CC35F /* AudioMetadata.swift */; };
+		05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */; };
+		05E1089F216106B8001CC35F /* PlayListEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E1089E216106B8001CC35F /* PlayListEditViewController.swift */; };
 		648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */; };
 /* End PBXBuildFile section */
 
@@ -145,6 +147,8 @@
 		05A016C5214164300057B459 /* MusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewController.swift; sourceTree = "<group>"; };
 		05E10896215D12BB001CC35F /* Array+Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Shuffle.swift"; sourceTree = "<group>"; };
 		05E10898215E7287001CC35F /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
+		05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListEditPresentationController.swift; sourceTree = "<group>"; };
+		05E1089E216106B8001CC35F /* PlayListEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListEditViewController.swift; sourceTree = "<group>"; };
 		33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.release.xcconfig"; sourceTree = "<group>"; };
 		4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.debug.xcconfig"; sourceTree = "<group>"; };
 		D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -275,6 +279,7 @@
 				05A016B3213ED0A40057B459 /* RootTabBarController.swift */,
 				050279872146B3040094CC40 /* DropBoxRootNavigactionController.swift */,
 				0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */,
+				05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -335,6 +340,7 @@
 				050279852146B25F0094CC40 /* DropBoxLinkViewController.swift */,
 				0502797E2142AFA40094CC40 /* FileListViewController.swift */,
 				0502797D2142AFA40094CC40 /* PlayListViewController.swift */,
+				05E1089E216106B8001CC35F /* PlayListEditViewController.swift */,
 				0502797F2142AFA50094CC40 /* SettingsViewController.swift */,
 			);
 			path = ViewController;
@@ -570,11 +576,13 @@
 				0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */,
 				05617F6B2156786B0025F07E /* PlayListManageData.swift in Sources */,
 				050279882146B3040094CC40 /* DropBoxRootNavigactionController.swift in Sources */,
+				05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListViewController.swift in Sources */,
 				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,
 				05617F612153CC690025F07E /* PlayListData.swift in Sources */,
 				05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */,
+				05E1089F216106B8001CC35F /* PlayListEditViewController.swift in Sources */,
 				050279862146B2600094CC40 /* DropBoxLinkViewController.swift in Sources */,
 				05617F5F2153C99B0025F07E /* PlayListViewCell.swift in Sources */,
 				0533A5A2214D7B8B006E625A /* UIImage+Resize.swift in Sources */,
