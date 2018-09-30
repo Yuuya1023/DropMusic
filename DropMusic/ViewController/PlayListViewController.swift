@@ -13,6 +13,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: - Variable Declaration
     var _tableView: UITableView!
     var _timer: Timer!
+    var _refreshControll: UIRefreshControl!
     
     // MARK: -
     override func viewDidLoad() {
@@ -35,6 +36,11 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         _tableView.register(PlayListViewCell.self, forCellReuseIdentifier: NSStringFromClass(PlayListViewCell.self))
         
         self.view.addSubview(_tableView)
+        
+        //
+        _refreshControll = UIRefreshControl()
+        _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
+        _tableView.refreshControl = _refreshControll
         
         // プレイリストの読み込み確認.
         if !PlayListManager.sharedManager.isLoaded {
@@ -70,6 +76,17 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         if PlayListManager.sharedManager.isLoaded {
             _timer.invalidate()
             updateScrollView()
+        }
+    }
+    
+    
+    @objc func selectorRefreshControll() {
+        print("selectorRefreshControll")
+        
+        PlayListManager.sharedManager.updateCheck {
+            print("update")
+            self.updateScrollView()
+            self._refreshControll.endRefreshing()
         }
     }
     

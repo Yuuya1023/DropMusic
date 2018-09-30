@@ -16,9 +16,13 @@ class DropboxFileListManager {
     var _pathDictionary: Dictionary = [String: Array<FileInfo>]()
     
     
-    
+    // MARK: -
     func get(pathLower: String) -> (Array<FileInfo>?){
         return _pathDictionary[pathLower]
+    }
+    
+    func remove(pathLower: String) {
+        _pathDictionary.removeValue(forKey: pathLower)
     }
     
     func regist(pathLower: String, list: Array<FileInfo>){

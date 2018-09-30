@@ -177,4 +177,78 @@ class PlayListManager {
             }
         }
     }
+    
+    
+    
+    // 更新チェック.
+    func updateCheck(completion: @escaping () -> ()) {
+        if !isLoaded || DropboxClientsManager.authorizedClient == nil{
+            completion()
+            return
+        }
+        
+        let localFile = loadPlaylistData(path: _savePath)
+        if localFile == nil {
+            completion()
+            return
+        }
+        
+        // 保存先.
+        let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
+            let path = self._localTempPlaylistFilePath
+            return URL(fileURLWithPath: path)
+        }
+        
+        // tempがあれば削除しておく.
+        do {
+            try FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempPlaylistFilePath))
+        }
+        catch {}
+        
+        // アップロード関数.
+        func upload() {
+            let encoder = JSONEncoder()
+            let data = try! encoder.encode(PlayListManager.sharedManager._manageData)
+            
+            if let client = DropboxClientsManager.authorizedClient {
+                client.files.upload(path: self._playlistFilePath+JSON_NAME_PLAYLIST, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
+                    if let metadata = response {
+                        // おわり.
+                        completion()
+                    } else {
+                        print(error!)
+                        // おわり.
+                        completion()
+                    }
+                }
+            }
+        }
+        
+        if let client = DropboxClientsManager.authorizedClient {
+            client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
+                if let (metadata, url) = response {
+                    print("Downloaded file name: \(metadata.name)")
+                    print(url)
+                    let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath)
+                    // バージョンチェック.
+                    if Int(tempData!.version)! > Int(localFile!.version)! {
+                        // サーバーの方が上の場合はtempを使う.
+                        self.setManageData(data: tempData!)
+                        self.save()
+                        // おわり.
+                        completion()
+                        }
+                    else {
+                        // ローカルが強い.
+                        self.setManageData(data: localFile!)
+                        // アップロード.
+                        upload()
+                    }
+                } else {
+                    // とりあえず.
+                    completion()
+                }
+            }
+        }
+    }
 }

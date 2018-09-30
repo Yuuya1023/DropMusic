@@ -15,6 +15,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     var _tableView: UITableView!
     var _datas: Array<FileInfo> = []
     
+    var _isLoading: Bool = false
+    var _refreshControll: UIRefreshControl!
+    
     
     
     // MARK: -
@@ -29,7 +32,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
         self.title = _pathList.last
         self.navigationController?.delegate = self
 //        self.navigationController?.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
@@ -51,6 +54,10 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         
         self.view.addSubview(_tableView)
         
+        //
+        _refreshControll = UIRefreshControl()
+        _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
+        _tableView.refreshControl = _refreshControll
         
         load()
     }
@@ -64,6 +71,10 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     // MARK: -
     func load(){
+        if _isLoading {
+            return
+        }
+        _isLoading = true
         let path = makePath()
         let cacheData = DropboxFileListManager.sharedManager.get(pathLower: path)
         if cacheData != nil && cacheData?.count != 0 {
@@ -106,6 +117,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
         self._tableView.reloadData()
         self._tableView.contentSize.height = self._tableView.contentSize.height+49
+        _isLoading = false
+        _refreshControll.endRefreshing()
     }
     
     
@@ -169,6 +182,16 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         alert.addAction(deleteCacheAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    // MARK: -
+    @objc func selectorRefreshControll() {
+        // キャッシュから消す.
+        DropboxFileListManager.sharedManager.remove(pathLower: makePath())
+        // 読み込み.
+        load()
     }
     
     
