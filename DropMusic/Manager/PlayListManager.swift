@@ -39,16 +39,24 @@ class PlayListManager {
         _manageData = data
         isLoaded = true
     }
+
     
+    private func getPlayListIndex(playListId: String) -> Int? {
+        for i in 0..<_manageData.playlists.count {
+            let d: PlayListData = _manageData.playlists[i]
+            if d.id == playListId {
+                return i
+            }
+        }
+        return nil
+    }
     
     
     // MARK: -
     func getPlaylistData(id: String) -> (PlayListData?) {
-        for i in 0..<_manageData.playlists.count {
-            let d: PlayListData = _manageData.playlists[i]
-            if d.id == id {
-                return d
-            }
+        let index = getPlayListIndex(playListId: id)
+        if index != nil {
+            return _manageData.playlists[index!]
         }
         return nil
     }
@@ -68,12 +76,13 @@ class PlayListManager {
     
     //
     func updatePlaylist(id: String, name: String, isSave: Bool = false) {
-        for i in 0..<_manageData.playlists.count {
-            var d: PlayListData = _manageData.playlists[i]
+        let index = getPlayListIndex(playListId: id)
+        if index != nil {
+            var d: PlayListData = _manageData.playlists[index!]
             if d.id == id {
                 if d.name != name {
                     d.name = name
-                    _manageData.playlists[i] = d
+                    _manageData.playlists[index!] = d
                     if isSave {
                         save()
                     }
@@ -84,12 +93,53 @@ class PlayListManager {
     }
     
     
+    func isIncludeAudio(playListId: String, data: AudioData) -> Bool {
+        let index = getPlayListIndex(playListId: playListId)
+        if index != nil {
+            let playlistData: PlayListData = _manageData.playlists[index!]
+            for i in 0..<playlistData.audioList.count {
+                let d = playlistData.audioList[i]
+                if d.id == data.id {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    
+    func addAudioToPlayList(playListId: String, addList: Array<AudioData>!, isSave: Bool = false) {
+        if addList.count == 0 { return }
+
+        let index = getPlayListIndex(playListId: playListId)
+        if index != nil {
+            var d: PlayListData = _manageData.playlists[index!]
+            if d.id == playListId {
+                // 追加する曲リストの判定.
+                var isAdd = false
+                for i in 0..<addList.count {
+                    let addAudio = addList[i]
+                    if !isIncludeAudio(playListId: playListId, data: addAudio) {
+                        isAdd = true
+                        d.audioList = d.audioList + [addAudio]
+                    }
+                }
+                if isAdd && isSave {
+                    _manageData.playlists[index!] = d
+                    save()
+                }
+            }
+        }
+    }
+    
+    
     //
     func deletePlaylist(id: String, isSave: Bool = false) {
-        for i in 0..<_manageData.playlists.count {
-            let d: PlayListData = _manageData.playlists[i]
+        let index = getPlayListIndex(playListId: id)
+        if index != nil {
+            let d: PlayListData = _manageData.playlists[index!]
             if d.id == id {
-                _manageData.playlists.remove(at: i)
+                _manageData.playlists.remove(at: index!)
                 if isSave {
                     save()
                 }

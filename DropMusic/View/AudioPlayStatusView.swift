@@ -101,7 +101,7 @@ class AudioPlayStatusView: UIView {
             _artwork.image = audioManager._metadata.artwork
         }
         _titleLabel.text = audioManager._metadata.title
-        _detailLabel.text = audioManager._metadata.artist + " - " + audioManager._metadata.album
+        _detailLabel.text = audioManager._metadata.artist + " ─ " + audioManager._metadata.album
     }
     
     @objc func selectorCheckAudioInformation(_ sender: UIButton) {

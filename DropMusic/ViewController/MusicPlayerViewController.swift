@@ -174,7 +174,7 @@ class MusicPlayerViewControlloer: UIViewController {
         
         // 曲情報.
         _titleLabel.text = audioManager._metadata.title
-        _artistLabel.text = audioManager._metadata.artist + " - " + audioManager._metadata.album
+        _artistLabel.text = audioManager._metadata.artist + " ─ " + audioManager._metadata.album
         if audioManager._metadata.artwork == nil {
             _artwork.image = UIImage()
         }
@@ -204,7 +204,7 @@ class MusicPlayerViewControlloer: UIViewController {
         
         func tweet() {
             let twitter = TWTRComposer()
-            twitter.setText( audioManager._metadata.title + " - " + audioManager._metadata.artist + "\n#DJさとし")
+            twitter.setText( audioManager._metadata.title + " ─ " + audioManager._metadata.artist + "\n#DJさとし")
             if withImage && audioManager._metadata.artwork != nil {
                 let image = audioManager._metadata.artwork?.resizeImage(reSize: CGSize(width: 128, height: 128))
                 twitter.setImage(image)
@@ -285,7 +285,12 @@ class MusicPlayerViewControlloer: UIViewController {
     }
     
     @objc func selectorPlaylistButton(_ sender: UIButton) {
-        
+        let playlistvc = PlayListSelectViewController()
+        playlistvc.setAudioData(data: AudioPlayManager.sharedManager._playing)
+        let vc = UINavigationController(rootViewController: playlistvc)
+        vc.modalTransitionStyle = .coverVertical
+//        vc.transitioningDelegate = self
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func selectorTwitterButton(_ sender: UIButton) {
