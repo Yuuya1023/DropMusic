@@ -78,11 +78,11 @@ class PlayListManager {
     func updatePlaylist(id: String, name: String, isSave: Bool = false) {
         let index = getPlayListIndex(playListId: id)
         if index != nil {
-            var d: PlayListData = _manageData.playlists[index!]
-            if d.id == id {
-                if d.name != name {
-                    d.name = name
-                    _manageData.playlists[index!] = d
+            var playlist: PlayListData = _manageData.playlists[index!]
+            if playlist.id == id {
+                if playlist.name != name {
+                    playlist.name = name
+                    _manageData.playlists[index!] = playlist
                     if isSave {
                         save()
                     }
@@ -113,20 +113,38 @@ class PlayListManager {
 
         let index = getPlayListIndex(playListId: playListId)
         if index != nil {
-            var d: PlayListData = _manageData.playlists[index!]
-            if d.id == playListId {
+            var playlist: PlayListData = _manageData.playlists[index!]
+            if playlist.id == playListId {
                 // 追加する曲リストの判定.
                 var isAdd = false
                 for i in 0..<addList.count {
                     let addAudio = addList[i]
                     if !isIncludeAudio(playListId: playListId, data: addAudio) {
                         isAdd = true
-                        d.audioList = d.audioList + [addAudio]
+                        playlist.audioList = playlist.audioList + [addAudio]
                     }
                 }
                 if isAdd && isSave {
-                    _manageData.playlists[index!] = d
+                    _manageData.playlists[index!] = playlist
                     save()
+                }
+            }
+        }
+    }
+    
+    func deleteAudioFromPlayList(playListId: String, audioId: String, isSave: Bool = false) {
+        let index = getPlayListIndex(playListId: playListId)
+        if index != nil {
+            var playlist: PlayListData = _manageData.playlists[index!]
+            for i in 0..<playlist.audioList.count {
+                let d = playlist.audioList[i]
+                if d.id == audioId {
+                    playlist.audioList.remove(at: i)
+                    _manageData.playlists[index!] = playlist
+                    if isSave {
+                        save()
+                    }
+                    return
                 }
             }
         }

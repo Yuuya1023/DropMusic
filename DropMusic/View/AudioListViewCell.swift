@@ -9,6 +9,7 @@ import UIKit
 
 class AudioListViewCell: UITableViewCell {
     var nameLabel: UILabel!
+    var artistLabel: UILabel!
     var icon: UIImageView!
     
     var index: Int = 0
@@ -25,6 +26,12 @@ class AudioListViewCell: UITableViewCell {
         nameLabel.textAlignment = .left
         nameLabel.adjustsFontSizeToFitWidth = true
         contentView.addSubview(nameLabel)
+        
+        artistLabel = UILabel(frame: CGRect.zero)
+        artistLabel.textAlignment = .left
+        artistLabel.adjustsFontSizeToFitWidth = true
+        artistLabel.textColor = UIColor.darkGray
+        contentView.addSubview(artistLabel)
         
         icon = UIImageView(image: UIImage())
         contentView.addSubview(icon)
@@ -46,8 +53,18 @@ class AudioListViewCell: UITableViewCell {
     
     
     func set(audioData: AudioData!) {
-        nameLabel.text = audioData.fileName
-        icon.image = UIImage(named: "icon_cell_audio.png")
+        let metadata = AudioMetadata()
+        metadata.set(atPath: DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData))
+        nameLabel.text = metadata.title
+        artistLabel.text = metadata.artist + " ─ " + metadata.album
+        
+        
+        if metadata.artwork != nil {
+            icon.image = metadata.artwork!
+        }
+        else {
+            icon.image = UIImage()
+        }
     }
     
     
@@ -67,7 +84,8 @@ class AudioListViewCell: UITableViewCell {
     // MARK: -
     override func layoutSubviews() {
         super.layoutSubviews()
-        nameLabel.frame = CGRect(x: 45, y: 0, width: frame.width - 50, height: frame.height)
-        icon.frame = CGRect(x: 5, y: 5, width: frame.height - 10, height: frame.height - 10)
+        nameLabel.frame = CGRect(x: 65, y:10, width: frame.width - 70, height: 20)
+        artistLabel.frame = CGRect(x: 65, y:30, width: frame.width - 70, height: 20)
+        icon.frame = CGRect(x: 0, y: 0.5, width: frame.height-1, height: frame.height-1)
     }
 }

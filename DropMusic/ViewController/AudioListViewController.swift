@@ -12,8 +12,6 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     var _tableView: UITableView!
     var _playListId: String!
     
-    var _refreshControll: UIRefreshControl!
-    
     
     
     // MARK: -
@@ -43,6 +41,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         bounds.size.height = bounds.size.height-98
         _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
+        _tableView.rowHeight = 60
         _tableView.autoresizingMask = [
             .flexibleWidth,
             .flexibleHeight
@@ -52,11 +51,6 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         _tableView.register(AudioListViewCell.self, forCellReuseIdentifier: NSStringFromClass(AudioListViewCell.self))
         
         self.view.addSubview(_tableView)
-        
-        //
-        _refreshControll = UIRefreshControl()
-        _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
-        _tableView.refreshControl = _refreshControll
         
         updateScroll()
     }
@@ -75,8 +69,41 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     
     // MARK: -
-    @objc func selectorRefreshControll() {
+    @objc func showActionSheet(_ sender: AudioListViewCell) {
+        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
+        if playlist == nil { return }
+            
+        let audioData = playlist?.audioList[sender.index]
+
         
+        let alert: UIAlertController = UIAlertController(title: audioData?.fileName,
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+
+        // 削除.
+        let deleteAction:UIAlertAction =
+            UIAlertAction(title: "Delete from playlist",
+                          style: .destructive,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: (playlist?.id)!,
+                                                                                  audioId: (audioData?.id)!,
+                                                                                  isSave: true)
+                            self.updateScroll()
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
     
@@ -109,6 +136,8 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
             
             c.set(audioData: audioData)
             c.index = indexPath.row
+            c.longpressTarget = self
+            c.longpressSelector = #selector(showActionSheet(_:))
         }
         return c
     }
