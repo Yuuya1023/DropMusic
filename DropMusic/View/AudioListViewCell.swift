@@ -36,6 +36,7 @@ class AudioListViewCell: UITableViewCell {
         contentView.addSubview(artistLabel)
         
         icon = UIImageView(image: UIImage())
+        icon.contentMode = .scaleAspectFit
         contentView.addSubview(icon)
         
         progress = UIProgressView()
@@ -61,6 +62,9 @@ class AudioListViewCell: UITableViewCell {
     
     func set(audioData: AudioData!) {
         self.audioData = audioData
+        // ダウンロード監視.
+        updateObserber(identifier: audioData.id)
+        // ファイル確認.
         if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!) {
             let metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
             if metadata != nil {
@@ -79,8 +83,6 @@ class AudioListViewCell: UITableViewCell {
         nameLabel.text = audioData.fileName
         artistLabel.text = ""
         icon.image = UIImage()
-        // ダウンロード監視.
-        updateObserber(identifier: audioData.id)
     }
     
     

@@ -151,11 +151,12 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                           style: .default,
                           handler:{
                             (action:UIAlertAction!) -> Void in
+                            let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
                             if isExist {
                                 deleteCache()
+                                MetadataCacheManager.sharedManager.remove(audioData: d)
                                 sender.progress.progress = 0
                             }
-                            let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
                             DownloadFileManager.sharedManager.download(audioData: d)
             })
         // キャッシュ削除.

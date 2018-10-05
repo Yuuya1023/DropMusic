@@ -22,7 +22,7 @@ class MetadataCacheManager {
     
     
     // MARK: -
-    func get(audioData: AudioData) -> AudioMetadata! {
+    func get(audioData: AudioData!) -> AudioMetadata! {
         var ret: AudioMetadata? = datas[audioData.id]
         if ret != nil{
             return ret
@@ -38,4 +38,8 @@ class MetadataCacheManager {
         return ret
     }
     
+    
+    func remove(audioData: AudioData!) {
+        datas.removeValue(forKey: audioData.id)
+    }
 }

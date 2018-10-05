@@ -21,6 +21,7 @@ class PlayListViewCell: UITableViewCell {
         self.backgroundColor = UIColor.clear
         
         icon = UIImageView(image: UIImage())
+        icon.contentMode = .scaleAspectFit
         contentView.addSubview(icon)
         
         nameLabel = UILabel(frame: CGRect.zero)
@@ -49,24 +50,33 @@ class PlayListViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        icon.frame = CGRect(x: 5, y: 5, width: frame.height - 10, height: frame.height - 10)
-        nameLabel.frame = CGRect(x: 70, y: -15, width: frame.width - 55, height: frame.height)
-        tracksLabel.frame = CGRect(x: 70, y: 15, width: frame.width - 55, height: frame.height)
+        icon.frame = CGRect(x: 0, y: 0.5, width: frame.height-1, height: frame.height-1)
+        nameLabel.frame = CGRect(x: 80, y: -15, width: frame.width - 65, height: frame.height)
+        tracksLabel.frame = CGRect(x: 80, y: 15, width: frame.width - 65, height: frame.height)
     }
     
     
     
     // MARK: -
     func set(data: PlayListData?) {
+        icon.image = UIImage()
         if data != nil {
             nameLabel.text = data!.name
             tracksLabel.text = String(data!.audioList.count) + " tracks"
+            if (data?.audioList.count)! > 0 {
+                let d: AudioData = (data?.audioList[0])!
+                let metadata = MetadataCacheManager.sharedManager.get(audioData: d)
+                if metadata?.artwork != nil {
+                    icon.image = metadata?.artwork
+                }
+            }
         }
     }
     
     func setAddPlayListCell() {
         nameLabel.text = "+"
         tracksLabel.text = ""
+        icon.image = UIImage()
     }
     
     

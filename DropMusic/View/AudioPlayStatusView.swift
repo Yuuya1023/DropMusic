@@ -39,6 +39,7 @@ class AudioPlayStatusView: UIView {
         self.addSubview(_effectView)
         
         _artwork = UIImageView()
+        _artwork.contentMode = .scaleAspectFit
         _artwork.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
         _artwork.layer.shadowOpacity = 0.5
         _artwork.layer.shadowOffset = CGSize(width: 3, height: 3)

@@ -30,6 +30,7 @@ class FileListViewCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         
         icon = UIImageView(image: UIImage())
+        icon.contentMode = .scaleAspectFit
         contentView.addSubview(icon)
         
         progress = UIProgressView()

@@ -74,6 +74,14 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         if playlist == nil { return }
             
         let audioData = playlist?.audioList[sender.index]
+        let isExist = DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!)
+        func deleteCache() {
+            do {
+                let path = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData!)
+                try FileManager.default.removeItem(at: URL(fileURLWithPath: path))
+            }
+            catch {}
+        }
 
         
         let alert: UIAlertController = UIAlertController(title: audioData?.fileName,
@@ -91,7 +99,19 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                                                                   isSave: true)
                             self.updateScroll()
             })
-        
+        // ダウンロード.
+        let downloadAction:UIAlertAction =
+            UIAlertAction(title: isExist ? "Download again": "Download",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if isExist {
+                                deleteCache()
+                                MetadataCacheManager.sharedManager.remove(audioData: audioData!)
+                                sender.progress.progress = 0
+                            }
+                            DownloadFileManager.sharedManager.download(audioData: audioData!)
+            })
         // キャンセル.
         let cancelAction:UIAlertAction =
             UIAlertAction(title: "Cancel",
@@ -102,6 +122,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
             })
         
         alert.addAction(deleteAction)
+        alert.addAction(downloadAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
     }
