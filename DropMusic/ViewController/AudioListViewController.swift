@@ -145,11 +145,18 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         
         let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
         if playlist != nil {
-            AudioPlayManager.sharedManager.set(selectType: .Playlist,
-                                               selectPath: (playlist?.name)!,
-                                               audioList: (playlist?.audioList)!,
-                                               playIndex: indexPath.row)
-            AudioPlayManager.sharedManager.play()
+            let audioData = playlist?.audioList[indexPath.row]
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!) {
+                AudioPlayManager.sharedManager.set(selectType: .Playlist,
+                                                   selectPath: (playlist?.name)!,
+                                                   audioList: (playlist?.audioList)!,
+                                                   playIndex: indexPath.row)
+                AudioPlayManager.sharedManager.play()
+            }
+            else {
+                // ダウンロード.
+                DownloadFileManager.sharedManager.download(audioData: audioData!)
+            }
         }
     }
 }

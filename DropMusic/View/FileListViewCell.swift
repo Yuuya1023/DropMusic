@@ -94,8 +94,9 @@ class FileListViewCell: UITableViewCell {
     
     // MARK: -
     @objc func setProgress(notification: Notification) {
-        let p = notification.object as! NSNumber
-        self.progress.progress = Float(truncating: p)
+        var p = Float(truncating: notification.object as! NSNumber)
+        if p < 0 { p = 0.0 }
+        self.progress.progress = p
     }
     
     @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {

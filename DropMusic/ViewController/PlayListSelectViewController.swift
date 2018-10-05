@@ -24,9 +24,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         self.view.backgroundColor = UIColor.white
         self.title = "Add to playlist"
         
-        var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-98
-        _tableView = UITableView(frame: bounds, style: .plain)
+        _tableView = UITableView(frame: self.view.bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
             .flexibleWidth,

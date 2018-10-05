@@ -138,7 +138,7 @@ class DownloadFileManager  {
 //                                                            print("progressData.fractionCompleted (New)  = \(progressData.fractionCompleted)")
                                                             // ダウンロードの進捗を通知.
                                                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
-                                                                                            object: progressData.fractionCompleted)
+                                                                                            object: progressData.fractionCompleted-0.1)
                                                         }
                                                         .response { response, error in
                                                             
@@ -151,6 +151,9 @@ class DownloadFileManager  {
                                                                 // キューから消す.
                                                                 self.removeQueue(audioData: audioData)
 
+                                                                // ダウンロードの進捗を通知.
+                                                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
+                                                                                                object: 1.0)
 //                                                                AudioPlayManager.sharedManager.play(audioData: audioData)
                                                             } else {
                                                                 print(error!)

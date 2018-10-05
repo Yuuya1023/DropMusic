@@ -56,7 +56,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    var _metadata: AudioMetadata = AudioMetadata()
+    var _metadata: AudioMetadata! = AudioMetadata()
     var _duration: Int = 0
     
     
@@ -132,7 +132,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         _playing = audioData
         
         // 曲情報の取得.
-        _metadata.set(atPath: cachePath)
+        _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
         
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)

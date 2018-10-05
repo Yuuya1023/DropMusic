@@ -8,9 +8,11 @@
 import UIKit
 
 class AudioListViewCell: UITableViewCell {
+    var audioData: AudioData? = nil
     var nameLabel: UILabel!
     var artistLabel: UILabel!
     var icon: UIImageView!
+    var progress: UIProgressView!
     
     var index: Int = 0
     var longpressTarget: NSObject? = nil
@@ -36,6 +38,11 @@ class AudioListViewCell: UITableViewCell {
         icon = UIImageView(image: UIImage())
         contentView.addSubview(icon)
         
+        progress = UIProgressView()
+        progress.progress = 0.0
+        progress.trackTintColor = UIColor.clear
+        contentView.addSubview(progress)
+        
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
             target: self,
@@ -53,22 +60,51 @@ class AudioListViewCell: UITableViewCell {
     
     
     func set(audioData: AudioData!) {
-        let metadata = AudioMetadata()
-        metadata.set(atPath: DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData))
-        nameLabel.text = metadata.title
-        artistLabel.text = metadata.artist + " ─ " + metadata.album
-        
-        
-        if metadata.artwork != nil {
-            icon.image = metadata.artwork!
+        self.audioData = audioData
+        if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!) {
+            let metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
+            if metadata != nil {
+                nameLabel.text = metadata?.title
+                artistLabel.text = (metadata?.artist)! + " ─ " + (metadata?.album)!
+                
+                if metadata?.artwork != nil {
+                    icon.image = metadata?.artwork!
+                }
+                else {
+                    icon.image = UIImage()
+                }
+                return
+            }
         }
-        else {
-            icon.image = UIImage()
+        nameLabel.text = audioData.fileName
+        artistLabel.text = ""
+        icon.image = UIImage()
+        // ダウンロード監視.
+        updateObserber(identifier: audioData.id)
+    }
+    
+    
+    
+    private func updateObserber(identifier: String) {
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(setProgress(notification:)),
+                                               name: NSNotification.Name(rawValue: identifier),
+                                               object: nil)
+    }
+    
+    // MARK: -
+    @objc func setProgress(notification: Notification) {
+        var p = Float(truncating: notification.object as! NSNumber)
+        if p < 0 { p = 0.0 }
+        self.progress.progress = p
+        if p >= 1.0 {
+            self.progress.progress = 0
+            set(audioData: self.audioData)
         }
     }
     
     
-    // MARK: -
     @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
@@ -87,5 +123,6 @@ class AudioListViewCell: UITableViewCell {
         nameLabel.frame = CGRect(x: 65, y:10, width: frame.width - 70, height: 20)
         artistLabel.frame = CGRect(x: 65, y:30, width: frame.width - 70, height: 20)
         icon.frame = CGRect(x: 0, y: 0.5, width: frame.height-1, height: frame.height-1)
+        progress.frame = CGRect(x: 0, y: frame.height-2.5, width: frame.width, height: frame.height - 5)
     }
 }

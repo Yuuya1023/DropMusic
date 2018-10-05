@@ -27,23 +27,27 @@ class AudioMetadata {
         artwork = nil
     }
     
-    func set(atPath: String) {
+    func set(atPath: String) -> Bool {
         internalInit()
-        let assetData: AVAsset = AVAsset(url: URL(fileURLWithPath:atPath))
-        let metadata: Array = assetData.commonMetadata
-        for item in metadata {
-            switch item.commonKey {
-            case AVMetadataKey.commonKeyTitle:
-                title = item.stringValue!
-            case AVMetadataKey.commonKeyAlbumName:
-                album = item.stringValue!
-            case AVMetadataKey.commonKeyArtist:
-                artist = item.stringValue!
-            case AVMetadataKey.commonKeyArtwork:
-                artwork = UIImage(data: item.dataValue!)
-            default:
-                break
+        if FileManager.default.fileExists(atPath: atPath) {
+            let assetData: AVAsset = AVAsset(url: URL(fileURLWithPath:atPath))
+            let metadata: Array = assetData.commonMetadata
+            for item in metadata {
+                switch item.commonKey {
+                case AVMetadataKey.commonKeyTitle:
+                    title = item.stringValue!
+                case AVMetadataKey.commonKeyAlbumName:
+                    album = item.stringValue!
+                case AVMetadataKey.commonKeyArtist:
+                    artist = item.stringValue!
+                case AVMetadataKey.commonKeyArtwork:
+                    artwork = UIImage(data: item.dataValue!)
+                default:
+                    break
+                }
             }
+            return true
         }
+        return false
     }
 }
