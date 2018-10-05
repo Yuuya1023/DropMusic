@@ -177,6 +177,22 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                             // 閉じるだけ.
             })
         
+        if isExist {
+            let playlistAction:UIAlertAction =
+                UIAlertAction(title: "Add to playlist",
+                              style: .default,
+                              handler:{
+                                (action:UIAlertAction!) -> Void in
+                                let playlistvc = PlayListSelectViewController()
+                                let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
+                                playlistvc.setAudioData(data: d)
+                                let vc = UINavigationController(rootViewController: playlistvc)
+                                vc.modalTransitionStyle = .coverVertical
+                                self.present(vc, animated: true, completion: nil)
+                })
+            alert.addAction(playlistAction)
+        }
+        
         alert.addAction(downloadAction)
         alert.addAction(deleteCacheAction)
         alert.addAction(cancelAction)
