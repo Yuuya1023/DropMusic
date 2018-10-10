@@ -90,7 +90,7 @@ class MusicPlayerViewControlloer: UIViewController {
         }
         
         do {
-            _playButton.setImage(UIImage(named: "play.png"), for: .normal)
+            _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"), for: .normal)
             _playButton.frame = CGRect(x:self.view.bounds.width/2 - 15, y:450, width:40, height:40)
             _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
             self.view.addSubview(_playButton)
@@ -108,12 +108,22 @@ class MusicPlayerViewControlloer: UIViewController {
         
         do {
             let y = 510
-            _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
+            switch AudioPlayManager.sharedManager._repeatType {
+            case .One:
+                _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
+            case .List:
+                _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
+            }
             _repeatButton.frame = CGRect(x:30, y:y, width:40, height:40)
             _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
             self.view.addSubview(_repeatButton)
             
-            _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
+            switch AudioPlayManager.sharedManager._shuffleType {
+            case .None:
+                _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
+            case .List:
+                _shuffleButton.setImage(UIImage(named: "icon_shuffle.png"), for: .normal)
+            }
             _shuffleButton.frame = CGRect(x:110, y:y, width:40, height:40)
             _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
             self.view.addSubview(_shuffleButton)
@@ -190,12 +200,7 @@ class MusicPlayerViewControlloer: UIViewController {
     }
     
     func layoutPlayButton() {
-        if AudioPlayManager.sharedManager.isPlaying() {
-            _playButton.setImage(UIImage(named: "pause.png"), for: .normal)
-        }
-        else {
-            _playButton.setImage(UIImage(named: "play.png"), for: .normal)
-        }
+        _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"), for: .normal)
     }
     
     
@@ -206,8 +211,7 @@ class MusicPlayerViewControlloer: UIViewController {
             let twitter = TWTRComposer()
             twitter.setText( audioManager._metadata.title + " ─ " + audioManager._metadata.artist + "\n#DJさとし")
             if withImage && audioManager._metadata.artwork != nil {
-                let image = audioManager._metadata.artwork?.resizeImage(reSize: CGSize(width: 128, height: 128))
-                twitter.setImage(image)
+                twitter.setImage(_artwork.image)
             }
             twitter.show(from: self, completion: nil)
         }

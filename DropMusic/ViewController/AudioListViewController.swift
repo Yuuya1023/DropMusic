@@ -107,9 +107,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                             (action:UIAlertAction!) -> Void in
                             if isExist {
                                 deleteCache()
-                                MetadataCacheManager.sharedManager.remove(audioData: audioData!)
                                 sender.progress.progress = 0
                             }
+                            MetadataCacheManager.sharedManager.remove(audioData: audioData!)
                             DownloadFileManager.sharedManager.download(audioData: audioData!)
             })
         // キャンセル.

@@ -35,9 +35,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         
         self.title = _pathList.last
         self.navigationController?.delegate = self
-//        self.navigationController?.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
-//        self.view.backgroundColor = UIColor(displayP3Red: 20/255, green: 30/255, blue: 80/255, alpha: 1)
         
         //
         var bounds = self.view.bounds

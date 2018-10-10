@@ -27,14 +27,14 @@ class AudioPlayStatusView: UIView {
         super.init(frame: CGRect(x: x, y: y, width: UIScreen.main.bounds.size.width, height: 50))
         
 //        self.backgroundColor = UIColor.clear
-        self.backgroundColor = UIColor(displayP3Red: 200/255, green: 200/255, blue: 255/255, alpha: 1)
+//        self.backgroundColor = UIColor(displayP3Red: 200/255, green: 200/255, blue: 255/255, alpha: 1)
         self.layer.shadowOpacity = 0.3
         self.layer.shadowOffset = CGSize(width: 0, height: -3)
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                                        action: #selector(selectorTouchLayer(_:)))
         self.addGestureRecognizer(tapGesture)
         
-        _effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+        _effectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
         _effectView.frame = self.bounds
         self.addSubview(_effectView)
         
@@ -48,7 +48,7 @@ class AudioPlayStatusView: UIView {
         _titleLabel = MarqueeLabel(frame: CGRect(x: 50, y: 6, width: 270, height: 20),
                                    duration: 10,
                                    fadeLength: 10)
-        _titleLabel.textColor = UIColor.darkGray
+        _titleLabel.textColor = UIColor.black
         self.addSubview(_titleLabel)
         
         _detailLabel = MarqueeLabel(frame: CGRect(x: 50, y: 25, width: 270, height: 20),

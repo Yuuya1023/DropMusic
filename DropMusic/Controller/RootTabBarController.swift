@@ -13,13 +13,8 @@ class RootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        // アイコンの色.
-//        UITabBar.appearance().tintColor = UIColor.yellow
-        
-        // 背景色.
+        UITabBar.appearance().tintColor = UIColor.white
         UITabBar.appearance().barTintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
-
         
         
         // タブバーの設定.
