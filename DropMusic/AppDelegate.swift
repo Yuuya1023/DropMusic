@@ -83,7 +83,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             AudioPlayManager.sharedManager.play()
         case .remoteControlPause?:
             AudioPlayManager.sharedManager.pause()
-
+        case .remoteControlStop?:
+            AudioPlayManager.sharedManager.pause()
+        case .remoteControlNextTrack?:
+            AudioPlayManager.sharedManager.playNext()
+        case .remoteControlPreviousTrack?:
+            AudioPlayManager.sharedManager.playBack()
+            
         default:
             break
         }

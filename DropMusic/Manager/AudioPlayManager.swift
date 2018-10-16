@@ -139,6 +139,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             _audioPlayer.currentTime = 0
             _audioPlayer.delegate = self
             _audioPlayer.prepareToPlay()
+            
 
             _duration = Int(_audioPlayer.duration)
             
@@ -146,15 +147,15 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             updateCheckQueue(isRefresh: isRefresh)
             
             // コントロールセンターの表示.
+            let image = (_metadata.artwork != nil) ? MPMediaItemArtwork(image: _metadata.artwork!) : MPMediaItemArtwork(image: UIImage())
             MPNowPlayingInfoCenter.default().nowPlayingInfo = [
                 MPMediaItemPropertyTitle: _metadata.title,
                 MPMediaItemPropertyArtist : _metadata.artist,
                 MPMediaItemPropertyAlbumTitle: _metadata.album,
-                MPMediaItemPropertyPlaybackDuration : NSNumber(value: _duration) //シークバー
+                MPMediaItemPropertyArtwork: image,
+                MPMediaItemPropertyPlaybackDuration: NSNumber(value: _duration), //シークバー
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: NSNumber(value: 0.0)
             ]
-            if _metadata.artwork != nil {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _metadata.artwork!)
-            }
             // 曲が変更されたことを通知.
             NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
             
@@ -320,10 +321,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         case .One:
             _audioPlayer.currentTime = 0
             _audioPlayer.play()
-            
-            if _metadata.artwork != nil {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: _metadata.artwork!)
-            }
+
             MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: 0.0)
         case .List:
             // 次へ.
