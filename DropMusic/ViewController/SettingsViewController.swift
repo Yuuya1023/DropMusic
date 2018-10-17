@@ -10,8 +10,19 @@ import SwiftyDropbox
 
 class SettingsViewController: UIViewController {
     
+    var acccountTitle: UILabel = UILabel()
+    var accountLabel: UILabel = UILabel()
+    var accountButton: UIButton = UIButton()
+    
+    var cacheTitle: UILabel = UILabel()
+    var fileCountTitle: UILabel = UILabel()
+    var fileSizeTitle: UILabel = UILabel()
     var fileCountLabel: UILabel = UILabel()
     var fileSizeLabel: UILabel = UILabel()
+    
+    var playlistTitle: UILabel = UILabel()
+    var playlistLabel: UILabel = UILabel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,24 +32,63 @@ class SettingsViewController: UIViewController {
         self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
         self.title = "Settings"
         
-        fileCountLabel.frame = CGRect(x: 200, y: 200, width: 100, height: 60)
+        acccountTitle.frame = CGRect(x: 20, y: 100, width: 100, height: 30)
+        acccountTitle.textAlignment = .left
+        acccountTitle.text = "Account"
+        self.view.addSubview(acccountTitle)
+        
+        accountLabel.frame = CGRect(x: 30, y: 130, width: 100, height: 30)
+        accountLabel.textAlignment = .left
+        accountLabel.text = "..."
+        self.view.addSubview(accountLabel)
+        
+        accountButton.frame = CGRect(x: 220, y: 130, width: 80, height: 30)
+        accountButton.setTitle("login", for: UIControlState.normal)
+        accountButton.setTitleColor(UIColor.black, for: .normal)
+        accountButton.layer.cornerRadius = 10
+        accountButton.layer.borderWidth = 1
+        accountButton.addTarget(self, action: #selector(logout(_:)), for: UIControlEvents.touchUpInside)
+        self.view.addSubview(accountButton)
+        
+        //
+        cacheTitle.frame = CGRect(x: 20, y: 180, width: 100, height: 30)
+        cacheTitle.textAlignment = .left
+        cacheTitle.text = "Caches"
+        self.view.addSubview(cacheTitle)
+        
+        fileCountTitle.frame = CGRect(x: 30, y: 210, width: 100, height: 30)
+        fileCountTitle.textAlignment = .left
+        fileCountTitle.text = "file count"
+        self.view.addSubview(fileCountTitle)
+        
+        fileSizeTitle.frame = CGRect(x: 30, y: 240, width: 100, height: 30)
+        fileSizeTitle.textAlignment = .left
+        fileSizeTitle.text = "file size"
+        self.view.addSubview(fileSizeTitle)
+        
+        
+        fileCountLabel.frame = CGRect(x: 200, y: 210, width: 100, height: 30)
         fileCountLabel.textAlignment = .right
         self.view.addSubview(fileCountLabel)
 
-        fileSizeLabel.frame = CGRect(x: 200, y: 230, width: 100, height: 60)
+        fileSizeLabel.frame = CGRect(x: 200, y: 240, width: 100, height: 30)
         fileSizeLabel.textAlignment = .right
         self.view.addSubview(fileSizeLabel)
 
+        //
+        playlistTitle.frame = CGRect(x: 20, y: 290, width: 150, height: 30)
+        playlistTitle.textAlignment = .left
+        playlistTitle.text = "Playlist save path"
+        self.view.addSubview(playlistTitle)
         
-        do{
-            let button = UIButton()
-            button.frame = CGRect(x: 200, y: 400, width: 60, height: 60)
-            button.setTitle("logout", for: UIControlState.normal)
-            button.setTitleColor(UIColor.black, for: .normal)
-            button.addTarget(self, action: #selector(logout(_:)), for: UIControlEvents.touchUpInside)
-            self.view.addSubview(button)
-        }
+        playlistLabel.frame = CGRect(x: 30, y: 320, width: 250, height: 30)
+        playlistLabel.textAlignment = .left
+        playlistLabel.text = "/DropMusic/playlist.json"
+        self.view.addSubview(playlistLabel)
         
+        
+        
+        loadUser()
         loadFiles()
     }
     
@@ -85,11 +135,52 @@ class SettingsViewController: UIViewController {
     }
     
     
+    private func loadUser() {
+        if let client = DropboxClientsManager.authorizedClient {
+            client.users.getCurrentAccount().response {
+                (response, error) in
+                if let account = response {
+                    self.accountLabel.text = account.name.displayName
+                    self.accountButton.setTitle("logout", for: UIControlState.normal)
+                }
+                else {
+                    self.accountLabel.text = "not loggedin."
+                    self.accountButton.setTitle("login", for: UIControlState.normal)
+                }
+            }
+        }
+    }
+    
+    
     
     // MARK: -
     @objc func logout(_ sender: UIButton) {
-        DropboxClientsManager.unlinkClients()
-        NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT), object: nil)
+        let alert: UIAlertController = UIAlertController(title: "confirm",
+                                                         message: "Will you unlink DropBox Account?",
+                                                         preferredStyle: .alert)
+        // アンリンク.
+        let okAction:UIAlertAction =
+            UIAlertAction(title: "Unlink",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            DropboxClientsManager.unlinkClients()
+                            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT), object: nil)
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
 }

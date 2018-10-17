@@ -10,18 +10,13 @@ import UIKit
 
 class AudioPlayerPresentationController: UIPresentationController {
     
-    var closeButton = UIButton()
     var swipe: UISwipeGestureRecognizer? = nil
-//    UISwipeGestureRecognizer
+
     // 表示トランジション開始前に呼ばれる
     override func presentationTransitionWillBegin() {
 //        guard let containerView = containerView else {
 //            return
 //        }
-        closeButton.frame = CGRect(x: 270, y: 30, width: 30, height: 30)
-        closeButton.setImage(UIImage(named: "down.png"), for: .normal)
-        closeButton.addTarget(self, action: #selector(selectorTouchCloseButton(_:)), for: .touchUpInside)
-        presentedViewController.view?.addSubview(closeButton)
         
         swipe = UISwipeGestureRecognizer(target: self, action: #selector(selectorSwipe(_:)))
         swipe?.direction = .down
@@ -42,7 +37,6 @@ class AudioPlayerPresentationController: UIPresentationController {
     // 非表示トランジション開始後に呼ばれる
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
-            closeButton.removeFromSuperview()
             presentedViewController.view?.removeGestureRecognizer(swipe!)
         }
     }

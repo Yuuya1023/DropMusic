@@ -44,7 +44,7 @@ class MusicPlayerViewControlloer: UIViewController {
         _effectView.frame = self.view.bounds
         self.view.addSubview(_effectView)
         
-        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 125, y:70, width:250, height:250)
+        _artwork.frame = CGRect(x:self.view.bounds.width/2 - 140, y:50, width:280, height:280)
         _artwork.contentMode = .scaleAspectFit
         _artwork.layer.shadowOpacity = 0.5
         _artwork.layer.shadowOffset = CGSize(width: 10, height: 10)
@@ -52,7 +52,7 @@ class MusicPlayerViewControlloer: UIViewController {
 //        _artwork.clipsToBounds = true
         self.view.addSubview(_artwork)
         
-        _titleLabel = MarqueeLabel(frame: CGRect(x:0, y:340, width:self.view.bounds.width, height:35),
+        _titleLabel = MarqueeLabel(frame: CGRect(x:0, y:350, width:self.view.bounds.width, height:35),
                                    duration: 10,
                                    fadeLength: 10)
         _titleLabel.animationDelay = 2.0
@@ -60,7 +60,7 @@ class MusicPlayerViewControlloer: UIViewController {
         _titleLabel.font = UIFont.systemFont(ofSize: 30)
         self.view.addSubview(_titleLabel)
         
-        _artistLabel = MarqueeLabel(frame: CGRect(x:0, y:370, width:self.view.bounds.width, height:30),
+        _artistLabel = MarqueeLabel(frame: CGRect(x:0, y:380, width:self.view.bounds.width, height:30),
                                    duration: 10,
                                    fadeLength: 10)
         _artistLabel.animationDelay = 2.0
@@ -71,7 +71,8 @@ class MusicPlayerViewControlloer: UIViewController {
         do {
             // シークバーまわり.
             _seakBar.frame = CGRect(x:self.view.bounds.width/2 - 120, y:420, width:240, height:5)
-            _seakBar.setThumbImage(UIColor.blue.circleImage(width: 20, height: 20), for: .normal)
+            _seakBar.setThumbImage(UIImage(), for: .normal)
+//            _seakBar.setThumbImage(UIColor.blue.circleImage(width: 20, height: 20), for: .normal)
             self.view.addSubview(_seakBar)
             
             _currentTimeLabel.frame = CGRect(x:0, y:407, width:40, height:30)
@@ -96,25 +97,26 @@ class MusicPlayerViewControlloer: UIViewController {
             self.view.addSubview(_playButton)
 
             _nextButton.setImage(UIImage(named: "icon_next.png"), for: .normal)
-            _nextButton.frame = CGRect(x:self.view.bounds.width/2 + 50, y:455, width:30, height:30)
+            _nextButton.frame = CGRect(x:self.view.bounds.width/2 + 60, y:455, width:30, height:30)
             _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
             self.view.addSubview(_nextButton)
             
             _backButton.setImage(UIImage(named: "icon_back.png"), for: .normal)
-            _backButton.frame = CGRect(x:self.view.bounds.width/2 - 80, y:455, width:30, height:30)
+            _backButton.frame = CGRect(x:self.view.bounds.width/2 - 90, y:455, width:30, height:30)
             _backButton.addTarget(self, action: #selector(selectorBackButton(_:)), for: .touchUpInside)
             self.view.addSubview(_backButton)
         }
         
         do {
-            let y = 510
+            let y = 530
+            let size = 20
             switch AudioPlayManager.sharedManager._repeatType {
             case .One:
                 _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
             case .List:
                 _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
             }
-            _repeatButton.frame = CGRect(x:30, y:y, width:40, height:40)
+            _repeatButton.frame = CGRect(x:30, y:y, width:size, height:size)
             _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
             self.view.addSubview(_repeatButton)
             
@@ -124,17 +126,17 @@ class MusicPlayerViewControlloer: UIViewController {
             case .List:
                 _shuffleButton.setImage(UIImage(named: "icon_shuffle.png"), for: .normal)
             }
-            _shuffleButton.frame = CGRect(x:110, y:y, width:40, height:40)
+            _shuffleButton.frame = CGRect(x:100, y:y, width:size, height:size)
             _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
             self.view.addSubview(_shuffleButton)
             
             _playlistButton.setImage(UIImage(named: "icon_playlist.png"), for: .normal)
-            _playlistButton.frame = CGRect(x:180, y:y, width:40, height:40)
+            _playlistButton.frame = CGRect(x:200, y:y, width:size, height:size)
             _playlistButton.addTarget(self, action: #selector(selectorPlaylistButton(_:)), for: .touchUpInside)
             self.view.addSubview(_playlistButton)
             
             _twitterButton.setImage(UIImage(named: "twitter.png"), for: .normal)
-            _twitterButton.frame = CGRect(x:250, y:y, width:40, height:40)
+            _twitterButton.frame = CGRect(x:270, y:y, width:size, height:size)
             _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
             let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
                 target: self,
