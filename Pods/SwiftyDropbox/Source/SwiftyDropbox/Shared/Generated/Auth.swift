@@ -71,6 +71,8 @@ open class Auth {
         case invalidSelectAdmin
         /// The user has been suspended.
         case userSuspended
+        /// The access token has expired.
+        case expiredAccessToken
         /// An unspecified error.
         case other
 
@@ -98,6 +100,10 @@ open class Auth {
                     var d = [String: JSON]()
                     d[".tag"] = .str("user_suspended")
                     return .dictionary(d)
+                case .expiredAccessToken:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired_access_token")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -117,6 +123,8 @@ open class Auth {
                             return AuthError.invalidSelectAdmin
                         case "user_suspended":
                             return AuthError.userSuspended
+                        case "expired_access_token":
+                            return AuthError.expiredAccessToken
                         case "other":
                             return AuthError.other
                         default:
@@ -233,9 +241,9 @@ open class Auth {
     /// Error occurred because the app is being rate limited.
     open class RateLimitError: CustomStringConvertible {
         /// The reason why the app is being rate limited.
-        open let reason: Auth.RateLimitReason
+        public let reason: Auth.RateLimitReason
         /// The number of seconds that the app should wait before making another request.
-        open let retryAfter: UInt64
+        public let retryAfter: UInt64
         public init(reason: Auth.RateLimitReason, retryAfter: UInt64 = 1) {
             self.reason = reason
             comparableValidator()(retryAfter)
@@ -320,9 +328,9 @@ open class Auth {
     /// The TokenFromOAuth1Arg struct
     open class TokenFromOAuth1Arg: CustomStringConvertible {
         /// The supplied OAuth 1.0 access token.
-        open let oauth1Token: String
+        public let oauth1Token: String
         /// The token secret associated with the supplied access token.
-        open let oauth1TokenSecret: String
+        public let oauth1TokenSecret: String
         public init(oauth1Token: String, oauth1TokenSecret: String) {
             stringValidator(minLength: 1)(oauth1Token)
             self.oauth1Token = oauth1Token
@@ -408,7 +416,7 @@ open class Auth {
     /// The TokenFromOAuth1Result struct
     open class TokenFromOAuth1Result: CustomStringConvertible {
         /// The OAuth 2.0 token generated from the supplied OAuth 1.0 token.
-        open let oauth2Token: String
+        public let oauth2Token: String
         public init(oauth2Token: String) {
             stringValidator(minLength: 1)(oauth2Token)
             self.oauth2Token = oauth2Token
@@ -441,6 +449,7 @@ open class Auth {
 
     static let tokenFromOauth1 = Route(
         name: "token/from_oauth1",
+        version: 1,
         namespace: "auth",
         deprecated: false,
         argSerializer: Auth.TokenFromOAuth1ArgSerializer(),
@@ -451,6 +460,7 @@ open class Auth {
     )
     static let tokenRevoke = Route(
         name: "token/revoke",
+        version: 1,
         namespace: "auth",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,

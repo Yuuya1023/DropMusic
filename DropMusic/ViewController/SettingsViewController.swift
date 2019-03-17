@@ -29,7 +29,11 @@ class SettingsViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+        if #available(iOS 10.0, *) {
+            self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+        } else {
+            // Fallback on earlier versions
+        }
         self.title = "Settings"
         
         acccountTitle.frame = CGRect(x: 20, y: 100, width: 100, height: 30)

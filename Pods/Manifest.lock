@@ -1,15 +1,15 @@
 PODS:
-  - Alamofire (4.5.1)
+  - Alamofire (4.7.3)
   - MarqueeLabel/Swift (3.2.0)
-  - SwiftyDropbox (4.6.0):
-    - Alamofire (~> 4.5.0)
+  - SwiftyDropbox (5.0.0):
+    - Alamofire (~> 4.7.3)
   - TwitterCore (3.2.0)
   - TwitterKit (3.4.0):
     - TwitterCore (>= 3.1.0)
 
 DEPENDENCIES:
   - MarqueeLabel/Swift
-  - SwiftyDropbox (= 4.6.0)
+  - SwiftyDropbox
   - TwitterKit (= 3.4.0)
 
 SPEC REPOS:
@@ -21,12 +21,12 @@ SPEC REPOS:
     - TwitterKit
 
 SPEC CHECKSUMS:
-  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   MarqueeLabel: 440a502b91a9179bd98f9fff00ba1150650a1c0e
-  SwiftyDropbox: 8af645e744de6f17b4e9fdeba21365b8dc55a542
+  SwiftyDropbox: 378b4425a2e8d0cb24c7b0f2e3af72bfbaaf1e73
   TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
   TwitterKit: bc7bd086b9b724a1d888745a054e1d0b1ecc4f3f
 
-PODFILE CHECKSUM: a02188057be2dc00994e3eb887905d4eb186c7f6
+PODFILE CHECKSUM: cfa67b2fc643f368b69082c70b7b955b76ef1546
 
 COCOAPODS: 1.5.3

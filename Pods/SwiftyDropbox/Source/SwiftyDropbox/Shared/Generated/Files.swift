@@ -11,18 +11,18 @@ open class Files {
     /// The GetMetadataArg struct
     open class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
-        open let path: String
+        public let path: String
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        open let includeMediaInfo: Bool
+        public let includeMediaInfo: Bool
         /// If true, DeletedMetadata will be returned for deleted file or folder, otherwise notFound in LookupError will
         /// be returned.
-        open let includeDeleted: Bool
+        public let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        open let includeHasExplicitSharedMembers: Bool
+        public let includeHasExplicitSharedMembers: Bool
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
         /// associated with the file and each of the listed templates.
-        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public let includePropertyGroups: FileProperties.TemplateFilterBase?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -66,7 +66,7 @@ open class Files {
     open class AlphaGetMetadataArg: Files.GetMetadataArg {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
-        open let includePropertyTemplates: Array<String>?
+        public let includePropertyTemplates: Array<String>?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
             self.includePropertyTemplates = includePropertyTemplates
@@ -189,23 +189,27 @@ open class Files {
     /// The CommitInfo struct
     open class CommitInfo: CustomStringConvertible {
         /// Path in the user's Dropbox to save the file.
-        open let path: String
+        public let path: String
         /// Selects what to do if the file already exists.
-        open let mode: Files.WriteMode
+        public let mode: Files.WriteMode
         /// If there's a conflict, as determined by mode, have the Dropbox server try to autorename the file to avoid
         /// conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// The value to store as the clientModified timestamp. Dropbox automatically records the time at which the file
         /// was written to the Dropbox servers. It can also record an additional timestamp, provided by Dropbox desktop
         /// clients, mobile clients, and API apps of when the file was actually created or modified.
-        open let clientModified: Date?
+        public let clientModified: Date?
         /// Normally, users are made aware of any file modifications in their Dropbox account via notifications in the
         /// client software. If true, this tells the clients that this modification shouldn't result in a user
         /// notification.
-        open let mute: Bool
+        public let mute: Bool
         /// List of custom properties to add to file.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
+        /// Be more strict about how each WriteMode detects conflict. For example, always return a conflict error when
+        /// mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev", even if the existing
+        /// file has been deleted.
+        public let strictConflict: Bool
+        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, strictConflict: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
             self.mode = mode
@@ -213,6 +217,7 @@ open class Files {
             self.clientModified = clientModified
             self.mute = mute
             self.propertyGroups = propertyGroups
+            self.strictConflict = strictConflict
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
@@ -228,6 +233,7 @@ open class Files {
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
+            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
             ]
             return .dictionary(output)
         }
@@ -240,7 +246,8 @@ open class Files {
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
+                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
+                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -263,6 +270,7 @@ open class Files {
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
+            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
             ]
             return .dictionary(output)
         }
@@ -275,7 +283,8 @@ open class Files {
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
+                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
+                    return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -285,9 +294,9 @@ open class Files {
     /// The ContentSyncSetting struct
     open class ContentSyncSetting: CustomStringConvertible {
         /// Id of the item this setting is applied to.
-        open let id: String
+        public let id: String
         /// Setting for this item.
-        open let syncSetting: Files.SyncSetting
+        public let syncSetting: Files.SyncSetting
         public init(id: String, syncSetting: Files.SyncSetting) {
             stringValidator(minLength: 4, pattern: "id:.+")(id)
             self.id = id
@@ -321,9 +330,9 @@ open class Files {
     /// The ContentSyncSettingArg struct
     open class ContentSyncSettingArg: CustomStringConvertible {
         /// Id of the item this setting is applied to.
-        open let id: String
+        public let id: String
         /// Setting for this item.
-        open let syncSetting: Files.SyncSettingArg
+        public let syncSetting: Files.SyncSettingArg
         public init(id: String, syncSetting: Files.SyncSettingArg) {
             stringValidator(minLength: 4, pattern: "id:.+")(id)
             self.id = id
@@ -357,9 +366,9 @@ open class Files {
     /// The CreateFolderArg struct
     open class CreateFolderArg: CustomStringConvertible {
         /// Path in the user's Dropbox to create.
-        open let path: String
+        public let path: String
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         public init(path: String, autorename: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -394,11 +403,11 @@ open class Files {
     open class CreateFolderBatchArg: CustomStringConvertible {
         /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are considered only
         /// once.
-        open let paths: Array<String>
+        public let paths: Array<String>
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// Whether to force the create to happen asynchronously.
-        open let forceAsync: Bool
+        public let forceAsync: Bool
         public init(paths: Array<String>, autorename: Bool = false, forceAsync: Bool = false) {
             arrayValidator(itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
             self.paths = paths
@@ -616,8 +625,9 @@ open class Files {
 
     /// The CreateFolderBatchResult struct
     open class CreateFolderBatchResult: Files.FileOpsResult {
-        /// (no description)
-        open let entries: Array<Files.CreateFolderBatchResultEntry>
+        /// Each entry in paths in CreateFolderBatchArg will appear at the same position inside entries in
+        /// CreateFolderBatchResult.
+        public let entries: Array<Files.CreateFolderBatchResultEntry>
         public init(entries: Array<Files.CreateFolderBatchResultEntry>) {
             self.entries = entries
             super.init()
@@ -737,7 +747,7 @@ open class Files {
     /// The CreateFolderEntryResult struct
     open class CreateFolderEntryResult: CustomStringConvertible {
         /// Metadata of the created folder.
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
@@ -803,7 +813,7 @@ open class Files {
     /// The CreateFolderResult struct
     open class CreateFolderResult: Files.FileOpsResult {
         /// Metadata of the created folder.
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
             super.init()
@@ -834,10 +844,10 @@ open class Files {
     /// The DeleteArg struct
     open class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
-        open let path: String
+        public let path: String
         /// Perform delete if given "rev" matches the existing file's latest "rev". This field does not support deleting
         /// a folder.
-        open let parentRev: String?
+        public let parentRev: String?
         public init(path: String, parentRev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
@@ -872,7 +882,7 @@ open class Files {
     /// The DeleteBatchArg struct
     open class DeleteBatchArg: CustomStringConvertible {
         /// (no description)
-        open let entries: Array<Files.DeleteArg>
+        public let entries: Array<Files.DeleteArg>
         public init(entries: Array<Files.DeleteArg>) {
             self.entries = entries
         }
@@ -1060,8 +1070,9 @@ open class Files {
 
     /// The DeleteBatchResult struct
     open class DeleteBatchResult: Files.FileOpsResult {
-        /// (no description)
-        open let entries: Array<Files.DeleteBatchResultEntry>
+        /// Each entry in entries in DeleteBatchArg will appear at the same position inside entries in
+        /// DeleteBatchResult.
+        public let entries: Array<Files.DeleteBatchResultEntry>
         public init(entries: Array<Files.DeleteBatchResultEntry>) {
             self.entries = entries
             super.init()
@@ -1092,7 +1103,7 @@ open class Files {
     /// The DeleteBatchResultData struct
     open class DeleteBatchResultData: CustomStringConvertible {
         /// Metadata of the deleted object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -1236,7 +1247,7 @@ open class Files {
     /// The DeleteResult struct
     open class DeleteResult: Files.FileOpsResult {
         /// Metadata of the deleted object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
             super.init()
@@ -1267,17 +1278,17 @@ open class Files {
     /// Metadata for a file or folder.
     open class Metadata: CustomStringConvertible {
         /// The last component of the path (including extension). This never contains a slash.
-        open let name: String
+        public let name: String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will be null if
         /// the file or folder is not mounted.
-        open let pathLower: String?
+        public let pathLower: String?
         /// The cased path to be used for display purposes only. In rare instances the casing will not correctly match
         /// the user's filesystem, but this behavior will match the path provided in the Core API v1, and at least the
         /// last path component will have the correct casing. Changes to only the casing of paths won't be returned by
         /// listFolderContinue. This field will be null if the file or folder is not mounted.
-        open let pathDisplay: String?
+        public let pathDisplay: String?
         /// Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo instead.
-        open let parentSharedFolderId: String?
+        public let parentSharedFolderId: String?
         public init(name: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil) {
             stringValidator()(name)
             self.name = name
@@ -1375,9 +1386,9 @@ open class Files {
     /// Dimensions for a photo or video.
     open class Dimensions: CustomStringConvertible {
         /// Height of the photo/video.
-        open let height: UInt64
+        public let height: UInt64
         /// Width of the photo/video.
-        open let width: UInt64
+        public let width: UInt64
         public init(height: UInt64, width: UInt64) {
             comparableValidator()(height)
             self.height = height
@@ -1412,9 +1423,9 @@ open class Files {
     /// The DownloadArg struct
     open class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
-        open let path: String
+        public let path: String
         /// Please specify revision in path instead.
-        open let rev: String?
+        public let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1493,7 +1504,7 @@ open class Files {
     /// The DownloadZipArg struct
     open class DownloadZipArg: CustomStringConvertible {
         /// The path of the folder to download.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1525,7 +1536,7 @@ open class Files {
     public enum DownloadZipError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
-        /// The folder is too large to download.
+        /// The folder or a file is too large to download.
         case tooLarge
         /// The folder has too many files to download.
         case tooManyFiles
@@ -1584,7 +1595,7 @@ open class Files {
     /// The DownloadZipResult struct
     open class DownloadZipResult: CustomStringConvertible {
         /// (no description)
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
@@ -1614,35 +1625,35 @@ open class Files {
     /// The FileMetadata struct
     open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
-        open let id: String
+        public let id: String
         /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
         /// this time is not verified (the Dropbox server stores whatever the desktop client sends up), this should only
         /// be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
         /// not.
-        open let clientModified: Date
+        public let clientModified: Date
         /// The last time the file was modified on Dropbox.
-        open let serverModified: Date
+        public let serverModified: Date
         /// A unique identifier for the current revision of a file. This field is the same rev as elsewhere in the API
         /// and can be used to detect changes and avoid conflicts.
-        open let rev: String
+        public let rev: String
         /// The file size in bytes.
-        open let size: UInt64
+        public let size: UInt64
         /// Additional information if the file is a photo or video.
-        open let mediaInfo: Files.MediaInfo?
+        public let mediaInfo: Files.MediaInfo?
         /// Set if this file is a symlink.
-        open let symlinkInfo: Files.SymlinkInfo?
+        public let symlinkInfo: Files.SymlinkInfo?
         /// Set if this file is contained in a shared folder.
-        open let sharingInfo: Files.FileSharingInfo?
+        public let sharingInfo: Files.FileSharingInfo?
         /// Additional information if the file has custom properties with the property template specified.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
         /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
         /// If this  flag is present, it will be true if this file has any explicit shared  members. This is different
         /// from sharing_info in that this could be true  in the case where a file has explicit members but is not
         /// contained within  a shared folder.
-        open let hasExplicitSharedMembers: Bool?
+        public let hasExplicitSharedMembers: Bool?
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
-        /// Content hash /developers/reference/content-hash page.
-        open let contentHash: String?
+        /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String?
         public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -1715,7 +1726,7 @@ open class Files {
     /// Sharing info for a file or folder.
     open class SharingInfo: CustomStringConvertible {
         /// True if the file or folder is inside a read-only shared folder.
-        open let readOnly: Bool
+        public let readOnly: Bool
         public init(readOnly: Bool) {
             self.readOnly = readOnly
         }
@@ -1745,9 +1756,9 @@ open class Files {
     /// Sharing info for a file which is contained by a shared folder.
     open class FileSharingInfo: Files.SharingInfo {
         /// ID of shared folder that holds this file.
-        open let parentSharedFolderId: String
+        public let parentSharedFolderId: String
         /// The last user who modified the file. This field will be null if the user's account has been deleted.
-        open let modifiedBy: String?
+        public let modifiedBy: String?
         public init(readOnly: Bool, parentSharedFolderId: String, modifiedBy: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1785,14 +1796,14 @@ open class Files {
     /// The FolderMetadata struct
     open class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
-        open let id: String
+        public let id: String
         /// Please use sharingInfo instead.
-        open let sharedFolderId: String?
+        public let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
-        open let sharingInfo: Files.FolderSharingInfo?
+        public let sharingInfo: Files.FolderSharingInfo?
         /// Additional information if the file has custom properties with the property template specified. Note that
         /// only properties associated with user-owned templates, not team-owned templates, can be attached to folders.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
         public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -1842,15 +1853,15 @@ open class Files {
     /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
     open class FolderSharingInfo: Files.SharingInfo {
         /// Set if the folder is contained by a shared folder.
-        open let parentSharedFolderId: String?
+        public let parentSharedFolderId: String?
         /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
-        open let sharedFolderId: String?
+        public let sharedFolderId: String?
         /// Specifies that the folder can only be traversed and the user can only see a limited subset of the contents
         /// of this folder because they don't have read access to this folder. They do, however, have access to some sub
         /// folder.
-        open let traverseOnly: Bool
+        public let traverseOnly: Bool
         /// Specifies that the folder cannot be accessed by the user.
-        open let noAccess: Bool
+        public let noAccess: Bool
         public init(readOnly: Bool, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, traverseOnly: Bool = false, noAccess: Bool = false) {
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1894,7 +1905,7 @@ open class Files {
     /// The GetCopyReferenceArg struct
     open class GetCopyReferenceArg: CustomStringConvertible {
         /// The path to the file or folder you want to get a copy reference to.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1969,12 +1980,12 @@ open class Files {
     /// The GetCopyReferenceResult struct
     open class GetCopyReferenceResult: CustomStringConvertible {
         /// Metadata of the file or folder.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         /// A copy reference to the file or folder.
-        open let copyReference: String
+        public let copyReference: String
         /// The expiration date of the copy reference. This value is currently set to be far enough in the future so
         /// that expiration is effectively not an issue.
-        open let expires: Date
+        public let expires: Date
         public init(metadata: Files.Metadata, copyReference: String, expires: Date) {
             self.metadata = metadata
             stringValidator()(copyReference)
@@ -2011,7 +2022,7 @@ open class Files {
     /// The GetTemporaryLinkArg struct
     open class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2086,9 +2097,9 @@ open class Files {
     /// The GetTemporaryLinkResult struct
     open class GetTemporaryLinkResult: CustomStringConvertible {
         /// Metadata of the file.
-        open let metadata: Files.FileMetadata
+        public let metadata: Files.FileMetadata
         /// The temporary link which can be used to stream content the file.
-        open let link: String
+        public let link: String
         public init(metadata: Files.FileMetadata, link: String) {
             self.metadata = metadata
             stringValidator()(link)
@@ -2119,10 +2130,79 @@ open class Files {
         }
     }
 
+    /// The GetTemporaryUploadLinkArg struct
+    open class GetTemporaryUploadLinkArg: CustomStringConvertible {
+        /// Contains the path and other optional modifiers for the future upload commit. Equivalent to the parameters
+        /// provided to upload.
+        public let commitInfo: Files.CommitInfo
+        /// How long before this link expires, in seconds.  Attempting to start an upload with this link longer than
+        /// this period  of time after link creation will result in an error.
+        public let duration: Double
+        public init(commitInfo: Files.CommitInfo, duration: Double = 14400.0) {
+            self.commitInfo = commitInfo
+            comparableValidator(minValue: 60.0, maxValue: 14400.0)(duration)
+            self.duration = duration
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryUploadLinkArgSerializer().serialize(self)))"
+        }
+    }
+    open class GetTemporaryUploadLinkArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTemporaryUploadLinkArg) -> JSON {
+            let output = [ 
+            "commit_info": Files.CommitInfoSerializer().serialize(value.commitInfo),
+            "duration": Serialization._DoubleSerializer.serialize(value.duration),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTemporaryUploadLinkArg {
+            switch json {
+                case .dictionary(let dict):
+                    let commitInfo = Files.CommitInfoSerializer().deserialize(dict["commit_info"] ?? .null)
+                    let duration = Serialization._DoubleSerializer.deserialize(dict["duration"] ?? .number(14400.0))
+                    return GetTemporaryUploadLinkArg(commitInfo: commitInfo, duration: duration)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GetTemporaryUploadLinkResult struct
+    open class GetTemporaryUploadLinkResult: CustomStringConvertible {
+        /// The temporary link which can be used to stream a file to a Dropbox location.
+        public let link: String
+        public init(link: String) {
+            stringValidator()(link)
+            self.link = link
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryUploadLinkResultSerializer().serialize(self)))"
+        }
+    }
+    open class GetTemporaryUploadLinkResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTemporaryUploadLinkResult) -> JSON {
+            let output = [ 
+            "link": Serialization._StringSerializer.serialize(value.link),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTemporaryUploadLinkResult {
+            switch json {
+                case .dictionary(let dict):
+                    let link = Serialization._StringSerializer.deserialize(dict["link"] ?? .null)
+                    return GetTemporaryUploadLinkResult(link: link)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Arguments for getThumbnailBatch.
     open class GetThumbnailBatchArg: CustomStringConvertible {
         /// List of files to get thumbnails.
-        open let entries: Array<Files.ThumbnailArg>
+        public let entries: Array<Files.ThumbnailArg>
         public init(entries: Array<Files.ThumbnailArg>) {
             self.entries = entries
         }
@@ -2195,7 +2275,7 @@ open class Files {
     /// The GetThumbnailBatchResult struct
     open class GetThumbnailBatchResult: CustomStringConvertible {
         /// List of files and their thumbnails.
-        open let entries: Array<Files.GetThumbnailBatchResultEntry>
+        public let entries: Array<Files.GetThumbnailBatchResultEntry>
         public init(entries: Array<Files.GetThumbnailBatchResultEntry>) {
             self.entries = entries
         }
@@ -2225,9 +2305,9 @@ open class Files {
     /// The GetThumbnailBatchResultData struct
     open class GetThumbnailBatchResultData: CustomStringConvertible {
         /// (no description)
-        open let metadata: Files.FileMetadata
-        /// (no description)
-        open let thumbnail: String
+        public let metadata: Files.FileMetadata
+        /// A string containing the base64-encoded thumbnail data for this file.
+        public let thumbnail: String
         public init(metadata: Files.FileMetadata, thumbnail: String) {
             self.metadata = metadata
             stringValidator()(thumbnail)
@@ -2314,9 +2394,9 @@ open class Files {
     /// GPS coordinates for a photo or video.
     open class GpsCoordinates: CustomStringConvertible {
         /// Latitude of the GPS coordinates.
-        open let latitude: Double
+        public let latitude: Double
         /// Longitude of the GPS coordinates.
-        open let longitude: Double
+        public let longitude: Double
         public init(latitude: Double, longitude: Double) {
             comparableValidator()(latitude)
             self.latitude = latitude
@@ -2351,30 +2431,30 @@ open class Files {
     /// The ListFolderArg struct
     open class ListFolderArg: CustomStringConvertible {
         /// A unique identifier for the file.
-        open let path: String
+        public let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
         /// contain contents of all subfolders.
-        open let recursive: Bool
+        public let recursive: Bool
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        open let includeMediaInfo: Bool
+        public let includeMediaInfo: Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
-        open let includeDeleted: Bool
+        public let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        open let includeHasExplicitSharedMembers: Bool
+        public let includeHasExplicitSharedMembers: Bool
         /// If true, the results will include entries under mounted folders which includes app folder, shared folder and
         /// team folder.
-        open let includeMountedFolders: Bool
+        public let includeMountedFolders: Bool
         /// The maximum number of results to return per request. Note: This is an approximate number and there can be
         /// slightly more entries returned in some cases.
-        open let limit: UInt32?
+        public let limit: UInt32?
         /// A shared link to list the contents of. If the link is password-protected, the password must be provided. If
         /// this field is present, path in ListFolderArg will be relative to root of the shared link. Only non-recursive
         /// mode is supported for shared link.
-        open let sharedLink: Files.SharedLink?
+        public let sharedLink: Files.SharedLink?
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
         /// associated with the file and each of the listed templates.
-        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public let includePropertyGroups: FileProperties.TemplateFilterBase?
         public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2430,7 +2510,7 @@ open class Files {
     /// The ListFolderContinueArg struct
     open class ListFolderContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
-        open let cursor: String
+        public let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2557,7 +2637,7 @@ open class Files {
     /// The ListFolderGetLatestCursorResult struct
     open class ListFolderGetLatestCursorResult: CustomStringConvertible {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        open let cursor: String
+        public let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2589,11 +2669,11 @@ open class Files {
     open class ListFolderLongpollArg: CustomStringConvertible {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
-        open let cursor: String
+        public let cursor: String
         /// A timeout in seconds. The request will block for at most this length of time, plus up to 90 seconds of
         /// random jitter added to avoid the thundering herd problem. Care should be taken when using this parameter, as
         /// some network infrastructure does not support long timeouts.
-        open let timeout: UInt64
+        public let timeout: UInt64
         public init(cursor: String, timeout: UInt64 = 30) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2671,9 +2751,9 @@ open class Files {
     /// The ListFolderLongpollResult struct
     open class ListFolderLongpollResult: CustomStringConvertible {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
-        open let changes: Bool
+        public let changes: Bool
         /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
-        open let backoff: UInt64?
+        public let backoff: UInt64?
         public init(changes: Bool, backoff: UInt64? = nil) {
             self.changes = changes
             nullableValidator(comparableValidator())(backoff)
@@ -2707,11 +2787,11 @@ open class Files {
     /// The ListFolderResult struct
     open class ListFolderResult: CustomStringConvertible {
         /// The files and (direct) subfolders in the folder.
-        open let entries: Array<Files.Metadata>
+        public let entries: Array<Files.Metadata>
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        open let cursor: String
+        public let cursor: String
         /// If true, then there are more entries available. Pass the cursor to listFolderContinue to retrieve the rest.
-        open let hasMore: Bool
+        public let hasMore: Bool
         public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
             stringValidator(minLength: 1)(cursor)
@@ -2748,11 +2828,11 @@ open class Files {
     /// The ListRevisionsArg struct
     open class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
-        open let path: String
+        public let path: String
         /// Determines the behavior of the API in listing the revisions for a given file path or id.
-        open let mode: Files.ListRevisionsMode
+        public let mode: Files.ListRevisionsMode
         /// The maximum number of revision entries returned.
-        open let limit: UInt64
+        public let limit: UInt64
         public init(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2886,11 +2966,11 @@ open class Files {
     /// The ListRevisionsResult struct
     open class ListRevisionsResult: CustomStringConvertible {
         /// If the file identified by the latest revision in the response is either deleted or moved.
-        open let isDeleted: Bool
+        public let isDeleted: Bool
         /// The time of deletion if the file was deleted.
-        open let serverDeleted: Date?
+        public let serverDeleted: Date?
         /// The revisions for the file. Only revisions that are not deleted will show up here.
-        open let entries: Array<Files.FileMetadata>
+        public let entries: Array<Files.FileMetadata>
         public init(isDeleted: Bool, entries: Array<Files.FileMetadata>, serverDeleted: Date? = nil) {
             self.isDeleted = isDeleted
             self.serverDeleted = serverDeleted
@@ -2925,7 +3005,8 @@ open class Files {
 
     /// The LookupError union
     public enum LookupError: CustomStringConvertible {
-        /// An unspecified error.
+        /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
+        /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more information.
         case malformedPath(String?)
         /// There is nothing at the given path.
         case notFound
@@ -3047,11 +3128,11 @@ open class Files {
     /// Metadata for a photo or video.
     open class MediaMetadata: CustomStringConvertible {
         /// Dimension of the photo/video.
-        open let dimensions: Files.Dimensions?
+        public let dimensions: Files.Dimensions?
         /// The GPS coordinate of the photo/video.
-        open let location: Files.GpsCoordinates?
+        public let location: Files.GpsCoordinates?
         /// The timestamp when the photo/video is taken.
-        open let timeTaken: Date?
+        public let timeTaken: Date?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil) {
             self.dimensions = dimensions
             self.location = location
@@ -3102,6 +3183,78 @@ open class Files {
         }
     }
 
+    /// The RelocationBatchArgBase struct
+    open class RelocationBatchArgBase: CustomStringConvertible {
+        /// List of entries to be moved or copied. Each entry is RelocationPath.
+        public let entries: Array<Files.RelocationPath>
+        /// If there's a conflict with any file, have the Dropbox server try to autorename that file to avoid the
+        /// conflict.
+        public let autorename: Bool
+        public init(entries: Array<Files.RelocationPath>, autorename: Bool = false) {
+            self.entries = entries
+            self.autorename = autorename
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchArgBaseSerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchArgBaseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchArgBase) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.RelocationPathSerializer()).serialize(value.entries),
+            "autorename": Serialization._BoolSerializer.serialize(value.autorename),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchArgBase {
+            switch json {
+                case .dictionary(let dict):
+                    let entries = ArraySerializer(Files.RelocationPathSerializer()).deserialize(dict["entries"] ?? .null)
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    return RelocationBatchArgBase(entries: entries, autorename: autorename)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MoveBatchArg struct
+    open class MoveBatchArg: Files.RelocationBatchArgBase {
+        /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
+        /// not apply to copies.
+        public let allowOwnershipTransfer: Bool
+        public init(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowOwnershipTransfer: Bool = false) {
+            self.allowOwnershipTransfer = allowOwnershipTransfer
+            super.init(entries: entries, autorename: autorename)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MoveBatchArgSerializer().serialize(self)))"
+        }
+    }
+    open class MoveBatchArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MoveBatchArg) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.RelocationPathSerializer()).serialize(value.entries),
+            "autorename": Serialization._BoolSerializer.serialize(value.autorename),
+            "allow_ownership_transfer": Serialization._BoolSerializer.serialize(value.allowOwnershipTransfer),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MoveBatchArg {
+            switch json {
+                case .dictionary(let dict):
+                    let entries = ArraySerializer(Files.RelocationPathSerializer()).deserialize(dict["entries"] ?? .null)
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let allowOwnershipTransfer = Serialization._BoolSerializer.deserialize(dict["allow_ownership_transfer"] ?? .number(0))
+                    return MoveBatchArg(entries: entries, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Metadata for a photo.
     open class PhotoMetadata: Files.MediaMetadata {
         open override var description: String {
@@ -3134,9 +3287,9 @@ open class Files {
     /// The PreviewArg struct
     open class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
-        open let path: String
+        public let path: String
         /// Please specify revision in path instead.
-        open let rev: String?
+        public let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -3231,9 +3384,9 @@ open class Files {
     /// The RelocationPath struct
     open class RelocationPath: CustomStringConvertible {
         /// Path in the user's Dropbox to be copied or moved.
-        open let fromPath: String
+        public let fromPath: String
         /// Path in the user's Dropbox that is the destination.
-        open let toPath: String
+        public let toPath: String
         public init(fromPath: String, toPath: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(fromPath)
             self.fromPath = fromPath
@@ -3269,12 +3422,12 @@ open class Files {
     open class RelocationArg: Files.RelocationPath {
         /// If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError will be
         /// returned if fromPath contains shared folder. This field is always true for move.
-        open let allowSharedFolder: Bool
+        public let allowSharedFolder: Bool
         /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
-        open let allowOwnershipTransfer: Bool
+        public let allowOwnershipTransfer: Bool
         public init(fromPath: String, toPath: String, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) {
             self.allowSharedFolder = allowSharedFolder
             self.autorename = autorename
@@ -3313,26 +3466,20 @@ open class Files {
     }
 
     /// The RelocationBatchArg struct
-    open class RelocationBatchArg: CustomStringConvertible {
-        /// List of entries to be moved or copied. Each entry is RelocationPath.
-        open let entries: Array<Files.RelocationPath>
+    open class RelocationBatchArg: Files.RelocationBatchArgBase {
         /// If true, copyBatch will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError
-        /// will be returned if fromPath in RelocationPath contains shared folder.  This field is always true for
+        /// will be returned if fromPath in RelocationPath contains shared folder. This field is always true for
         /// moveBatch.
-        open let allowSharedFolder: Bool
-        /// If there's a conflict with any file, have the Dropbox server try to autorename that file to avoid the
-        /// conflict.
-        open let autorename: Bool
+        public let allowSharedFolder: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
-        open let allowOwnershipTransfer: Bool
-        public init(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) {
-            self.entries = entries
+        public let allowOwnershipTransfer: Bool
+        public init(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowSharedFolder: Bool = false, allowOwnershipTransfer: Bool = false) {
             self.allowSharedFolder = allowSharedFolder
-            self.autorename = autorename
             self.allowOwnershipTransfer = allowOwnershipTransfer
+            super.init(entries: entries, autorename: autorename)
         }
-        open var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchArgSerializer().serialize(self)))"
         }
     }
@@ -3341,8 +3488,8 @@ open class Files {
         open func serialize(_ value: RelocationBatchArg) -> JSON {
             let output = [ 
             "entries": ArraySerializer(Files.RelocationPathSerializer()).serialize(value.entries),
-            "allow_shared_folder": Serialization._BoolSerializer.serialize(value.allowSharedFolder),
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
+            "allow_shared_folder": Serialization._BoolSerializer.serialize(value.allowSharedFolder),
             "allow_ownership_transfer": Serialization._BoolSerializer.serialize(value.allowOwnershipTransfer),
             ]
             return .dictionary(output)
@@ -3351,10 +3498,10 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let entries = ArraySerializer(Files.RelocationPathSerializer()).deserialize(dict["entries"] ?? .null)
-                    let allowSharedFolder = Serialization._BoolSerializer.deserialize(dict["allow_shared_folder"] ?? .number(0))
                     let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let allowSharedFolder = Serialization._BoolSerializer.deserialize(dict["allow_shared_folder"] ?? .number(0))
                     let allowOwnershipTransfer = Serialization._BoolSerializer.deserialize(dict["allow_ownership_transfer"] ?? .number(0))
-                    return RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+                    return RelocationBatchArg(entries: entries, autorename: autorename, allowSharedFolder: allowSharedFolder, allowOwnershipTransfer: allowOwnershipTransfer)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3384,6 +3531,9 @@ open class Files {
         case cantTransferOwnership
         /// The current user does not have enough space to move or copy the files.
         case insufficientQuota
+        /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
+        /// succeeded, and if not, try again. This should happen very rarely.
+        case internalError
         /// An unspecified error.
         case other
 
@@ -3435,6 +3585,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("insufficient_quota")
                     return .dictionary(d)
+                case .internalError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_error")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3469,6 +3623,8 @@ open class Files {
                             return RelocationError.cantTransferOwnership
                         case "insufficient_quota":
                             return RelocationError.insufficientQuota
+                        case "internal_error":
+                            return RelocationError.internalError
                         case "other":
                             return RelocationError.other
                         default:
@@ -3503,6 +3659,9 @@ open class Files {
         case cantTransferOwnership
         /// The current user does not have enough space to move or copy the files.
         case insufficientQuota
+        /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
+        /// succeeded, and if not, try again. This should happen very rarely.
+        case internalError
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -3556,6 +3715,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("insufficient_quota")
                     return .dictionary(d)
+                case .internalError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_error")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3594,12 +3757,75 @@ open class Files {
                             return RelocationBatchError.cantTransferOwnership
                         case "insufficient_quota":
                             return RelocationBatchError.insufficientQuota
+                        case "internal_error":
+                            return RelocationBatchError.internalError
                         case "other":
                             return RelocationBatchError.other
                         case "too_many_write_operations":
                             return RelocationBatchError.tooManyWriteOperations
                         default:
                             fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The RelocationBatchErrorEntry union
+    public enum RelocationBatchErrorEntry: CustomStringConvertible {
+        /// User errors that retry won't help.
+        case relocationError(Files.RelocationError)
+        /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
+        /// succeeded, and if not, try again. This should happen very rarely.
+        case internalError
+        /// There are too many write operations in user's Dropbox. Please retry this request.
+        case tooManyWriteOperations
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchErrorEntrySerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchErrorEntrySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchErrorEntry) -> JSON {
+            switch value {
+                case .relocationError(let arg):
+                    var d = ["relocation_error": Files.RelocationErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("relocation_error")
+                    return .dictionary(d)
+                case .internalError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_error")
+                    return .dictionary(d)
+                case .tooManyWriteOperations:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_write_operations")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchErrorEntry {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "relocation_error":
+                            let v = Files.RelocationErrorSerializer().deserialize(d["relocation_error"] ?? .null)
+                            return RelocationBatchErrorEntry.relocationError(v)
+                        case "internal_error":
+                            return RelocationBatchErrorEntry.internalError
+                        case "too_many_write_operations":
+                            return RelocationBatchErrorEntry.tooManyWriteOperations
+                        case "other":
+                            return RelocationBatchErrorEntry.other
+                        default:
+                            return RelocationBatchErrorEntry.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -3717,7 +3943,7 @@ open class Files {
     /// The RelocationBatchResult struct
     open class RelocationBatchResult: Files.FileOpsResult {
         /// (no description)
-        open let entries: Array<Files.RelocationBatchResultData>
+        public let entries: Array<Files.RelocationBatchResultData>
         public init(entries: Array<Files.RelocationBatchResultData>) {
             self.entries = entries
             super.init()
@@ -3748,7 +3974,7 @@ open class Files {
     /// The RelocationBatchResultData struct
     open class RelocationBatchResultData: CustomStringConvertible {
         /// Metadata of the relocated object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -3775,10 +4001,187 @@ open class Files {
         }
     }
 
+    /// The RelocationBatchResultEntry union
+    public enum RelocationBatchResultEntry: CustomStringConvertible {
+        /// An unspecified error.
+        case success(Files.Metadata)
+        /// An unspecified error.
+        case failure(Files.RelocationBatchErrorEntry)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchResultEntrySerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchResultEntrySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchResultEntry) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = ["success": Files.MetadataSerializer().serialize(arg)]
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .failure(let arg):
+                    var d = ["failure": Files.RelocationBatchErrorEntrySerializer().serialize(arg)]
+                    d[".tag"] = .str("failure")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchResultEntry {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Files.MetadataSerializer().deserialize(d["success"] ?? .null)
+                            return RelocationBatchResultEntry.success(v)
+                        case "failure":
+                            let v = Files.RelocationBatchErrorEntrySerializer().deserialize(d["failure"] ?? .null)
+                            return RelocationBatchResultEntry.failure(v)
+                        case "other":
+                            return RelocationBatchResultEntry.other
+                        default:
+                            return RelocationBatchResultEntry.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Result returned by copyBatchV2 or moveBatchV2 that may either launch an asynchronous job or complete
+    /// synchronously.
+    public enum RelocationBatchV2JobStatus: CustomStringConvertible {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// The copy or move batch job has finished.
+        case complete(Files.RelocationBatchV2Result)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchV2JobStatusSerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchV2JobStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchV2JobStatus) -> JSON {
+            switch value {
+                case .inProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("in_progress")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Files.RelocationBatchV2ResultSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchV2JobStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "in_progress":
+                            return RelocationBatchV2JobStatus.inProgress
+                        case "complete":
+                            let v = Files.RelocationBatchV2ResultSerializer().deserialize(json)
+                            return RelocationBatchV2JobStatus.complete(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Result returned by copyBatchV2 or moveBatchV2 that may either launch an asynchronous job or complete
+    /// synchronously.
+    public enum RelocationBatchV2Launch: CustomStringConvertible {
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
+        case asyncJobId(String)
+        /// An unspecified error.
+        case complete(Files.RelocationBatchV2Result)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchV2LaunchSerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchV2LaunchSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchV2Launch) -> JSON {
+            switch value {
+                case .asyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("async_job_id")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Files.RelocationBatchV2ResultSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchV2Launch {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                            return RelocationBatchV2Launch.asyncJobId(v)
+                        case "complete":
+                            let v = Files.RelocationBatchV2ResultSerializer().deserialize(json)
+                            return RelocationBatchV2Launch.complete(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The RelocationBatchV2Result struct
+    open class RelocationBatchV2Result: Files.FileOpsResult {
+        /// Each entry in CopyBatchArg.entries or entries in MoveBatchArg will appear at the same position inside
+        /// entries in RelocationBatchV2Result.
+        public let entries: Array<Files.RelocationBatchResultEntry>
+        public init(entries: Array<Files.RelocationBatchResultEntry>) {
+            self.entries = entries
+            super.init()
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationBatchV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class RelocationBatchV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RelocationBatchV2Result) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.RelocationBatchResultEntrySerializer()).serialize(value.entries),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> RelocationBatchV2Result {
+            switch json {
+                case .dictionary(let dict):
+                    let entries = ArraySerializer(Files.RelocationBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .null)
+                    return RelocationBatchV2Result(entries: entries)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The RelocationResult struct
     open class RelocationResult: Files.FileOpsResult {
         /// Metadata of the relocated object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
             super.init()
@@ -3808,10 +4211,10 @@ open class Files {
 
     /// The RestoreArg struct
     open class RestoreArg: CustomStringConvertible {
-        /// The path to the file you want to restore.
-        open let path: String
-        /// The revision to restore for the file.
-        open let rev: String
+        /// The path to save the restored file.
+        public let path: String
+        /// The revision to restore.
+        public let rev: String
         public init(path: String, rev: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -3849,7 +4252,7 @@ open class Files {
         case pathLookup(Files.LookupError)
         /// An error occurs when trying to restore the file to that path.
         case pathWrite(Files.WriteError)
-        /// The revision is invalid. It may point to a different file.
+        /// The revision is invalid. It may not exist.
         case invalidRevision
         /// An unspecified error.
         case other
@@ -3907,9 +4310,9 @@ open class Files {
     /// The SaveCopyReferenceArg struct
     open class SaveCopyReferenceArg: CustomStringConvertible {
         /// A copy reference returned by copyReferenceGet.
-        open let copyReference: String
+        public let copyReference: String
         /// Path in the user's Dropbox that is the destination.
-        open let path: String
+        public let path: String
         public init(copyReference: String, path: String) {
             stringValidator()(copyReference)
             self.copyReference = copyReference
@@ -4021,7 +4424,7 @@ open class Files {
     /// The SaveCopyReferenceResult struct
     open class SaveCopyReferenceResult: CustomStringConvertible {
         /// The metadata of the saved file or folder in the user's Dropbox.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -4051,9 +4454,9 @@ open class Files {
     /// The SaveUrlArg struct
     open class SaveUrlArg: CustomStringConvertible {
         /// The path in Dropbox where the URL will be saved to.
-        open let path: String
+        public let path: String
         /// The URL to be saved.
-        open let url: String
+        public let url: String
         public init(path: String, url: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
@@ -4255,18 +4658,18 @@ open class Files {
     /// The SearchArg struct
     open class SearchArg: CustomStringConvertible {
         /// The path in the user's Dropbox to search. Should probably be a folder.
-        open let path: String
+        public let path: String
         /// The string to search for. The search string is split on spaces into multiple tokens. For file name
         /// searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
         /// car").
-        open let query: String
+        public let query: String
         /// The starting index within the search results (used for paging).
-        open let start: UInt64
+        public let start: UInt64
         /// The maximum number of search results to return.
-        open let maxResults: UInt64
+        public let maxResults: UInt64
         /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is
         /// only available for Dropbox Business accounts.
-        open let mode: Files.SearchMode
+        public let mode: Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -4356,9 +4759,9 @@ open class Files {
     /// The SearchMatch struct
     open class SearchMatch: CustomStringConvertible {
         /// The type of the match.
-        open let matchType: Files.SearchMatchType
+        public let matchType: Files.SearchMatchType
         /// The metadata for the matched file or folder.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(matchType: Files.SearchMatchType, metadata: Files.Metadata) {
             self.matchType = matchType
             self.metadata = metadata
@@ -4493,12 +4896,12 @@ open class Files {
     /// The SearchResult struct
     open class SearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
-        open let matches: Array<Files.SearchMatch>
+        public let matches: Array<Files.SearchMatch>
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
         /// calling search again.
-        open let more: Bool
+        public let more: Bool
         /// Used for paging. Value to set the start argument to when calling search to fetch the next page of results.
-        open let start: UInt64
+        public let start: UInt64
         public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64) {
             self.matches = matches
             self.more = more
@@ -4535,9 +4938,9 @@ open class Files {
     /// The SharedLink struct
     open class SharedLink: CustomStringConvertible {
         /// Shared link url.
-        open let url: String
+        public let url: String
         /// Password for the shared link.
-        open let password: String?
+        public let password: String?
         public init(url: String, password: String? = nil) {
             stringValidator()(url)
             self.url = url
@@ -4572,7 +4975,7 @@ open class Files {
     /// The SymlinkInfo struct
     open class SymlinkInfo: CustomStringConvertible {
         /// The target this symlink points to.
-        open let target: String
+        public let target: String
         public init(target: String) {
             stringValidator()(target)
             self.target = target
@@ -4776,14 +5179,14 @@ open class Files {
     /// The ThumbnailArg struct
     open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
-        open let path: String
+        public let path: String
         /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
         /// preferred, while png is  better for screenshots and digital arts.
-        open let format: Files.ThumbnailFormat
+        public let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
-        open let size: Files.ThumbnailSize
+        public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
-        open let mode: Files.ThumbnailMode
+        public let mode: Files.ThumbnailMode
         public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -5182,10 +5585,10 @@ open class Files {
     /// The UploadSessionAppendArg struct
     open class UploadSessionAppendArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        open let cursor: Files.UploadSessionCursor
+        public let cursor: Files.UploadSessionCursor
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        open let close: Bool
+        public let close: Bool
         public init(cursor: Files.UploadSessionCursor, close: Bool = false) {
             self.cursor = cursor
             self.close = close
@@ -5218,10 +5621,10 @@ open class Files {
     /// The UploadSessionCursor struct
     open class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
-        open let sessionId: String
+        public let sessionId: String
         /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
         /// duplicated in the event of a network error.
-        open let offset: UInt64
+        public let offset: UInt64
         public init(sessionId: String, offset: UInt64) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
@@ -5256,9 +5659,9 @@ open class Files {
     /// The UploadSessionFinishArg struct
     open class UploadSessionFinishArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        open let cursor: Files.UploadSessionCursor
+        public let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
-        open let commit: Files.CommitInfo
+        public let commit: Files.CommitInfo
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
             self.cursor = cursor
             self.commit = commit
@@ -5291,7 +5694,7 @@ open class Files {
     /// The UploadSessionFinishBatchArg struct
     open class UploadSessionFinishBatchArg: CustomStringConvertible {
         /// Commit information for each file in the batch.
-        open let entries: Array<Files.UploadSessionFinishArg>
+        public let entries: Array<Files.UploadSessionFinishArg>
         public init(entries: Array<Files.UploadSessionFinishArg>) {
             self.entries = entries
         }
@@ -5419,8 +5822,9 @@ open class Files {
 
     /// The UploadSessionFinishBatchResult struct
     open class UploadSessionFinishBatchResult: CustomStringConvertible {
-        /// Commit result for each file in the batch.
-        open let entries: Array<Files.UploadSessionFinishBatchResultEntry>
+        /// Each entry in entries in UploadSessionFinishBatchArg will appear at the same position inside entries in
+        /// UploadSessionFinishBatchResult.
+        public let entries: Array<Files.UploadSessionFinishBatchResultEntry>
         public init(entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
             self.entries = entries
         }
@@ -5654,7 +6058,7 @@ open class Files {
     /// The UploadSessionOffsetError struct
     open class UploadSessionOffsetError: CustomStringConvertible {
         /// The offset up to which data has been collected.
-        open let correctOffset: UInt64
+        public let correctOffset: UInt64
         public init(correctOffset: UInt64) {
             comparableValidator()(correctOffset)
             self.correctOffset = correctOffset
@@ -5686,7 +6090,7 @@ open class Files {
     open class UploadSessionStartArg: CustomStringConvertible {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        open let close: Bool
+        public let close: Bool
         public init(close: Bool = false) {
             self.close = close
         }
@@ -5716,7 +6120,7 @@ open class Files {
     /// The UploadSessionStartResult struct
     open class UploadSessionStartResult: CustomStringConvertible {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
-        open let sessionId: String
+        public let sessionId: String
         public init(sessionId: String) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
@@ -5747,10 +6151,10 @@ open class Files {
     /// The UploadWriteFailed struct
     open class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
-        open let reason: Files.WriteError
+        public let reason: Files.WriteError
         /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
         /// used to retry the commit with uploadSessionFinish.
-        open let uploadSessionId: String
+        public let uploadSessionId: String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
             stringValidator()(uploadSessionId)
@@ -5784,7 +6188,7 @@ open class Files {
     /// Metadata for a video.
     open class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
-        open let duration: UInt64?
+        public let duration: UInt64?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil, duration: UInt64? = nil) {
             nullableValidator(comparableValidator())(duration)
             self.duration = duration
@@ -5880,7 +6284,8 @@ open class Files {
 
     /// The WriteError union
     public enum WriteError: CustomStringConvertible {
-        /// An unspecified error.
+        /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
+        /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more information.
         case malformedPath(String?)
         /// Couldn't write to the target path because there was something in the way.
         case conflict(Files.WriteConflictError)
@@ -6036,6 +6441,7 @@ open class Files {
 
     static let alphaGetMetadata = Route(
         name: "alpha/get_metadata",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.AlphaGetMetadataArgSerializer(),
@@ -6046,6 +6452,7 @@ open class Files {
     )
     static let alphaUpload = Route(
         name: "alpha/upload",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.CommitInfoWithPropertiesSerializer(),
@@ -6054,8 +6461,20 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
+    static let copyV2 = Route(
+        name: "copy",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.RelocationResultSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let copy = Route(
         name: "copy",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.RelocationArgSerializer(),
@@ -6064,20 +6483,44 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let copyBatch = Route(
+    static let copyBatchV2 = Route(
         name: "copy_batch",
+        version: 2,
         namespace: "files",
         deprecated: false,
+        argSerializer: Files.RelocationBatchArgBaseSerializer(),
+        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let copyBatch = Route(
+        name: "copy_batch",
+        version: 1,
+        namespace: "files",
+        deprecated: true,
         argSerializer: Files.RelocationBatchArgSerializer(),
         responseSerializer: Files.RelocationBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let copyBatchCheck = Route(
+    static let copyBatchCheckV2 = Route(
         name: "copy_batch/check",
+        version: 2,
         namespace: "files",
         deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let copyBatchCheck = Route(
+        name: "copy_batch/check",
+        version: 1,
+        namespace: "files",
+        deprecated: true,
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
@@ -6086,6 +6529,7 @@ open class Files {
     )
     static let copyReferenceGet = Route(
         name: "copy_reference/get",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetCopyReferenceArgSerializer(),
@@ -6096,6 +6540,7 @@ open class Files {
     )
     static let copyReferenceSave = Route(
         name: "copy_reference/save",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SaveCopyReferenceArgSerializer(),
@@ -6104,18 +6549,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let copyV2 = Route(
-        name: "copy_v2",
+    static let createFolderV2 = Route(
+        name: "create_folder",
+        version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.RelocationResultSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
+        argSerializer: Files.CreateFolderArgSerializer(),
+        responseSerializer: Files.CreateFolderResultSerializer(),
+        errorSerializer: Files.CreateFolderErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
     static let createFolder = Route(
         name: "create_folder",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.CreateFolderArgSerializer(),
@@ -6126,6 +6573,7 @@ open class Files {
     )
     static let createFolderBatch = Route(
         name: "create_folder_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.CreateFolderBatchArgSerializer(),
@@ -6136,6 +6584,7 @@ open class Files {
     )
     static let createFolderBatchCheck = Route(
         name: "create_folder_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6144,18 +6593,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let createFolderV2 = Route(
-        name: "create_folder_v2",
+    static let deleteV2 = Route(
+        name: "delete",
+        version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.CreateFolderArgSerializer(),
-        responseSerializer: Files.CreateFolderResultSerializer(),
-        errorSerializer: Files.CreateFolderErrorSerializer(),
+        argSerializer: Files.DeleteArgSerializer(),
+        responseSerializer: Files.DeleteResultSerializer(),
+        errorSerializer: Files.DeleteErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
     static let delete = Route(
         name: "delete",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.DeleteArgSerializer(),
@@ -6166,6 +6617,7 @@ open class Files {
     )
     static let deleteBatch = Route(
         name: "delete_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DeleteBatchArgSerializer(),
@@ -6176,6 +6628,7 @@ open class Files {
     )
     static let deleteBatchCheck = Route(
         name: "delete_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6184,18 +6637,9 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let deleteV2 = Route(
-        name: "delete_v2",
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.DeleteArgSerializer(),
-        responseSerializer: Files.DeleteResultSerializer(),
-        errorSerializer: Files.DeleteErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
     static let download = Route(
         name: "download",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DownloadArgSerializer(),
@@ -6206,6 +6650,7 @@ open class Files {
     )
     static let downloadZip = Route(
         name: "download_zip",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DownloadZipArgSerializer(),
@@ -6216,6 +6661,7 @@ open class Files {
     )
     static let getMetadata = Route(
         name: "get_metadata",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetMetadataArgSerializer(),
@@ -6226,6 +6672,7 @@ open class Files {
     )
     static let getPreview = Route(
         name: "get_preview",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.PreviewArgSerializer(),
@@ -6236,6 +6683,7 @@ open class Files {
     )
     static let getTemporaryLink = Route(
         name: "get_temporary_link",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetTemporaryLinkArgSerializer(),
@@ -6244,8 +6692,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let getTemporaryUploadLink = Route(
+        name: "get_temporary_upload_link",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.GetTemporaryUploadLinkArgSerializer(),
+        responseSerializer: Files.GetTemporaryUploadLinkResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let getThumbnail = Route(
         name: "get_thumbnail",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ThumbnailArgSerializer(),
@@ -6256,6 +6716,7 @@ open class Files {
     )
     static let getThumbnailBatch = Route(
         name: "get_thumbnail_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetThumbnailBatchArgSerializer(),
@@ -6266,6 +6727,7 @@ open class Files {
     )
     static let listFolder = Route(
         name: "list_folder",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderArgSerializer(),
@@ -6276,6 +6738,7 @@ open class Files {
     )
     static let listFolderContinue = Route(
         name: "list_folder/continue",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderContinueArgSerializer(),
@@ -6286,6 +6749,7 @@ open class Files {
     )
     static let listFolderGetLatestCursor = Route(
         name: "list_folder/get_latest_cursor",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderArgSerializer(),
@@ -6296,6 +6760,7 @@ open class Files {
     )
     static let listFolderLongpoll = Route(
         name: "list_folder/longpoll",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderLongpollArgSerializer(),
@@ -6306,6 +6771,7 @@ open class Files {
     )
     static let listRevisions = Route(
         name: "list_revisions",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListRevisionsArgSerializer(),
@@ -6314,38 +6780,9 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let move = Route(
-        name: "move",
-        namespace: "files",
-        deprecated: true,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.MetadataSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let moveBatch = Route(
-        name: "move_batch",
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.RelocationBatchArgSerializer(),
-        responseSerializer: Files.RelocationBatchLaunchSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let moveBatchCheck = Route(
-        name: "move_batch/check",
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Async.PollArgSerializer(),
-        responseSerializer: Files.RelocationBatchJobStatusSerializer(),
-        errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
     static let moveV2 = Route(
-        name: "move_v2",
+        name: "move",
+        version: 2,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.RelocationArgSerializer(),
@@ -6354,8 +6791,64 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let move = Route(
+        name: "move",
+        version: 1,
+        namespace: "files",
+        deprecated: true,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.MetadataSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let moveBatchV2 = Route(
+        name: "move_batch",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.MoveBatchArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let moveBatch = Route(
+        name: "move_batch",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.RelocationBatchArgSerializer(),
+        responseSerializer: Files.RelocationBatchLaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let moveBatchCheckV2 = Route(
+        name: "move_batch/check",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let moveBatchCheck = Route(
+        name: "move_batch/check",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.RelocationBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let permanentlyDelete = Route(
         name: "permanently_delete",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DeleteArgSerializer(),
@@ -6366,6 +6859,7 @@ open class Files {
     )
     static let propertiesAdd = Route(
         name: "properties/add",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
@@ -6376,6 +6870,7 @@ open class Files {
     )
     static let propertiesOverwrite = Route(
         name: "properties/overwrite",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
@@ -6386,6 +6881,7 @@ open class Files {
     )
     static let propertiesRemove = Route(
         name: "properties/remove",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
@@ -6396,6 +6892,7 @@ open class Files {
     )
     static let propertiesTemplateGet = Route(
         name: "properties/template/get",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.GetTemplateArgSerializer(),
@@ -6406,6 +6903,7 @@ open class Files {
     )
     static let propertiesTemplateList = Route(
         name: "properties/template/list",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Serialization._VoidSerializer,
@@ -6416,6 +6914,7 @@ open class Files {
     )
     static let propertiesUpdate = Route(
         name: "properties/update",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
@@ -6426,6 +6925,7 @@ open class Files {
     )
     static let restore = Route(
         name: "restore",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.RestoreArgSerializer(),
@@ -6436,6 +6936,7 @@ open class Files {
     )
     static let saveUrl = Route(
         name: "save_url",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SaveUrlArgSerializer(),
@@ -6446,6 +6947,7 @@ open class Files {
     )
     static let saveUrlCheckJobStatus = Route(
         name: "save_url/check_job_status",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6456,6 +6958,7 @@ open class Files {
     )
     static let search = Route(
         name: "search",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SearchArgSerializer(),
@@ -6466,6 +6969,7 @@ open class Files {
     )
     static let upload = Route(
         name: "upload",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.CommitInfoSerializer(),
@@ -6474,18 +6978,9 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
-    static let uploadSessionAppend = Route(
-        name: "upload_session/append",
-        namespace: "files",
-        deprecated: true,
-        argSerializer: Files.UploadSessionCursorSerializer(),
-        responseSerializer: Serialization._VoidSerializer,
-        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
     static let uploadSessionAppendV2 = Route(
-        name: "upload_session/append_v2",
+        name: "upload_session/append",
+        version: 2,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionAppendArgSerializer(),
@@ -6494,8 +6989,20 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
+    static let uploadSessionAppend = Route(
+        name: "upload_session/append",
+        version: 1,
+        namespace: "files",
+        deprecated: true,
+        argSerializer: Files.UploadSessionCursorSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
     static let uploadSessionFinish = Route(
         name: "upload_session/finish",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionFinishArgSerializer(),
@@ -6506,6 +7013,7 @@ open class Files {
     )
     static let uploadSessionFinishBatch = Route(
         name: "upload_session/finish_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
@@ -6516,6 +7024,7 @@ open class Files {
     )
     static let uploadSessionFinishBatchCheck = Route(
         name: "upload_session/finish_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6526,6 +7035,7 @@ open class Files {
     )
     static let uploadSessionStart = Route(
         name: "upload_session/start",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionStartArgSerializer(),
