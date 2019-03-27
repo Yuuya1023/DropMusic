@@ -65,6 +65,9 @@
 		056AF8D7214D416600A5E497 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8D4214D416600A5E497 /* icon_repeat_one.png */; };
 		056AF8D9214D416600A5E497 /* icon_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8D6214D416600A5E497 /* icon_repeat.png */; };
 		056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8DC214D4DF100A5E497 /* icon_playlist.png */; };
+		05841A6B224BB4290054E51C /* MusicPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6A224BB4290054E51C /* MusicPlayerView.xib */; };
+		05841A6D224BBA4B0054E51C /* icon_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6C224BBA4A0054E51C /* icon_menu.png */; };
+		05841A6F224BBB700054E51C /* icon_airplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6E224BBB700054E51C /* icon_airplay.png */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootTabBarController.swift */; };
 		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
@@ -142,6 +145,9 @@
 		056AF8D4214D416600A5E497 /* icon_repeat_one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one.png; sourceTree = "<group>"; };
 		056AF8D6214D416600A5E497 /* icon_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat.png; sourceTree = "<group>"; };
 		056AF8DC214D4DF100A5E497 /* icon_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlist.png; sourceTree = "<group>"; };
+		05841A6A224BB4290054E51C /* MusicPlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicPlayerView.xib; sourceTree = "<group>"; };
+		05841A6C224BBA4A0054E51C /* icon_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_menu.png; sourceTree = "<group>"; };
+		05841A6E224BBB700054E51C /* icon_airplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_airplay.png; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05A016B3213ED0A40057B459 /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
@@ -182,9 +188,11 @@
 				05617F622153DD1B0025F07E /* tab_settings.png */,
 				05617F642153DD1B0025F07E /* twitter.png */,
 				0533A5DD21514973006E625A /* no_image.gif */,
+				05841A6E224BBB700054E51C /* icon_airplay.png */,
 				05617F71215D028F0025F07E /* icon_nonshuffle.png */,
 				05617F70215D028F0025F07E /* icon_shuffle.png */,
 				056AF8DC214D4DF100A5E497 /* icon_playlist.png */,
+				05841A6C224BBA4A0054E51C /* icon_menu.png */,
 				05617F74215D06FD0025F07E /* icon_back.png */,
 				05617F75215D06FD0025F07E /* icon_next.png */,
 				056AF8D6214D416600A5E497 /* icon_repeat.png */,
@@ -304,6 +312,14 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		05841A69224BB3F60054E51C /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				05841A6A224BB4290054E51C /* MusicPlayerView.xib */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
 		05A016A5213ED0A40057B459 = {
 			isa = PBXGroup;
 			children = (
@@ -326,6 +342,7 @@
 		05A016B0213ED0A40057B459 /* DropMusic */ = {
 			isa = PBXGroup;
 			children = (
+				05841A69224BB3F60054E51C /* Interface */,
 				05617F5D2153C8AD0025F07E /* Manager */,
 				0533A59F214D7B60006E625A /* Extension */,
 				05027989214809300094CC40 /* Object */,
@@ -473,6 +490,7 @@
 				0533A5D1214EAAE3006E625A /* appicon-Small@3x.png in Resources */,
 				0533A5C7214EAAE3006E625A /* appicon-76.png in Resources */,
 				0533A5D0214EAAE3006E625A /* appicon-83.5@2x.png in Resources */,
+				05841A6B224BB4290054E51C /* MusicPlayerView.xib in Resources */,
 				05617F73215D02900025F07E /* icon_nonshuffle.png in Resources */,
 				05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */,
 				05617F77215D06FD0025F07E /* icon_next.png in Resources */,
@@ -489,6 +507,7 @@
 				0533A5C2214EAAE3006E625A /* appicon-60@3x.png in Resources */,
 				0533A5C6214EAAE3006E625A /* iTunesArtwork@2x in Resources */,
 				0533A5C9214EAAE3006E625A /* appicon-Small-40@2x.png in Resources */,
+				05841A6D224BBA4B0054E51C /* icon_menu.png in Resources */,
 				05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */,
 				056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */,
 				05617F50215290250025F07E /* pause.png in Resources */,
@@ -497,6 +516,7 @@
 				05617F76215D06FD0025F07E /* icon_back.png in Resources */,
 				05617F72215D02900025F07E /* icon_shuffle.png in Resources */,
 				056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */,
+				05841A6F224BBB700054E51C /* icon_airplay.png in Resources */,
 				056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */,
 				0533A5CA214EAAE3006E625A /* appicon-Small-50.png in Resources */,
 			);
@@ -742,6 +762,7 @@
 			baseConfigurationReference = 4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6BQK829PNM;
 				INFOPLIST_FILE = DropMusic/Info.plist;
@@ -752,6 +773,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Dropmusic/BridgingHeader.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -763,6 +785,7 @@
 			baseConfigurationReference = 33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6BQK829PNM;
 				INFOPLIST_FILE = DropMusic/Info.plist;
@@ -773,6 +796,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Dropmusic/BridgingHeader.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
