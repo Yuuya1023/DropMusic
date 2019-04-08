@@ -34,11 +34,16 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         self.navigationController?.delegate = self
 //        self.navigationController?.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
-//        self.view.backgroundColor = UIColor(displayP3Red: 20/255, green: 30/255, blue: 80/255, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = .white
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(selectorMenuButton))
         
         //
         var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-98
+        bounds.size.height = bounds.size.height-132
         _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
         _tableView.rowHeight = 60
@@ -65,6 +70,39 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         self._tableView.reloadData()
     }
 
+    
+    // MARK: -
+    @objc func selectorMenuButton() {
+        let alert: UIAlertController = UIAlertController(title: nil,
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+        // ダウンロード.
+        let downloadAction:UIAlertAction =
+            UIAlertAction(title: "Download all",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            let playlist = PlayListManager.sharedManager.getPlaylistData(id: self._playListId)
+                            if playlist != nil {
+                                for audioData in (playlist?.audioList)! {
+                                    DownloadFileManager.sharedManager.addQueue(audioData: audioData)
+                                }
+                            }
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        alert.addAction(downloadAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
     
     
     
@@ -110,8 +148,23 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                 sender.progress.progress = 0
                             }
                             MetadataCacheManager.sharedManager.remove(audioData: audioData!)
-                            DownloadFileManager.sharedManager.download(audioData: audioData!)
+                            DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
             })
+        
+        if isExist {
+            let playlistAction:UIAlertAction =
+                UIAlertAction(title: "Add to playlist",
+                              style: .default,
+                              handler:{
+                                (action:UIAlertAction!) -> Void in
+                                let playlistvc = PlayListSelectViewController()
+                                playlistvc.setAudioData(data: audioData)
+                                let vc = UINavigationController(rootViewController: playlistvc)
+                                vc.modalTransitionStyle = .coverVertical
+                                self.present(vc, animated: true, completion: nil)
+                })
+            alert.addAction(playlistAction)
+        }
         // キャンセル.
         let cancelAction:UIAlertAction =
             UIAlertAction(title: "Cancel",
@@ -176,7 +229,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
             }
             else {
                 // ダウンロード.
-                DownloadFileManager.sharedManager.download(audioData: audioData!)
+                DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
             }
         }
     }

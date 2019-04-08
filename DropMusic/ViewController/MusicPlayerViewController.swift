@@ -107,6 +107,10 @@ class MusicPlayerViewControlloer: UIViewController {
         }
         
         do {
+            // メニュー.
+            _menuButton.addTarget(self, action: #selector(selectorMenuButton(_:)), for: .touchUpInside)
+            
+            // リピート.
             switch AudioPlayManager.sharedManager._repeatType {
             case .One:
                 _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
@@ -115,6 +119,7 @@ class MusicPlayerViewControlloer: UIViewController {
             }
             _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
             
+            // シャッフル.
             switch AudioPlayManager.sharedManager._shuffleType {
             case .None:
                 _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
@@ -123,6 +128,7 @@ class MusicPlayerViewControlloer: UIViewController {
             }
             _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
             
+            // ツイート.
             _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
             let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
                 target: self,
@@ -288,13 +294,35 @@ class MusicPlayerViewControlloer: UIViewController {
         AudioPlayManager.sharedManager._shuffleType = next
     }
     
-    @objc func selectorPlaylistButton(_ sender: UIButton) {
-        let playlistvc = PlayListSelectViewController()
-        playlistvc.setAudioData(data: AudioPlayManager.sharedManager._playing)
-        let vc = UINavigationController(rootViewController: playlistvc)
-        vc.modalTransitionStyle = .coverVertical
-//        vc.transitioningDelegate = self
-        present(vc, animated: true, completion: nil)
+    @objc func selectorMenuButton(_ sender: UIButton) {
+        let alert: UIAlertController = UIAlertController(title: AudioPlayManager.sharedManager._playing?.fileName,
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+        // プレイリストに追加.
+        let playlistAction:UIAlertAction =
+            UIAlertAction(title: "Add to playlist",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            let playlistvc = PlayListSelectViewController()
+                            playlistvc.setAudioData(data: AudioPlayManager.sharedManager._playing)
+                            let vc = UINavigationController(rootViewController: playlistvc)
+                            vc.modalTransitionStyle = .coverVertical
+                            self.present(vc, animated: true, completion: nil)
+
+            })
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        alert.addAction(playlistAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func selectorTwitterButton(_ sender: UIButton) {

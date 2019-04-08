@@ -62,7 +62,7 @@ class PlayListManager {
     }
     
     //
-    func addPlaylist(isSave: Bool = false) {
+    func addPlaylist(isSave: Bool = false) -> (String) {
         let latestId = String(Int(_manageData.latestId)!+1)
         _manageData.playlists.append(PlayListData(id: latestId,
                                                   name: "Playlist_" + String(Int(_manageData.latestId)!+1),
@@ -71,6 +71,7 @@ class PlayListManager {
         if isSave {
             save()
         }
+        return latestId
     }
     
     
@@ -207,8 +208,6 @@ class PlayListManager {
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
                 if let (metadata, url) = response {
-                    print("Downloaded file name: \(metadata.name)")
-                    print(url)
                     let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath)
                     if localFile != nil {
                         // ローカルにある場合はバージョンのチェック.
@@ -261,7 +260,6 @@ class PlayListManager {
             let decoder: JSONDecoder = JSONDecoder()
             do {
                 let newJson: PlayListManageData = try decoder.decode(PlayListManageData.self, from: data as Data)
-                print(newJson) //Success!!!
                 return newJson
             } catch {
                 print("json convert failed in JSONDecoder", error.localizedDescription)
@@ -339,8 +337,6 @@ class PlayListManager {
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
                 if let (metadata, url) = response {
-                    print("Downloaded file name: \(metadata.name)")
-                    print(url)
                     let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath)
                     // バージョンチェック.
                     if Int(tempData!.version)! > Int(localFile!.version)! {

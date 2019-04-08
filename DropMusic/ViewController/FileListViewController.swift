@@ -33,15 +33,21 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = _pathList.last
+        self.title = _pathList.count != 0 ? _pathList.last : "Cloud"
         self.navigationController?.delegate = self
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.tintColor = .white
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(selectorMenuButton))
         
         //
         var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-98
+        bounds.size.height = bounds.size.height-132
         _tableView = UITableView(frame: bounds, style: .plain)
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
@@ -53,7 +59,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         _tableView.register(FileListViewCell.self, forCellReuseIdentifier: NSStringFromClass(FileListViewCell.self))
         
         self.view.addSubview(_tableView)
-        
+
         //
         _refreshControll = UIRefreshControl()
         _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
@@ -157,7 +163,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                 MetadataCacheManager.sharedManager.remove(audioData: d)
                                 sender.progress.progress = 0
                             }
-                            DownloadFileManager.sharedManager.download(audioData: d)
+                            DownloadFileManager.sharedManager.addQueue(audioData: d)
             })
         // キャッシュ削除.
         let deleteCacheAction:UIAlertAction =
@@ -201,7 +207,6 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    
     // MARK: -
     @objc func selectorRefreshControll() {
         // キャッシュから消す.
@@ -209,7 +214,36 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         // 読み込み.
         load()
     }
-    
+
+    @objc func selectorMenuButton() {
+        let alert: UIAlertController = UIAlertController(title: nil,
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+        // ダウンロード.
+        let downloadAction:UIAlertAction =
+            UIAlertAction(title: "Download all",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            for info in self._datas {
+                                let d: AudioData! = AudioData.createFromFileInfo(fileInfo: info)
+                                DownloadFileManager.sharedManager.addQueue(audioData: d)
+                            }
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        alert.addAction(downloadAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
     
     
     // MARK: NavigationController Delegate.
@@ -266,7 +300,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                 AudioPlayManager.sharedManager.play()
             }
             else {
-                DownloadFileManager.sharedManager.download(audioData: audioData)
+                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
             }
         }
     }

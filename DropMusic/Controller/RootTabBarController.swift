@@ -20,7 +20,7 @@ class RootTabBarController: UITabBarController {
         // タブバーの設定.
         let vc1 = DropBoxRootNavigactionController()
         let vc2 = UINavigationController(rootViewController: PlayListViewController())
-        let vc3 = UINavigationController(rootViewController:  SettingsViewController())
+        let vc3 = UINavigationController(rootViewController: SettingsViewController())
         
         let size = CGSize(width: 25, height: 25)
         vc1.tabBarItem = UITabBarItem(title: "Cloud",
@@ -36,13 +36,18 @@ class RootTabBarController: UITabBarController {
         let tabs = NSArray(objects: vc1, vc2, vc3)
         self.setViewControllers(tabs as? [UIViewController], animated: false)
         
-        let statusView = AudioPlayStatusView(x: 0, y : self.view.bounds.height-98)
+        let statusView = AudioPlayStatusView(x: 0, y : self.view.bounds.height-132)
         self.view.addSubview(statusView)
         
         // プレイヤー表示.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(selectorShowAudioPlayer),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),
+                                               object: nil)
+        // ダウンロード数更新.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(selectorUpdateDownloadCount),
+                                               name: NSNotification.Name(rawValue: NOTIFICATION_DOWNLOAD_COUNT),
                                                object: nil)
     }
 
@@ -58,6 +63,12 @@ class RootTabBarController: UITabBarController {
         modalViewController.modalPresentationStyle = .custom
         modalViewController.transitioningDelegate = self
         present(modalViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func selectorUpdateDownloadCount(notification: Notification) {
+        let value : String = notification.object as! String
+        self.tabBar.items![0].badgeValue = value == "0" ? nil : value
+//        self.tabBarController?.viewControllers?[0].tabBarItem.badgeValue = value
     }
 }
 
