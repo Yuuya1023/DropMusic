@@ -77,6 +77,19 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             print(error.description)
         }
         
+        // 前回再生していた曲情報を取得.
+        do {
+            let decoder: JSONDecoder = JSONDecoder()
+            let defaults = UserDefaults.standard
+            let data = defaults.data(forKey: "audio")
+            if data != nil {
+                let audioData: AudioData = try decoder.decode(AudioData.self, from: data!)
+                set(audioData: audioData, isRefresh: false)
+            }
+        } catch {
+            print("json convert failed in JSONDecoder", error.localizedDescription)
+        }
+        
         // 他アプリでの再生時通知.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleSecondaryAudio),
@@ -118,22 +131,25 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if !FileManager.default.fileExists(atPath: cachePath) {
             return
         }
-        
         // 同じのだったら再生しない.
         if _playing != nil {
             if (_playing?.isEqualData(audioData: audioData))! {
                 return
             }
         }
-        
         // 履歴に追加.
         addHistory(_playing)
         // 再生中を保持.
         _playing = audioData
-        
+        // 曲情報を保存.
+        do {
+            let encoder = JSONEncoder()
+            let data = try! encoder.encode(_playing)
+            let defaults = UserDefaults.standard
+            defaults.set(data, forKey: "audio")
+        }
         // 曲情報の取得.
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
-        
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
             _audioPlayer.currentTime = 0

@@ -71,6 +71,9 @@ class AudioPlayStatusView: UIView {
                                                selector: #selector(selectorDidChangeAudio),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
+        
+        // 初回チェック.
+        set() 
     }
     override private init(frame: CGRect) {
         super.init(frame: frame)
@@ -88,12 +91,7 @@ class AudioPlayStatusView: UIView {
 //        return CGSize(width: UIScreen.main.bounds.size.width, height: 50)
 //    }
     
-    @objc func selectorTouchLayer(_ sender: UITapGestureRecognizer) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),
-                                        object: nil)
-    }
-    
-    @objc func selectorDidChangeAudio(_ notification: Notification) {
+    private func set() {
         let audioManager = AudioPlayManager.sharedManager
         if audioManager._metadata.artwork == nil {
             _artwork.image = UIImage(named: "no_image.gif")
@@ -103,6 +101,15 @@ class AudioPlayStatusView: UIView {
         }
         _titleLabel.text = audioManager._metadata.title
         _detailLabel.text = audioManager._metadata.artist + " ─ " + audioManager._metadata.album
+    }
+    
+    @objc func selectorTouchLayer(_ sender: UITapGestureRecognizer) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATION_SHOW_AUDIO_PLAYER_VIEW),
+                                        object: nil)
+    }
+    
+    @objc func selectorDidChangeAudio(_ notification: Notification) {
+        set()
     }
     
     @objc func selectorCheckAudioInformation(_ sender: UIButton) {
