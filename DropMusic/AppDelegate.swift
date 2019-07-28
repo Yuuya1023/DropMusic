@@ -26,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                            consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
         // プレイリスト.
         PlayListManager.sharedManager.checkPlaylistFile()
+        // AudioPlayManager.
+        AudioPlayManager.sharedManager
         
         _rootViewController = RootTabBarController()
         

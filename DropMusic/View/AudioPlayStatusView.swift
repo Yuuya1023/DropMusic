@@ -95,8 +95,9 @@ class AudioPlayStatusView: UIView {
                                                selector: #selector(selectorDidChangeAudio),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
-        
-        
+        // 初回チェック.
+        set()
+        //
         self.addSubview(view)
     }
 
@@ -130,6 +131,10 @@ class AudioPlayStatusView: UIView {
     
     
     @objc func selectorDidChangeAudio(_ notification: Notification) {
+        set()
+    }
+    
+    private func set() {
         let audioManager = AudioPlayManager.sharedManager
         if audioManager._metadata.artwork == nil {
             _artwork.image = UIImage(named: "no_image.gif")
