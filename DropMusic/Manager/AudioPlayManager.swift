@@ -307,11 +307,15 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if type == .begin {
             // 他のアプリケーションが再生を開始したため副次的なオーディオを消音.
             print("begin")
-            _audioPlayer.volume = 0.5
+            if _audioPlayer != nil {
+                _audioPlayer.volume = 0.5
+            }
         } else {
             // 他のアプリケーションが再生を停止したため副次的なオーディオを再開.
             print("end")
-            _audioPlayer.volume = 1.0
+            if _audioPlayer != nil {
+                _audioPlayer.volume = 1.0
+            }
         }
     }
     

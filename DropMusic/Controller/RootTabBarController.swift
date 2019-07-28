@@ -36,7 +36,12 @@ class RootTabBarController: UITabBarController {
         let tabs = NSArray(objects: vc1, vc2, vc3)
         self.setViewControllers(tabs as? [UIViewController], animated: false)
         
-        let statusView = AudioPlayStatusView(x: 0, y : self.view.bounds.height-132)
+        let statusView = AudioPlayStatusView()
+        let frame = CGRect(x: 0,
+                           y: self.view.bounds.height-132,
+                           width: statusView.frame.width,
+                           height: statusView.frame.height)
+        statusView.frame = frame
         self.view.addSubview(statusView)
         
         // プレイヤー表示.
