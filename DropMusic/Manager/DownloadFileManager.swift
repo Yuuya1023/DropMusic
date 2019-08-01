@@ -174,12 +174,12 @@ class DownloadFileManager  {
                         // ダウンロードの進捗を通知.
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
                                                         object: 1.0)
-                        // 次へ.
-                        self._isDownloading = false
-                        self.downloadNext()
                     } else {
                         print(error!)
                     }
+                    // 次へ.
+                    self._isDownloading = false
+                    self.downloadNext()
             }
         }
     }

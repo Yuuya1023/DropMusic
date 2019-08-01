@@ -8,31 +8,19 @@
 import UIKit
 
 class PlayListViewCell: UITableViewCell {
-    var icon: UIImageView!
-    var nameLabel: UILabel!
-    var tracksLabel: UILabel!
+    
+    @IBOutlet var _artwork: UIImageView!
+    @IBOutlet var _titleLabel: UILabel!
+    @IBOutlet var _tracksLabel: UILabel!
     
     var index: Int = 0
     var longpressTarget: NSObject? = nil
     var longpressSelector: Selector? = nil
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clear
-        
-        icon = UIImageView(image: UIImage())
-        icon.contentMode = .scaleAspectFit
-        contentView.addSubview(icon)
-        
-        nameLabel = UILabel(frame: CGRect.zero)
-        nameLabel.textAlignment = .left
-        contentView.addSubview(nameLabel)
-        
-        tracksLabel = UILabel(frame: CGRect.zero)
-        tracksLabel.textAlignment = .left
-        tracksLabel.textColor = UIColor.gray
-        contentView.addSubview(tracksLabel)
-        
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
             target: self,
@@ -40,9 +28,6 @@ class PlayListViewCell: UITableViewCell {
         self.addGestureRecognizer(tapGesture)
     }
     
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder: ) has not been implemented")
-    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -50,33 +35,22 @@ class PlayListViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        icon.frame = CGRect(x: 0, y: 0.5, width: frame.height-1, height: frame.height-1)
-        nameLabel.frame = CGRect(x: 80, y: -15, width: frame.width - 65, height: frame.height)
-        tracksLabel.frame = CGRect(x: 80, y: 15, width: frame.width - 65, height: frame.height)
     }
-    
-    
     
     // MARK: -
     func set(data: PlayListData?) {
-        icon.image = UIImage()
+        _artwork.image = UIImage()
         if data != nil {
-            nameLabel.text = data!.name
-            tracksLabel.text = String(data!.audioList.count) + " tracks"
+            _titleLabel.text = data!.name
+            _tracksLabel.text = String(data!.audioList.count) + " tracks"
             if (data?.audioList.count)! > 0 {
                 let d: AudioData = (data?.audioList[0])!
                 let metadata = MetadataCacheManager.sharedManager.get(audioData: d)
                 if metadata?.artwork != nil {
-                    icon.image = metadata?.artwork
+                    _artwork.image = metadata?.artwork
                 }
             }
         }
-    }
-    
-    func setAddPlayListCell() {
-        nameLabel.text = "+"
-        tracksLabel.text = ""
-        icon.image = UIImage()
     }
     
     

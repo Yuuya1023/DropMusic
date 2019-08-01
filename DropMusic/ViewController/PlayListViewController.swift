@@ -15,6 +15,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     var _timer: Timer!
     var _refreshControll: UIRefreshControl!
     
+    private let _cellIdentifier = "PlayListViewCell"
+    
     // MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,10 +40,11 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
             .flexibleWidth,
             .flexibleHeight
         ]
-        _tableView.rowHeight = 70
+//        _tableView.isEditing = true
+//        _tableView.allowsSelectionDuringEditing = true
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(PlayListViewCell.self, forCellReuseIdentifier: NSStringFromClass(PlayListViewCell.self))
+        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
         
         self.view.addSubview(_tableView)
         
@@ -148,13 +151,14 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     // MARK: - TableViewDelegate
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100.0
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return PlayListManager.sharedManager.playlistManageData.playlists.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let temp = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(PlayListViewCell.self))
-            ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(PlayListViewCell.self))
-        let c = temp as! PlayListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
         c.longpressTarget = self
@@ -170,9 +174,20 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         self.navigationController?.pushViewController(AudioListViewController(playListId: d.id),
                                                       animated: true)
     }
+//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+////        let d = PlayListManager.sharedManager.playlistManageData.playlists?[sourceIndexPath.row]
+//
+//    }
+//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+//        return .none
+//    }
+//    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+//        return false
+//    }
 }
-
-
 
 
 // MARK: -
