@@ -20,7 +20,9 @@ class PlayListViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        // アートワーク.
+        _artwork.layer.shadowOpacity = 0.7
+        _artwork.layer.shadowOffset = CGSize(width: 2, height: 2)
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
             target: self,
