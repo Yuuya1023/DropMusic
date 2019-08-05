@@ -67,19 +67,19 @@ class AudioPlayStatusView: UIView {
         _artwork.layer.shadowOffset = CGSize(width: 3, height: 3)
         
         // タイトル.
-        _titleLabel = MarqueeLabel(frame: _titleView.frame,
+        _titleLabel = MarqueeLabel(frame: CGRect(x: 0, y: 0, width: _titleView.frame.width, height: _titleView.frame.height),
                                    duration: 10,
                                    fadeLength: 10)
         _titleLabel.textColor = UIColor.black
-        view.addSubview(_titleLabel)
+        _titleView.addSubview(_titleLabel)
         
         // 情報.
-        _detailLabel = MarqueeLabel(frame: _descView.frame,
+        _detailLabel = MarqueeLabel(frame: CGRect(x: 0, y: 0, width: _descView.frame.width, height: _descView.frame.height),
                                     duration: 10,
                                     fadeLength: 10)
         _detailLabel.font = UIFont.systemFont(ofSize: 12)
         _detailLabel.textColor = UIColor.darkGray
-        view.addSubview(_detailLabel)
+        _descView.addSubview(_detailLabel)
         // 再生.
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
         layoutPlayButton()

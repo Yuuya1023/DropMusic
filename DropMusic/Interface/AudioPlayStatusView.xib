@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -34,28 +34,69 @@
                     </view>
                     <blurEffect style="light"/>
                 </visualEffectView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s1w-Kt-QwN" userLabel="artwork">
-                    <rect key="frame" x="7" y="5" width="40" height="40"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
-                <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbM-81-LTO" userLabel="titleView">
-                    <rect key="frame" x="55" y="5" width="310" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3lu-dq-sgK" userLabel="Base_Artwork">
+                    <rect key="frame" x="0.0" y="0.0" width="58" height="50"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="s1w-Kt-QwN" userLabel="artwork">
+                            <rect key="frame" x="7.5" y="4" width="42.5" height="42.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="s1w-Kt-QwN" secondAttribute="height" multiplier="1:1" id="ck8-d3-htm"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="s1w-Kt-QwN" firstAttribute="centerX" secondItem="3lu-dq-sgK" secondAttribute="centerX" id="3TW-of-WWn"/>
+                        <constraint firstItem="s1w-Kt-QwN" firstAttribute="height" secondItem="3lu-dq-sgK" secondAttribute="height" multiplier="0.85" id="eyD-04-KWW"/>
+                        <constraint firstItem="s1w-Kt-QwN" firstAttribute="centerY" secondItem="3lu-dq-sgK" secondAttribute="centerY" id="wDr-BN-6rP"/>
+                    </constraints>
                 </view>
-                <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFk-sV-ms2" userLabel="descView">
-                    <rect key="frame" x="55" y="25" width="310" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAH-dJ-9if" userLabel="Base_Text">
+                    <rect key="frame" x="58" y="0.0" width="298" height="50"/>
+                    <subviews>
+                        <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mbM-81-LTO" userLabel="titleView">
+                            <rect key="frame" x="0.0" y="5" width="298" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20" id="xfb-h0-u1s"/>
+                            </constraints>
+                        </view>
+                        <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sFk-sV-ms2" userLabel="descView">
+                            <rect key="frame" x="0.0" y="25" width="298" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20" id="2Ky-rg-npN"/>
+                            </constraints>
+                        </view>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="mbM-81-LTO" firstAttribute="width" secondItem="qAH-dJ-9if" secondAttribute="width" id="3cw-CX-Zo3"/>
+                        <constraint firstItem="sFk-sV-ms2" firstAttribute="width" secondItem="qAH-dJ-9if" secondAttribute="width" id="XnZ-Zg-31F"/>
+                        <constraint firstItem="mbM-81-LTO" firstAttribute="leading" secondItem="qAH-dJ-9if" secondAttribute="leading" id="bs2-ny-yUR"/>
+                        <constraint firstItem="sFk-sV-ms2" firstAttribute="centerY" secondItem="qAH-dJ-9if" secondAttribute="centerY" multiplier="1.4" id="oyy-fY-nZr"/>
+                        <constraint firstItem="mbM-81-LTO" firstAttribute="centerY" secondItem="qAH-dJ-9if" secondAttribute="centerY" multiplier="0.6" id="snl-Rq-41D"/>
+                        <constraint firstItem="sFk-sV-ms2" firstAttribute="leading" secondItem="qAH-dJ-9if" secondAttribute="leading" id="wQg-Km-D5W"/>
+                    </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9pz-LM-UO0" userLabel="button">
-                    <rect key="frame" x="374" y="10" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="play.png"/>
-                </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIQ-DD-tUk" userLabel="touchView">
-                    <rect key="frame" x="0.0" y="0.0" width="360" height="50"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOn-Pg-KXu" userLabel="Base_Button">
+                    <rect key="frame" x="356" y="0.0" width="58" height="50"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9pz-LM-UO0" userLabel="button">
+                            <rect key="frame" x="11.5" y="7.5" width="35" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="9pz-LM-UO0" secondAttribute="height" multiplier="1:1" id="e5D-Wk-33o"/>
+                            </constraints>
+                            <state key="normal" image="play.png"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="9pz-LM-UO0" firstAttribute="centerY" secondItem="IOn-Pg-KXu" secondAttribute="centerY" id="9fn-EG-E3M"/>
+                        <constraint firstItem="9pz-LM-UO0" firstAttribute="centerX" secondItem="IOn-Pg-KXu" secondAttribute="centerX" id="OVx-UH-XN0"/>
+                        <constraint firstItem="9pz-LM-UO0" firstAttribute="height" secondItem="IOn-Pg-KXu" secondAttribute="height" multiplier="0.7" id="nkU-Xb-QtW"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIQ-DD-tUk" userLabel="touchView">
+                    <rect key="frame" x="0.0" y="0.0" width="356" height="50"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="zS6-a2-cvr" appends="YES" id="wps-ra-2CV"/>
@@ -64,6 +105,24 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="IOn-Pg-KXu" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="0NZ-hw-uPR"/>
+                <constraint firstItem="NIQ-DD-tUk" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="3FZ-Of-pnD"/>
+                <constraint firstItem="IOn-Pg-KXu" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="5cw-IU-hXo"/>
+                <constraint firstItem="qAH-dJ-9if" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.72" id="62q-8s-ipM"/>
+                <constraint firstItem="3lu-dq-sgK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="9MZ-NY-GJe"/>
+                <constraint firstItem="NIQ-DD-tUk" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.86" id="I3g-Lv-cll"/>
+                <constraint firstItem="3lu-dq-sgK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="J1z-jb-Kxo"/>
+                <constraint firstItem="3lu-dq-sgK" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.14" id="Sqa-cJ-vhq"/>
+                <constraint firstItem="NIQ-DD-tUk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="WDk-sR-lTb"/>
+                <constraint firstItem="IOn-Pg-KXu" firstAttribute="leading" secondItem="qAH-dJ-9if" secondAttribute="trailing" id="XVR-IR-jEX"/>
+                <constraint firstItem="qAH-dJ-9if" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="al7-d9-bHI"/>
+                <constraint firstItem="NIQ-DD-tUk" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="cDS-6l-gSy"/>
+                <constraint firstItem="qAH-dJ-9if" firstAttribute="leading" secondItem="3lu-dq-sgK" secondAttribute="trailing" id="tIL-b6-LIy"/>
+                <constraint firstItem="IOn-Pg-KXu" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.14" id="tnl-2V-MJ4"/>
+                <constraint firstItem="qAH-dJ-9if" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="wp1-mF-mqv"/>
+                <constraint firstItem="3lu-dq-sgK" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="x9T-P1-rwP"/>
+            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
         <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="zS6-a2-cvr">
