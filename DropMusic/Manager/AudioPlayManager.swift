@@ -252,15 +252,22 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if exlusion != nil {
             // 同じデータを見つけて削除.
             for i in 0..<add.count {
-                let d = add[i]
-                if d.isEqualData(audioData: exlusion) {
+                if add[i].isEqualData(audioData: exlusion) {
                     temp.remove(at: i)
                     break
                 }
             }
         }
+        // ファイルが存在しない楽曲を候補から除外
+        var list: Array<AudioData> = []
+        for i in 0..<temp.count {
+            let d = temp[i]
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: d) {
+                list.append(d)
+            }
+        }
         // 追加.
-        _queue = _queue + temp
+        _queue = _queue + list
         
     }
     
