@@ -175,12 +175,16 @@ class DownloadFileManager  {
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
                                                         object: 1.0)
                     } else {
-                        print(error!)
+                        if (error != nil) {
+                            print(error!)
+                            // キューから消す.
+                            self.removeQueue(audioData: audioData)
+                        }
                     }
                     // 次へ.
                     self._isDownloading = false
                     self.downloadNext()
-            }
+                }
         }
     }
     
