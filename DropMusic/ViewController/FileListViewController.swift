@@ -164,6 +164,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                 sender.progress.progress = 0
                             }
                             DownloadFileManager.sharedManager.addQueue(audioData: d)
+                            DownloadFileManager.sharedManager.startDownload()
             })
         // キャッシュ削除.
         let deleteCacheAction:UIAlertAction =
@@ -229,6 +230,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                 let d: AudioData! = AudioData.createFromFileInfo(fileInfo: info)
                                 DownloadFileManager.sharedManager.addQueue(audioData: d)
                             }
+                            DownloadFileManager.sharedManager.startDownload()
             })
         
         // キャンセル.
@@ -301,6 +303,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             }
             else {
                 DownloadFileManager.sharedManager.addQueue(audioData: audioData)
+                DownloadFileManager.sharedManager.startDownload()
             }
         }
     }

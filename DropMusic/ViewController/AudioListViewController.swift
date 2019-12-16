@@ -88,6 +88,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                     DownloadFileManager.sharedManager.addQueue(audioData: audioData)
                                 }
                             }
+                            DownloadFileManager.sharedManager.startDownload()
             })
         
         // キャンセル.
@@ -149,6 +150,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                             }
                             MetadataCacheManager.sharedManager.remove(audioData: audioData!)
                             DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
+                            DownloadFileManager.sharedManager.startDownload()
             })
         
         if isExist {
@@ -230,6 +232,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
             else {
                 // ダウンロード.
                 DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
+                DownloadFileManager.sharedManager.startDownload()
             }
         }
     }

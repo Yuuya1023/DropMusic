@@ -11,20 +11,31 @@ import SwiftyDropbox
 
 class DownloadFileManager  {
     
+    //
+    // MARK: - Properties
+    //
+    
     struct DownloadQueueData {
         var _audioData: AudioData
         var _request: DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>?
     }
     
-    
+    var _backgroundTaskIdentifier: UIBackgroundTaskIdentifier = 0
+    var _isStartDownload: Bool = false
     var _isDownloading: Bool = false
     var _downloadQueue: [DownloadQueueData] = []
     
     static let sharedManager = DownloadFileManager()
+    
+    
+    //
+    // MARK: -
+    //
+    
     private init() {
     }
     
-    func createDirectory(path: String) ->(Bool){
+    private func createDirectory(path: String) ->(Bool){
         do {
             if !FileManager.default.fileExists(atPath: path) {
                 try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false , attributes: nil)
@@ -43,7 +54,9 @@ class DownloadFileManager  {
             break
         case .DropBox:
             storageTypePath = "/dropbox"
-//            default: break
+            break
+        default:
+            break
         }
         
         let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first! + storageTypePath
@@ -91,6 +104,7 @@ class DownloadFileManager  {
 //        }
 //    }
     
+    /// キューからファイル削除.
     func removeQueue(audioData: AudioData){
         var index = 0
         for queue in _downloadQueue {
@@ -103,6 +117,7 @@ class DownloadFileManager  {
         }
     }
     
+    /// ファイルが積まれているか.
     func isStackedQueue(audioData: AudioData) ->(Bool){
         for queue in _downloadQueue {
             if audioData.isEqualData(audioData: queue._audioData) {
@@ -112,7 +127,7 @@ class DownloadFileManager  {
         return false
     }
     
-    
+    /// キューにファイル追加.
     func addQueue(audioData: AudioData){
         // スタックに積まれている場合はやめる.
         if isStackedQueue(audioData: audioData) {
@@ -124,10 +139,23 @@ class DownloadFileManager  {
         // 積む.
         _downloadQueue.append(DownloadQueueData.init(_audioData: audioData,
                                                          _request: nil))
-        //  ダウンロード開始.
+    }
+    
+    /// ダウンロード開始.
+    public func startDownload(){
+        if _isStartDownload {
+            return
+        }
+        _isStartDownload = true
+        // バックグランド処理登録.
+        _backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            self.endDownload()
+        })
+        // ダウンロードへ.
         downloadNext()
     }
     
+    /// 次のファイルをダウンロード.
     private func downloadNext(){
         // ダウンロード数を通知.
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATION_DOWNLOAD_COUNT),
@@ -136,6 +164,7 @@ class DownloadFileManager  {
             return
         }
         if _downloadQueue.count == 0 {
+            endDownload()
             return
         }
         _isDownloading = true
@@ -188,9 +217,15 @@ class DownloadFileManager  {
         }
     }
     
+    /// キャンセル.
     func cancel(audioData: AudioData){
         removeQueue(audioData: audioData)
     }
     
+    /// ダウンロード終了処理.
+    private func endDownload() {
+        _isStartDownload = false
+        UIApplication.shared.endBackgroundTask(_backgroundTaskIdentifier)
+    }
     
 }
