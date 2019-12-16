@@ -90,16 +90,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             print("json convert failed in JSONDecoder", error.localizedDescription)
         }
         
-        // 他アプリでの再生時通知.
+        // 停止通知.
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleSecondaryAudio),
-                                               name: .AVAudioSessionSilenceSecondaryAudioHint,
-                                               object: AVAudioSession.sharedInstance())
-        
-//        NotificationCenter.default.addObserver(self,
-//                                               selector: #selector(ViewController.handleInterruption(_:)),
-//                                               name: NSNotification.Name.AVAudioSessionInterruption,
-//                                               object: nil)
+                                               selector: #selector(handleInterruption),
+                                               name: .AVAudioSessionInterruption,
+                                               object: nil)
     }
     
     func isPlaying() -> (Bool) {
@@ -317,32 +312,36 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     
-    
+    //
     // MARK: -
-    @objc func handleSecondaryAudio(notification: Notification) {
-        // ヒントの種類を判定
+    //
+    
+    /// 再生終了検知.
+    @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionSilenceSecondaryAudioHintTypeKey] as? UInt,
-            let type = AVAudioSessionSilenceSecondaryAudioHintType(rawValue: typeValue) else {
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
                 return
         }
-        
-        if type == .begin {
-            // 他のアプリケーションが再生を開始したため副次的なオーディオを消音.
-            print("begin")
-            if _audioPlayer != nil {
-                _audioPlayer.volume = 0.5
-            }
-        } else {
-            // 他のアプリケーションが再生を停止したため副次的なオーディオを再開.
-            print("end")
-            if _audioPlayer != nil {
-                _audioPlayer.volume = 1.0
+        if type == .began {
+            // Interruption began, take appropriate actions
+        }
+        else if type == .ended {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSessionInterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    // Interruption Ended - playback should resume
+                    if _audioPlayer != nil {
+                        _audioPlayer.play()
+                    }
+                } else {
+                    // Interruption Ended - playback should NOT resume
+                }
             }
         }
     }
     
-    // MARK: -
+    ///
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         switch _repeatType {
         case .One:
