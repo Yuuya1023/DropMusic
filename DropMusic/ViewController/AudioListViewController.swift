@@ -9,12 +9,17 @@ import UIKit
 
 class AudioListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    //
+    // MARK: - Properties.
+    //
     var _tableView: UITableView!
     var _playListId: String!
     
     
     
+    //
     // MARK: -
+    //
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,9 +47,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                                                  action: #selector(selectorMenuButton))
         
         //
-        var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-132
-        _tableView = UITableView(frame: bounds, style: .plain)
+        _tableView = UITableView()
         _tableView.backgroundColor = UIColor.clear
         _tableView.rowHeight = 60
         _tableView.autoresizingMask = [
@@ -63,6 +66,18 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    ///
+    override func viewWillLayoutSubviews() {
+        // tableview.
+        var frame = self.view.frame
+        var margin = AudioPlayStatusView._height
+        if let val = self.tabBarController {
+            margin += val.tabBar.frame.size.height
+        }
+        frame.size.height = frame.size.height-margin
+        _tableView.frame = frame
     }
     
     
@@ -184,7 +199,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     
     
-    // MARK: NavigationController Delegate.
+    //
+    // MARK: - NavigationController Delegate.
+    //
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
     }
     
@@ -193,7 +210,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
 
 
     
+    //
     // MARK: - TableViewController Delegate.
+    //
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
         if playlist != nil {

@@ -10,14 +10,20 @@ import SwiftyDropbox
 
 class PlayListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Variable Declaration
+    //
+    // MARK: - Properties.
+    //
     var _tableView: UITableView!
     var _timer: Timer!
     var _refreshControll: UIRefreshControl!
     
     private let _cellIdentifier = "PlayListViewCell"
     
+    
+    
+    //
     // MARK: -
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -32,9 +38,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
                                                                  target: self,
                                                                  action: #selector(selectorMenuButton))
         
-        var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-132
-        _tableView = UITableView(frame: bounds, style: .plain)
+        // tableview
+        _tableView = UITableView()
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
             .flexibleWidth,
@@ -48,7 +53,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         
         self.view.addSubview(_tableView)
         
-        //
+        // refresh control.
         _refreshControll = UIRefreshControl()
         _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
         _tableView.refreshControl = _refreshControll
@@ -59,6 +64,16 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         }
     }
     
+    override func viewWillLayoutSubviews() {
+        // tableview.
+        var frame = self.view.frame
+        var margin = AudioPlayStatusView._height
+        if let val = self.tabBarController {
+            margin += val.tabBar.frame.size.height
+        }
+        frame.size.height = frame.size.height-margin
+        _tableView.frame = frame
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         updateScrollView()
@@ -71,7 +86,9 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
 
     
     
+    //
     // MARK: -
+    //
     func setScheduler() {
         _timer = Timer.scheduledTimer(timeInterval: 1.0,
                                       target: self,
@@ -150,7 +167,9 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
+    //
     // MARK: - TableViewDelegate
+    //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }

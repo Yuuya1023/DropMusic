@@ -14,7 +14,7 @@ class FileListViewCell: UITableViewCell {
     var isAudioFile: Bool = false
     
     var index: Int = 0
-    var longpressTarget: NSObject? = nil
+    weak var longpressTarget: NSObject? = nil
     var longpressSelector: Selector? = nil
     
     

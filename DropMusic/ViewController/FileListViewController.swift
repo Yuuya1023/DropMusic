@@ -10,6 +10,9 @@ import SwiftyDropbox
 
 class FileListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    //
+    // MARK: - Properties
+    //
     var _pathList: [String] = []
     
     var _tableView: UITableView!
@@ -20,7 +23,11 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
+    //
     // MARK: -
+    //
+    
+    ///
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -45,10 +52,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                                                  target: self,
                                                                  action: #selector(selectorMenuButton))
         
-        //
-        var bounds = self.view.bounds
-        bounds.size.height = bounds.size.height-132
-        _tableView = UITableView(frame: bounds, style: .plain)
+        // tableview.
+        _tableView = UITableView()
         _tableView.backgroundColor = UIColor.clear
         _tableView.autoresizingMask = [
             .flexibleWidth,
@@ -60,7 +65,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         
         self.view.addSubview(_tableView)
 
-        //
+        // refresh control.
         _refreshControll = UIRefreshControl()
         _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
         _tableView.refreshControl = _refreshControll
@@ -73,9 +78,26 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         // Dispose of any resources that can be recreated.
     }
     
+    ///
+    override func viewWillLayoutSubviews() {
+        // tableview.
+        var frame = self.view.frame
+        var margin = AudioPlayStatusView._height
+        if let val = self.tabBarController {
+            margin += val.tabBar.frame.size.height
+        }
+        frame.size.height = frame.size.height-margin
+        _tableView.frame = frame
+    }
     
     
+    
+    
+    //
     // MARK: -
+    //
+    
+    ///
     func load(){
         if _isLoading {
             return
@@ -248,7 +270,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    // MARK: NavigationController Delegate.
+    //
+    // MARK: - NavigationController Delegate.
+    //
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
     }
     
@@ -257,7 +281,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
 
 
     
+    //
     // MARK: - TableViewController Delegate.
+    //
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _datas.count
     }

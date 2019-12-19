@@ -24,13 +24,6 @@ class DropBoxLinkViewController: UIViewController {
         }
         do{
             let button = UIButton()
-            button.frame = CGRect(x: 200, y: 300, width: 60, height: 60)
-            button.setTitle("load", for: UIControlState.normal)
-            button.addTarget(self, action: #selector(load(_:)), for: UIControlEvents.touchUpInside)
-            self.view.addSubview(button)
-        }
-        do{
-            let button = UIButton()
             button.frame = CGRect(x: 200, y: 350, width: 60, height: 60)
             button.setTitle("userinfo", for: UIControlState.normal)
             button.addTarget(self, action: #selector(userinfo(_:)), for: UIControlEvents.touchUpInside)
@@ -51,20 +44,6 @@ class DropBoxLinkViewController: UIViewController {
                                                       openURL: { (url: URL) -> Void in
                                                         UIApplication.shared.openURL(url)
         })
-    }
-    
-    @objc func load(_ sender: UIButton) {
-        print("load")
-        if let client = DropboxClientsManager.authorizedClient {
-            client.files.listFolder(path: "/[music]/[Artist]/ALTIMA/Tryangle").response { response, error in
-//                client.files.listFolder(path: "").response { response, error in
-                if let metadata = response {
-                    print("Entries: \(metadata.entries)")
-                } else {
-                    print(error!)
-                }
-            }
-        }
     }
     
     @objc func userinfo(_ sender: UIButton) {

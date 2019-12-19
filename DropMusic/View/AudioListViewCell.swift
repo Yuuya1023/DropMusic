@@ -15,7 +15,7 @@ class AudioListViewCell: UITableViewCell {
     var progress: UIProgressView!
     
     var index: Int = 0
-    var longpressTarget: NSObject? = nil
+    weak var longpressTarget: NSObject? = nil
     var longpressSelector: Selector? = nil
     
     

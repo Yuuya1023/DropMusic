@@ -10,12 +10,23 @@ import SwiftyDropbox
 
 class RootTabBarController: UITabBarController {
 
+    //
+    // MARK: - Properties
+    //
+    var _statusView: AudioPlayStatusView = AudioPlayStatusView()
+    
+    
+    
+    //
+    // MARK: -
+    //
+    
+    /// viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBar.appearance().tintColor = UIColor.white
         UITabBar.appearance().barTintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
-        
         
         // タブバーの設定.
         let vc1 = DropBoxRootNavigactionController()
@@ -35,14 +46,9 @@ class RootTabBarController: UITabBarController {
         
         let tabs = NSArray(objects: vc1, vc2, vc3)
         self.setViewControllers(tabs as? [UIViewController], animated: false)
-        
-        let statusView = AudioPlayStatusView()
-        let frame = CGRect(x: 0,
-                           y: self.view.bounds.height-132,
-                           width: statusView.frame.width,
-                           height: statusView.frame.height)
-        statusView.frame = frame
-        self.view.addSubview(statusView)
+
+        // ステータス表示.
+        self.view.addSubview(_statusView)
         
         // プレイヤー表示.
         NotificationCenter.default.addObserver(self,
@@ -54,6 +60,17 @@ class RootTabBarController: UITabBarController {
                                                selector: #selector(selectorUpdateDownloadCount),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DOWNLOAD_COUNT),
                                                object: nil)
+    }
+    
+    /// viewWillLayoutSubviews
+    override func viewWillLayoutSubviews() {
+        // ステータス表示初期化.
+        let tabbarHeight = self.tabBar.frame.size.height+_statusView.frame.height
+        let frame = CGRect(x: 0,
+                           y: self.view.bounds.height-tabbarHeight,
+                           width: _statusView.frame.width,
+                           height: _statusView.frame.height)
+        _statusView.frame = frame
     }
 
     override func didReceiveMemoryWarning() {

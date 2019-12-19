@@ -12,6 +12,11 @@ import MarqueeLabel
 
 class AudioPlayStatusView: UIView {
     
+    //
+    // MARK: - Properties
+    //
+    static let _height: CGFloat = 50.0
+    
     @IBOutlet var _touchView: UIView!
     @IBOutlet var tapGesture:UITapGestureRecognizer!
     
@@ -27,8 +32,13 @@ class AudioPlayStatusView: UIView {
     var _detailLabel: MarqueeLabel!
 
     var _timer: Timer!
-
-    // コードから生成した時の初期化処理
+    
+    
+    
+    //
+    // MARK: -
+    //
+    /// コードから生成した時の初期化処理
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.nibInit()
@@ -48,6 +58,7 @@ class AudioPlayStatusView: UIView {
         }
         
         self.bounds = view.bounds
+        
 //        view.frame = self.bounds
 //        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         self.layer.shadowOpacity = 0.3
