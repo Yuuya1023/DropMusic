@@ -41,15 +41,17 @@ class PlayListViewCell: UITableViewCell {
     
     // MARK: -
     func set(data: PlayListData?) {
+        guard let data = data else {
+            return
+        }
         _artwork.image = UIImage()
-        if data != nil {
-            _titleLabel.text = data!.name
-            _tracksLabel.text = String(data!.audioList.count) + " tracks."
-            if (data?.audioList.count)! > 0 {
-                let d: AudioData = (data?.audioList[0])!
-                let metadata = MetadataCacheManager.sharedManager.get(audioData: d)
-                if metadata?.artwork != nil {
-                    _artwork.image = metadata?.artwork
+        _titleLabel.text = data.name
+        _tracksLabel.text = String(data.audioList.count) + " tracks."
+        if (data.audioList.count) > 0 {
+            let d: AudioData = data.audioList[0]
+            if let metadata = MetadataCacheManager.sharedManager.get(audioData: d) {
+                if let artwork = metadata.artwork {
+                    _artwork.image = artwork
                 }
             }
         }

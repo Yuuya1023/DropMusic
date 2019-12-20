@@ -56,7 +56,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    var _metadata: AudioMetadata! = AudioMetadata()
+    var _metadata: AudioMetadata?
     var _duration: Int = 0
     
     
@@ -145,32 +145,34 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         // 曲情報の取得.
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
-        do {
-            _audioPlayer = try AVAudioPlayer(contentsOf: url)
-            _audioPlayer.currentTime = 0
-            _audioPlayer.delegate = self
-            _audioPlayer.prepareToPlay()
+        if _metadata != nil {
+            do {
+                _audioPlayer = try AVAudioPlayer(contentsOf: url)
+                _audioPlayer.currentTime = 0
+                _audioPlayer.delegate = self
+                _audioPlayer.prepareToPlay()
             
 
-            _duration = Int(_audioPlayer.duration)
+                _duration = Int(_audioPlayer.duration)
             
-            settingRpeat()
-            updateCheckQueue(isRefresh: isRefresh)
+                settingRpeat()
+                updateCheckQueue(isRefresh: isRefresh)
             
-            // コントロールセンターの表示.
-            let image = (_metadata.artwork != nil) ? MPMediaItemArtwork(image: _metadata.artwork!) : MPMediaItemArtwork(image: UIImage())
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-                MPMediaItemPropertyTitle: _metadata.title,
-                MPMediaItemPropertyArtist : _metadata.artist,
-                MPMediaItemPropertyAlbumTitle: _metadata.album,
-                MPMediaItemPropertyArtwork: image,
-                MPMediaItemPropertyPlaybackDuration: NSNumber(value: _duration), //シークバー
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: NSNumber(value: 0.0)
-            ]
-            // 曲が変更されたことを通知.
-            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
+                // コントロールセンターの表示.
+                let image = (_metadata!.artwork != nil) ? MPMediaItemArtwork(image: _metadata!.artwork!) : MPMediaItemArtwork(image: UIImage())
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+                    MPMediaItemPropertyTitle: _metadata!.title,
+                    MPMediaItemPropertyArtist : _metadata!.artist,
+                    MPMediaItemPropertyAlbumTitle: _metadata!.album,
+                    MPMediaItemPropertyArtwork: image,
+                    MPMediaItemPropertyPlaybackDuration: NSNumber(value: _duration), //シークバー
+                    MPNowPlayingInfoPropertyElapsedPlaybackTime: NSNumber(value: 0.0)
+                ]
+                // 曲が変更されたことを通知.
+                NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
             
-        } catch {
+            } catch {
+            }
         }
     }
     

@@ -9,36 +9,44 @@ import Foundation
 
 class MetadataCacheManager {
     
-    // MARK: - singleton
+    //
+    // MARK: - Singleton.
+    //
     static let sharedManager = MetadataCacheManager()
     private init() {
     }
 
     
     
+    //
+    // MARK: - Properties.
+    //
+    private var datas: Dictionary<String, AudioMetadata> = [:]
+    
+    
+    
+    //
     // MARK: -
-    private var datas: Dictionary<String, AudioMetadata>! = [:]
-    
-    
-    
-    // MARK: -
-    func get(audioData: AudioData!) -> AudioMetadata! {
-        var ret: AudioMetadata? = datas[audioData.id]
-        if ret != nil{
-            return ret
+    //
+    /// 取得.
+    func get(audioData: AudioData?) -> AudioMetadata? {
+        guard let audioData = audioData else {
+            return nil
         }
-
+        if let metadata = datas[audioData.id] {
+            return metadata
+        }
         // 見つからなかった.
-        ret = AudioMetadata()
-        let success = ret?.set(atPath: DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData))
-        if success! {
-            datas[audioData.id] = ret
-            return ret
+        let metadata = AudioMetadata()
+        let success = metadata.set(atPath: DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData))
+        if success {
+            datas[audioData.id] = metadata
+            return metadata
         }
-        return ret
+        return nil
     }
     
-    
+    /// 削除.
     func remove(audioData: AudioData!) {
         datas.removeValue(forKey: audioData.id)
     }

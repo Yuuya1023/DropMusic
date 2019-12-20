@@ -124,21 +124,24 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     // MARK: -
     @objc func showActionSheet(_ sender: AudioListViewCell) {
-        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
-        if playlist == nil { return }
-            
-        let audioData = playlist?.audioList[sender.index]
-        let isExist = DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!)
+        guard let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) else {
+            return
+        }
+        guard playlist.audioList.indices.contains(sender.index) else {
+            return
+        }
+        let audioData = playlist.audioList[sender.index]
+        let isExist = DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData)
         func deleteCache() {
             do {
-                let path = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData!)
+                let path = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData)
                 try FileManager.default.removeItem(at: URL(fileURLWithPath: path))
             }
             catch {}
         }
 
         
-        let alert: UIAlertController = UIAlertController(title: audioData?.fileName,
+        let alert: UIAlertController = UIAlertController(title: audioData.fileName,
                                                          message: nil,
                                                          preferredStyle: .actionSheet)
 
@@ -148,8 +151,8 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                           style: .destructive,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: (playlist?.id)!,
-                                                                                  audioId: (audioData?.id)!,
+                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: (playlist.id),
+                                                                                  audioId: (audioData.id),
                                                                                   isSave: true)
                             self.updateScroll()
             })
@@ -163,8 +166,8 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                 deleteCache()
                                 sender.progress.progress = 0
                             }
-                            MetadataCacheManager.sharedManager.remove(audioData: audioData!)
-                            DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
+                            MetadataCacheManager.sharedManager.remove(audioData: audioData)
+                            DownloadFileManager.sharedManager.addQueue(audioData: audioData)
                             DownloadFileManager.sharedManager.startDownload()
             })
         

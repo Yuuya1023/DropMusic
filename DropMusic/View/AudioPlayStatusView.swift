@@ -146,15 +146,17 @@ class AudioPlayStatusView: UIView {
     }
     
     private func set() {
-        let audioManager = AudioPlayManager.sharedManager
-        if audioManager._metadata.artwork == nil {
+        guard let metadata = AudioPlayManager.sharedManager._metadata else {
+            return
+        }
+        if metadata.artwork == nil {
             _artwork.image = UIImage(named: "no_image.gif")
         }
         else {
-            _artwork.image = audioManager._metadata.artwork
+            _artwork.image = metadata.artwork
         }
-        _titleLabel.text = audioManager._metadata.title
-        _detailLabel.text = audioManager._metadata.artist + " ─ " + audioManager._metadata.album
+        _titleLabel.text = metadata.title
+        _detailLabel.text = metadata.artist + " ─ " + metadata.album
     }
     
     @objc func selectorCheckAudioInformation(_ sender: UIButton) {

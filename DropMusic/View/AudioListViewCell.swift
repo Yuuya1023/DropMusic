@@ -66,13 +66,12 @@ class AudioListViewCell: UITableViewCell {
         updateObserber(identifier: audioData.id)
         // ファイル確認.
         if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!) {
-            let metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
-            if metadata != nil {
-                nameLabel.text = metadata?.title
-                artistLabel.text = (metadata?.artist)! + " ─ " + (metadata?.album)!
+            if let metadata = MetadataCacheManager.sharedManager.get(audioData: audioData) {
+                nameLabel.text = metadata.title
+                artistLabel.text = (metadata.artist) + " ─ " + (metadata.album)
                 
-                if metadata?.artwork != nil {
-                    icon.image = metadata?.artwork!
+                if metadata.artwork != nil {
+                    icon.image = metadata.artwork!
                 }
                 else {
                     icon.image = UIImage()

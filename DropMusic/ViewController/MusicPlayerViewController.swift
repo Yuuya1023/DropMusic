@@ -186,19 +186,20 @@ class MusicPlayerViewControlloer: UIViewController {
     
     // MARK: -
     func layoutUpdate() {
-        let audioManager = AudioPlayManager.sharedManager
-        
+        guard let metadata = AudioPlayManager.sharedManager._metadata else {
+            return
+        }
         // 曲情報.
-        _titleLabel.text = audioManager._metadata.title
-        _artistLabel.text = audioManager._metadata.artist + " ─ " + audioManager._metadata.album
-        if audioManager._metadata.artwork == nil {
+        _titleLabel.text = metadata.title
+        _artistLabel.text = metadata.artist + " ─ " + metadata.album
+        if metadata.artwork == nil {
             _artwork.image = UIImage()
         }
         else {
-            _artwork.image = audioManager._metadata.artwork
+            _artwork.image = metadata.artwork
         }
-        let min = audioManager._duration/60
-        let sec = audioManager._duration%60
+        let min = AudioPlayManager.sharedManager._duration/60
+        let sec = AudioPlayManager.sharedManager._duration%60
         _durationLabel.text = String(min) + ":" + String(format: "%02d", sec)
 
         // 再生ボタン.
@@ -211,12 +212,14 @@ class MusicPlayerViewControlloer: UIViewController {
     
     
     func postTwitter(withImage: Bool) {
-        let audioManager = AudioPlayManager.sharedManager
+        guard let metadata = AudioPlayManager.sharedManager._metadata else {
+            return
+        }
 
         func tweet() {
             let twitter = TWTRComposer()
-            twitter.setText( audioManager._metadata.title + " ─ " + audioManager._metadata.artist + "\n#DJさとし")
-            if withImage && audioManager._metadata.artwork != nil {
+            twitter.setText( metadata.title + " ─ " + metadata.artist + "\n#DJさとし")
+            if withImage && metadata.artwork != nil {
                 twitter.setImage(_artwork.image)
             }
             twitter.show(from: self, completion: nil)
