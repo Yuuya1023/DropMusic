@@ -12,13 +12,20 @@ import MediaPlayer
 
 class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
-    // MARK: -
-    private let MAX_HISTORY_LENGTH: Int = 32
-    private let MIN_QUEUE_LENGTH: Int = 2
-    
-    // MARK: -
+    //
+    // MARK: - Singleton.
+    //
     static let sharedManager = AudioPlayManager()
     
+    
+    
+    //
+    // MARK: - Properties
+    //
+    private let USER_DEFAULT_KEY = "audio"
+    private let MAX_HISTORY_LENGTH: Int = 32
+    private let MIN_QUEUE_LENGTH: Int = 2
+
     var _audioPlayer: AVAudioPlayer!
     
     enum AudioSelectType {
@@ -61,7 +68,9 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     
+    //
     // MARK: -
+    //
     private override init() {
         super.init()
         UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -69,7 +78,6 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         
         // ロック中の設定.
         do {
-//            try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
             try session.setCategory(AVAudioSessionCategoryPlayback)
             try session.setActive(true)
         }
@@ -81,9 +89,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         do {
             let decoder: JSONDecoder = JSONDecoder()
             let defaults = UserDefaults.standard
-            let data = defaults.data(forKey: "audio")
-            if data != nil {
-                let audioData: AudioData = try decoder.decode(AudioData.self, from: data!)
+            if let data = defaults.data(forKey: USER_DEFAULT_KEY) {
+                let audioData = try decoder.decode(AudioData.self, from: data)
                 set(audioData: audioData, isRefresh: false)
             }
         } catch {
@@ -97,6 +104,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
                                                object: nil)
     }
     
+    /// 再生中か.
     func isPlaying() -> (Bool) {
         if _audioPlayer != nil {
             return _audioPlayer.isPlaying
@@ -104,6 +112,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         return false
     }
     
+    /// 曲を設定.
     func set(selectType: AudioSelectType, selectPath: String, audioList: Array<AudioData>, playIndex: Int) {
         if _audioSelect != selectType || _audioSelectPath != selectPath {
             // 選択した場所が変わった場合はそこのリストを保存しておく.
@@ -119,7 +128,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    func set(audioData: AudioData, isRefresh: Bool) {
+    /// 曲を設定.
+    func set(audioData: AudioData?, isRefresh: Bool) {
+        guard let audioData = audioData else {
+            return
+        }
         let cachePath = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData)
         let url = URL(fileURLWithPath: cachePath)
         
@@ -141,52 +154,70 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             let encoder = JSONEncoder()
             let data = try! encoder.encode(_playing)
             let defaults = UserDefaults.standard
-            defaults.set(data, forKey: "audio")
+            defaults.set(data, forKey: USER_DEFAULT_KEY)
         }
         // 曲情報の取得.
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
-        if _metadata != nil {
-            do {
-                _audioPlayer = try AVAudioPlayer(contentsOf: url)
-                _audioPlayer.currentTime = 0
-                _audioPlayer.delegate = self
-                _audioPlayer.prepareToPlay()
-            
-
-                _duration = Int(_audioPlayer.duration)
-            
-                settingRpeat()
-                updateCheckQueue(isRefresh: isRefresh)
-            
-                // コントロールセンターの表示.
-                let image = (_metadata!.artwork != nil) ? MPMediaItemArtwork(image: _metadata!.artwork!) : MPMediaItemArtwork(image: UIImage())
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-                    MPMediaItemPropertyTitle: _metadata!.title,
-                    MPMediaItemPropertyArtist : _metadata!.artist,
-                    MPMediaItemPropertyAlbumTitle: _metadata!.album,
-                    MPMediaItemPropertyArtwork: image,
-                    MPMediaItemPropertyPlaybackDuration: NSNumber(value: _duration), //シークバー
-                    MPNowPlayingInfoPropertyElapsedPlaybackTime: NSNumber(value: 0.0)
-                ]
-                // 曲が変更されたことを通知.
-                NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
-            
-            } catch {
-            }
+        do {
+            _audioPlayer = try AVAudioPlayer(contentsOf: url)
+            _audioPlayer.currentTime = 0
+            _audioPlayer.delegate = self
+            _audioPlayer.prepareToPlay()
+            _duration = Int(_audioPlayer.duration)
+        
+            settingRpeat()
+            updateCheckQueue(isRefresh: isRefresh)
+        
+            // コントロールセンター表示.
+            updateInfoCenter()
+            // 曲が変更されたことを通知.
+            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_AUDIO), object: nil)
+        
+        } catch {
         }
     }
     
+    /// コントロールセンターの表示更新.
+    func updateInfoCenter() {
+        guard let metadata = _metadata else {
+            return
+        }
+        guard let player = _audioPlayer else {
+            return
+        }
+        var info = [String : Any]()
+        info[MPMediaItemPropertyTitle] = metadata.title
+        info[MPMediaItemPropertyArtist] = metadata.artist
+        info[MPMediaItemPropertyAlbumTitle] = metadata.album
+        
+        let image = metadata.artwork ?? UIImage()
+        info[MPMediaItemPropertyArtwork] =
+            MPMediaItemArtwork(boundsSize: image.size) { size in
+                return image
+        }
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime
+        info[MPMediaItemPropertyPlaybackDuration] = player.duration
+        info[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        
+        // Set the metadata.
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+    
+    /// 再生.
     func play() -> (Bool) {
         if _audioPlayer != nil {
             if !_audioPlayer.isPlaying {
                 _audioPlayer.play()
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1.0)
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = _audioPlayer.currentTime
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyPlaybackDuration] = _audioPlayer.duration
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = _audioPlayer.rate
                 return true
             }
         }
         return false
     }
     
+    /// 次へ.
     func playNext() {
         if _queue.count == 0 {
             set(audioData:_playing!, isRefresh: false)
@@ -196,9 +227,10 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             set(audioData: d, isRefresh: false)
             _queue.remove(at: 0)
         }
-        play()
+        _ = play()
     }
     
+    /// 前へ.
     func playBack() {
         if _history.count == 0 {
             set(audioData:_playing!, isRefresh: false)
@@ -209,34 +241,47 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             set(audioData: d, isRefresh: false)
             _history.remove(at: 0)
         }
-        play()
+        _ = play()
     }
     
+    /// 停止.
     func pause() {
         if _audioPlayer != nil {
             if _audioPlayer.isPlaying {
                 _audioPlayer.pause()
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = _audioPlayer.currentTime
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyPlaybackDuration] = _audioPlayer.duration
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = _audioPlayer.rate
             }
         }
     }
     
+    
+    
+    //
     // MARK: - private function
+    //
+    /// リピート設定.
     private func settingRpeat() {
         switch _repeatType {
         case .One:
-            _audioPlayer?.numberOfLoops = 0
+            _audioPlayer.numberOfLoops = 0
         case .List:
-            _audioPlayer?.numberOfLoops = 0
+            _audioPlayer.numberOfLoops = 0
         }
     }
     
+    /// シャッフル設定.
     private func settingShuffle() {
         updateCheckQueue(isRefresh: true)
     }
     
+    /// 履歴に追加.
     private func addHistory(_ d: AudioData?) {
-        if d == nil { return }
-        _history.insert(d!, at: 0)
+        guard let d = d else {
+            return
+        }
+        _history.insert(d, at: 0)
         
         // 多すぎるので消す.
         if _history.count > MAX_HISTORY_LENGTH {
@@ -244,6 +289,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
+    /// キューに追加.
     private func addQueue(add: Array<AudioData>!, exlusion: AudioData?) {
         var temp: Array<AudioData> = add
         if exlusion != nil {
@@ -265,10 +311,9 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         // 追加.
         _queue = _queue + list
-        
     }
     
-    // リフレッシュするときは初回作成時なのでプレイ中を含めない、しないときはループが一周したときなのでプレイ中の曲を含める.
+    /// リフレッシュするときは初回作成時なのでプレイ中を含めない、しないときはループが一周したときなのでプレイ中の曲を含める.
     private func updateCheckQueue(isRefresh: Bool) {
         if _audioList.count == 0 { return }
         
@@ -315,9 +360,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     //
-    // MARK: -
+    // MARK: - handle interruption.
     //
-    
     /// 再生終了検知.
     @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
@@ -343,22 +387,22 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
-    ///
+    //
+    // MARK: - AVAudioPlayer Delegate.
+    //
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         switch _repeatType {
         case .One:
             _audioPlayer.currentTime = 0
             _audioPlayer.play()
-
-            MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: 0.0)
+            // コントロールセンター表示.
+            updateInfoCenter()
         case .List:
             // 次へ.
             playNext()
         }
     }
-    
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        
     }
     
 }

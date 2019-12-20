@@ -14,7 +14,6 @@ class DownloadFileManager  {
     //
     // MARK: - Properties
     //
-    
     struct DownloadQueueData {
         var _audioData: AudioData
         var _request: DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>?
@@ -73,15 +72,17 @@ class DownloadFileManager  {
     }
     
     func getFileCachePath(audioData: AudioData) -> (String) {
-        let cachePath: String! = self.getCachePath(storageType: audioData.storageType, add: "/audio")
-        let fileName: String! = audioData.localFileName()
+        let cachePath = self.getCachePath(storageType: audioData.storageType, add: "/audio")
+        let fileName = audioData.localFileName()
         
         return cachePath+"/"+fileName
     }
     
     func getFileCachePath(fileInfo: FileInfo) -> (String) {
-        let cachePath: String! = self.getCachePath(storageType: .DropBox, add: "/audio")
-        let fileName: String! = fileInfo.localFileName()
+        guard let fileName = fileInfo.localFileName() else {
+            return ""
+        }
+        let cachePath = self.getCachePath(storageType: .DropBox, add: "/audio")
         
         return cachePath+"/"+fileName
     }
@@ -109,7 +110,9 @@ class DownloadFileManager  {
         var index = 0
         for queue in _downloadQueue {
             if audioData.isEqualData(audioData: queue._audioData) {
-                queue._request?.cancel()
+                if let req = queue._request {
+                    req.cancel()
+                }
                 _downloadQueue.remove(at: index)
                 return
             }

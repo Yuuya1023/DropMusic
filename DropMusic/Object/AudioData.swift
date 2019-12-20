@@ -5,10 +5,14 @@
 //  Copyright © 2018年 n.yuuya. All rights reserved.
 //
 
-//import UIKit
+import UIKit
+
 
 struct AudioData: Codable {
     
+    //
+    // MARK: - Properties.
+    //
     enum StorageType:Int,Codable {
         case None = 0
         case DropBox = 1
@@ -20,11 +24,17 @@ struct AudioData: Codable {
     var path: String = ""
     var extensionString: String = ""
     
-    // MARK: - static
+    
+    
+    //
+    // MARK: - Static
+    //
     static func createFromFileInfo(fileInfo: FileInfo) -> (AudioData?) {
-        var ret: AudioData = AudioData()
-        if !fileInfo.isFile() { return ret }
+        guard fileInfo.isFile() else {
+            return nil
+        }
         
+        var ret: AudioData = AudioData()
         ret.id = fileInfo.id()!
         ret.fileName = fileInfo.name()
         ret.storageType = .DropBox
@@ -35,9 +45,15 @@ struct AudioData: Codable {
     }
     
     
+    
+    //
     // MARK: -
+    //
     func isEqualData(audioData: AudioData?) ->(Bool){
-        return id == audioData?.id
+        guard let audioData = audioData else {
+            return false
+        }
+        return id == audioData.id
     }
     
     func localFileName() ->(String){

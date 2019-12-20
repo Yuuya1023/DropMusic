@@ -11,7 +11,7 @@ struct PlayListManageData: Codable {
     
     var updated: String = ""
     var latestId: String = "0"
-    var version: String! = "0"
-    var playlists: Array<PlayListData>! = []
+    var version: String = "0"
+    var playlists: Array<PlayListData> = []
     
 }

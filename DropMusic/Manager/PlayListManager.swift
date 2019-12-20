@@ -10,15 +10,22 @@ import SwiftyDropbox
 
 class PlayListManager {
     
-    // MARK: - singleton
+    //
+    // MARK: - Singleton.
+    //
     static let sharedManager = PlayListManager()
     private init() {
+        _savePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME_PLAYLIST
+        _playlistFilePath = "/DropMusic/"
+        _localTempPlaylistFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/temp_" + JSON_NAME_PLAYLIST
         _manageData = PlayListManageData()
     }
     
     
     
-    // MARK: -
+    //
+    // MARK: - Properties.
+    //
     var isLoaded: Bool = false
     private var _manageData: PlayListManageData!
     var playlistManageData: PlayListManageData! {
@@ -26,21 +33,22 @@ class PlayListManager {
             return _manageData
         }
     }
-    private let _savePath: String! = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME_PLAYLIST
-    
-    private let _playlistFilePath: String = "/DropMusic/"
-    private let _localTempPlaylistFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/temp_" + JSON_NAME_PLAYLIST
-    
+    private let _savePath: String!
+    private let _playlistFilePath: String!
+    private let _localTempPlaylistFilePath: String!
     
     
+    
+    //
     // MARK: -
     //
+    /// プレイリスト管理情報設定.
     private func setManageData(data: PlayListManageData) {
         _manageData = data
         isLoaded = true
     }
 
-    
+    /// プレイリストのインデックスを取得.
     private func getPlayListIndex(playListId: String) -> Int? {
         for i in 0..<_manageData.playlists.count {
             let d: PlayListData = _manageData.playlists[i]
@@ -51,21 +59,19 @@ class PlayListManager {
         return nil
     }
     
-    
-    // MARK: -
+    /// プレイリスト情報取得.
     func getPlaylistData(id: String) -> (PlayListData?) {
-        let index = getPlayListIndex(playListId: id)
-        if index != nil {
-            return _manageData.playlists[index!]
+        guard let index = getPlayListIndex(playListId: id) else {
+            return nil
         }
-        return nil
+        return _manageData.playlists[index]
     }
     
-    //
+    /// プレイリストを追加.
     func addPlaylist(isSave: Bool = false) -> (String) {
         let latestId = String(Int(_manageData.latestId)!+1)
         _manageData.playlists.append(PlayListData(id: latestId,
-                                                  name: "Playlist_" + String(Int(_manageData.latestId)!+1),
+                                                  name: "Playlist_" + latestId,
                                                   audioList: []))
         _manageData.latestId = latestId
         if isSave {
@@ -73,92 +79,76 @@ class PlayListManager {
         }
         return latestId
     }
-    
-    
-    //
+
+    /// プレイリストを更新.
     func updatePlaylist(id: String, name: String, isSave: Bool = false) {
-        let index = getPlayListIndex(playListId: id)
-        if index != nil {
-            var playlist: PlayListData = _manageData.playlists[index!]
-            if playlist.id == id {
-                if playlist.name != name {
-                    playlist.name = name
-                    _manageData.playlists[index!] = playlist
-                    if isSave {
-                        save()
-                    }
+        guard let index = getPlayListIndex(playListId: id) else {
+            return
+        }
+        var playlist: PlayListData = _manageData.playlists[index]
+        if playlist.id == id {
+            if playlist.name != name {
+                playlist.name = name
+                _manageData.playlists[index] = playlist
+                if isSave {
+                    save()
                 }
-                return
             }
+            return
         }
     }
     
-    
+    /// プレイリストに楽曲が入っているか.
     func isIncludeAudio(playListId: String, data: AudioData) -> Bool {
-        let index = getPlayListIndex(playListId: playListId)
-        if index != nil {
-            let playlistData: PlayListData = _manageData.playlists[index!]
-            for i in 0..<playlistData.audioList.count {
-                let d = playlistData.audioList[i]
-                if d.id == data.id {
-                    return true
-                }
+        guard let index = getPlayListIndex(playListId: playListId) else {
+            return false
+        }
+        let playlistData: PlayListData = _manageData.playlists[index]
+        for i in 0..<playlistData.audioList.count {
+            let d = playlistData.audioList[i]
+            if d.id == data.id {
+                return true
             }
         }
         return false
     }
     
-    
+    /// プレイリストの楽曲を追加.
     func addAudioToPlayList(playListId: String, addList: Array<AudioData>!, isSave: Bool = false) {
         if addList.count == 0 { return }
 
-        let index = getPlayListIndex(playListId: playListId)
-        if index != nil {
-            var playlist: PlayListData = _manageData.playlists[index!]
-            if playlist.id == playListId {
-                // 追加する曲リストの判定.
-                var isAdd = false
-                for i in 0..<addList.count {
-                    let addAudio = addList[i]
-                    if !isIncludeAudio(playListId: playListId, data: addAudio) {
-                        isAdd = true
-                        playlist.audioList = playlist.audioList + [addAudio]
-                    }
+        guard let index = getPlayListIndex(playListId: playListId) else {
+            return
+        }
+        var playlist: PlayListData = _manageData.playlists[index]
+        if playlist.id == playListId {
+            // 追加する曲リストの判定.
+            var isAdd = false
+            for i in 0..<addList.count {
+                let addAudio = addList[i]
+                if !isIncludeAudio(playListId: playListId, data: addAudio) {
+                    isAdd = true
+                    playlist.audioList = playlist.audioList + [addAudio]
                 }
-                if isAdd && isSave {
-                    _manageData.playlists[index!] = playlist
-                    save()
-                }
+            }
+            if isAdd && isSave {
+                _manageData.playlists[index] = playlist
+                save()
             }
         }
     }
     
+    /// プレイリストから楽曲を削除.
     func deleteAudioFromPlayList(playListId: String, audioId: String, isSave: Bool = false) {
-        let index = getPlayListIndex(playListId: playListId)
-        if index != nil {
-            var playlist: PlayListData = _manageData.playlists[index!]
-            for i in 0..<playlist.audioList.count {
-                let d = playlist.audioList[i]
-                if d.id == audioId {
-                    playlist.audioList.remove(at: i)
-                    _manageData.playlists[index!] = playlist
-                    if isSave {
-                        save()
-                    }
-                    return
-                }
-            }
+        guard let index = getPlayListIndex(playListId: playListId) else {
+            return
         }
-    }
-    
-    
-    //
-    func deletePlaylist(id: String, isSave: Bool = false) {
-        let index = getPlayListIndex(playListId: id)
-        if index != nil {
-            let d: PlayListData = _manageData.playlists[index!]
-            if d.id == id {
-                _manageData.playlists.remove(at: index!)
+        var playlist: PlayListData = _manageData.playlists[index]
+        for i in 0..<playlist.audioList.count {
+            let d = playlist.audioList[i]
+            if d.id == audioId {
+                playlist.audioList.remove(at: i)
+                _manageData.playlists[index] = playlist
                 if isSave {
                     save()
                 }
@@ -167,8 +157,21 @@ class PlayListManager {
         }
     }
     
+    /// プレイリスト削除.
+    func deletePlaylist(id: String, isSave: Bool = false) {
+        guard let index = getPlayListIndex(playListId: id) else {
+            return
+        }
+        let d: PlayListData = _manageData.playlists[index]
+        if d.id == id {
+            _manageData.playlists.remove(at: index)
+            if isSave {
+                save()
+            }
+        }
+    }
     
-    //
+    /// 保存.
     func save() {
         // 保存する時にバージョンをあげる.
         _manageData.version = String(Int(_manageData.version)!+1)
@@ -183,9 +186,10 @@ class PlayListManager {
     }
     
     
-    
+    //
     // MARK: - LoadPlayList.
-    // プレイリストファイルの確認.
+    //
+    /// プレイリストファイルの確認.
     func checkPlaylistFile() {
         isLoaded = false
         if DropboxClientsManager.authorizedClient == nil {
@@ -195,8 +199,7 @@ class PlayListManager {
         
         // 保存先.
         let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-            let path = self._localTempPlaylistFilePath
-            return URL(fileURLWithPath: path)
+            return URL(fileURLWithPath: self._localTempPlaylistFilePath)
         }
         
         // tempがあれば削除しておく.
@@ -208,41 +211,44 @@ class PlayListManager {
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
                 if let (metadata, url) = response {
-                    let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath)
-                    if localFile != nil {
-                        // ローカルにある場合はバージョンのチェック.
-                        if Int(tempData!.version)! > Int(localFile!.version)! {
-                            // サーバーの方が上の場合はtempを使う.
-                            self.setManageData(data: tempData!)
-                            self.save()
+                    if let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath) {
+                        if let localFile = localFile {
+                            // ローカルにある場合はバージョンのチェック.
+                            if Int(tempData.version)! > Int(localFile.version)! {
+                                // サーバーの方が上の場合はtempを使う.
+                                self.setManageData(data: tempData)
+                                self.save()
+                            }
+                            else {
+                                self.setManageData(data: localFile)
+                            }
                         }
                         else {
-                            self.setManageData(data: localFile!)
+                            // ない場合は保存.
+                            self.setManageData(data: tempData)
+                            self.save()
                         }
                     }
-                    else {
-                        // ない場合は保存.
-                        self.setManageData(data: tempData!)
-                        self.save()
-                    }
                 } else {
-                    print(error!)
-                    //                    if let callError = error {
-                    //                        switch callError {
-                    //                        case .clientError(let _clientError):
-                    //                            print(_clientError)
-                    //                        case .routeError(let _routeError):
-                    //                            print("route error")
-                    //                        default :
-                    //                            print("unknown error")
-                    //                        }
-                    //                    }
-                    // エラー判定したい.
-                    //                    print(error?.description)
+                    if let error = error {
+                        print(error)
+//                        if let callError = error {
+//                            switch callError {
+//                            case .clientError(let _clientError):
+//                                print(_clientError)
+//                            case .routeError(let _routeError):
+//                                print("route error")
+//                            default :
+//                                print("unknown error")
+//                            }
+//                        }
+//                        // エラー判定したい.
+//                        print(error?.description)
+                    }
                     
-                    if localFile != nil {
+                    if let localFile = localFile {
                         // ローカルにある場合はとりあえず読み込んでおく.
-                        self.setManageData(data: localFile!)
+                        self.setManageData(data: localFile)
                     }
                     else {
                         // プレイリストファイルがなかったら作成してアップロード.
@@ -253,8 +259,7 @@ class PlayListManager {
         }
     }
     
-    
-    // プレイリストファイルの読み込み.
+    /// プレイリストファイルの読み込み.
     private func loadPlaylistData(path: String) -> (PlayListManageData?) {
         if let data = NSData(contentsOfFile: path) {
             let decoder: JSONDecoder = JSONDecoder()
@@ -268,8 +273,7 @@ class PlayListManager {
         return nil
     }
     
-    
-    // プレイリストの初回作成.
+    /// プレイリストの初回作成.
     private func createPlaylist(){
         let playlist = PlayListManager.sharedManager._manageData
         
@@ -290,23 +294,20 @@ class PlayListManager {
     
     
     
-    // 更新チェック.
+    /// 更新チェック.
     func updateCheck(completion: @escaping () -> ()) {
-        if !isLoaded || DropboxClientsManager.authorizedClient == nil{
+        if !isLoaded || DropboxClientsManager.authorizedClient == nil {
             completion()
             return
         }
-        
-        let localFile = loadPlaylistData(path: _savePath)
-        if localFile == nil {
+        guard let localFile = loadPlaylistData(path: _savePath) else {
             completion()
             return
         }
         
         // 保存先.
         let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-            let path = self._localTempPlaylistFilePath
-            return URL(fileURLWithPath: path)
+            return URL(fileURLWithPath: self._localTempPlaylistFilePath)
         }
         
         // tempがあれば削除しておく.
@@ -337,20 +338,21 @@ class PlayListManager {
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
                 if let (metadata, url) = response {
-                    let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath)
-                    // バージョンチェック.
-                    if Int(tempData!.version)! > Int(localFile!.version)! {
-                        // サーバーの方が上の場合はtempを使う.
-                        self.setManageData(data: tempData!)
-                        self.save()
-                        // おわり.
-                        completion()
+                    if let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath) {
+                        // バージョンチェック.
+                        if Int(tempData.version)! > Int(localFile.version)! {
+                            // サーバーの方が上の場合はtempを使う.
+                            self.setManageData(data: tempData)
+                            self.save()
+                            // おわり.
+                            completion()
+                            }
+                        else {
+                            // ローカルが強い.
+                            self.setManageData(data: localFile)
+                            // アップロード.
+                            upload()
                         }
-                    else {
-                        // ローカルが強い.
-                        self.setManageData(data: localFile!)
-                        // アップロード.
-                        upload()
                     }
                 } else {
                     // とりあえず.

@@ -218,7 +218,7 @@ class MusicPlayerViewControlloer: UIViewController {
 
         func tweet() {
             let twitter = TWTRComposer()
-            twitter.setText( metadata.title + " ─ " + metadata.artist + "\n#DJさとし")
+            twitter.setText(metadata.title + " ─ " + metadata.artist + "\n#DJさとし")
             if withImage && metadata.artwork != nil {
                 twitter.setImage(_artwork.image)
             }
@@ -230,8 +230,6 @@ class MusicPlayerViewControlloer: UIViewController {
         }
         else {
             TWTRTwitter.sharedInstance().logIn { success, error in
-                //                print(success)
-                //                print(error)
                 tweet()
             }
         }
@@ -244,7 +242,7 @@ class MusicPlayerViewControlloer: UIViewController {
             AudioPlayManager.sharedManager.pause()
         }
         else {
-            AudioPlayManager.sharedManager.play()
+            _ = AudioPlayManager.sharedManager.play()
         }
         layoutPlayButton()
     }
@@ -298,7 +296,10 @@ class MusicPlayerViewControlloer: UIViewController {
     }
     
     @objc func selectorMenuButton(_ sender: UIButton) {
-        let alert: UIAlertController = UIAlertController(title: AudioPlayManager.sharedManager._playing?.fileName,
+        guard let playing = AudioPlayManager.sharedManager._playing else {
+            return
+        }
+        let alert: UIAlertController = UIAlertController(title: playing.fileName,
                                                          message: nil,
                                                          preferredStyle: .actionSheet)
         // プレイリストに追加.
@@ -308,7 +309,7 @@ class MusicPlayerViewControlloer: UIViewController {
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             let playlistvc = PlayListSelectViewController()
-                            playlistvc.setAudioData(data: AudioPlayManager.sharedManager._playing)
+                            playlistvc.setAudioData(data: playing)
                             let vc = UINavigationController(rootViewController: playlistvc)
                             vc.modalTransitionStyle = .coverVertical
                             self.present(vc, animated: true, completion: nil)

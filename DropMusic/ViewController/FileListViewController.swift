@@ -179,14 +179,15 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                           style: .default,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
-                            if isExist {
-                                deleteCache()
-                                MetadataCacheManager.sharedManager.remove(audioData: d)
-                                sender.progress.progress = 0
+                            if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                if isExist {
+                                    deleteCache()
+                                    MetadataCacheManager.sharedManager.remove(audioData: d)
+                                    sender.progress.progress = 0
+                                }
+                                DownloadFileManager.sharedManager.addQueue(audioData: d)
+                                DownloadFileManager.sharedManager.startDownload()
                             }
-                            DownloadFileManager.sharedManager.addQueue(audioData: d)
-                            DownloadFileManager.sharedManager.startDownload()
             })
         // キャッシュ削除.
         let deleteCacheAction:UIAlertAction =
@@ -214,11 +215,12 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                               handler:{
                                 (action:UIAlertAction!) -> Void in
                                 let playlistvc = PlayListSelectViewController()
-                                let d: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
-                                playlistvc.setAudioData(data: d)
-                                let vc = UINavigationController(rootViewController: playlistvc)
-                                vc.modalTransitionStyle = .coverVertical
-                                self.present(vc, animated: true, completion: nil)
+                                if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                    playlistvc.setAudioData(data: d)
+                                    let vc = UINavigationController(rootViewController: playlistvc)
+                                    vc.modalTransitionStyle = .coverVertical
+                                    self.present(vc, animated: true, completion: nil)
+                                }
                 })
             alert.addAction(playlistAction)
         }
@@ -249,8 +251,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             for info in self._datas {
-                                let d: AudioData! = AudioData.createFromFileInfo(fileInfo: info)
-                                DownloadFileManager.sharedManager.addQueue(audioData: d)
+                                if let d = AudioData.createFromFileInfo(fileInfo: info) {
+                                    DownloadFileManager.sharedManager.addQueue(audioData: d)
+                                }
                             }
                             DownloadFileManager.sharedManager.startDownload()
             })
@@ -311,16 +314,19 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else if fileInfo.isFile() {
             // ファイル.
-            let audioData: AudioData! = AudioData.createFromFileInfo(fileInfo: fileInfo)
+            guard let audioData = AudioData.createFromFileInfo(fileInfo: fileInfo) else {
+                return
+            }
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // AudioDataのリストを作成する.
                 var list: Array<AudioData> = []
                 for i in 0 ..< _datas.count {
-                    list.append(AudioData.createFromFileInfo(fileInfo: _datas[i])!)
+                    if let d = AudioData.createFromFileInfo(fileInfo: _datas[i]) {
+                        list.append(d)
+                    }
                 }
                 // 再生.
-//                AudioPlayManager.sharedManager.set(audioData: audioData)
                 AudioPlayManager.sharedManager.set(selectType: .Cloud,
                                                    selectPath: makePath(),
                                                    audioList: list,
