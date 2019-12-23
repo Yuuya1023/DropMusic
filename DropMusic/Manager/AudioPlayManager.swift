@@ -65,6 +65,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     var _metadata: AudioMetadata?
     var _duration: Int = 0
+    var _deviceName: String = ""
     
     
     
@@ -101,6 +102,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleInterruption),
                                                name: .AVAudioSessionInterruption,
+                                               object: nil)
+        // 接続デバイス検知.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleAudioRouteChange),
+                                               name: .AVAudioSessionRouteChange,
                                                object: nil)
     }
     
@@ -385,6 +391,31 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
                 }
             }
         }
+    }
+    
+    
+    
+    //
+    // MARK: - handle AudioRouteChange.
+    //
+    @objc func handleAudioRouteChange(notification: Notification) {
+        let currentRoute = AVAudioSession.sharedInstance().currentRoute
+        for output in currentRoute.outputs {
+            switch output.portType {
+            case AVAudioSessionPortAirPlay,
+                 AVAudioSessionPortHeadphones,
+                 AVAudioSessionPortBluetoothA2DP,
+                 AVAudioSessionPortBluetoothLE,
+                 AVAudioSessionPortBluetoothHFP:
+                // 接続機器がある場合、機器名をもっておく.
+                _deviceName = output.portName
+                return
+            
+            default:
+                break
+            }
+        }
+        _deviceName = ""
     }
     
     //
