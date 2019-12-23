@@ -8,35 +8,26 @@
 import UIKit
 
 class FileListViewCell: UITableViewCell {
-    var nameLabel: UILabel!
-    var icon: UIImageView!
-    var progress: UIProgressView!
-    var isAudioFile: Bool = false
     
+    //
+    // MARK: - Properties.
+    //
+    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var icon: UIImageView!
+    @IBOutlet var progressView: UIProgressView!
+    
+    var isAudioFile: Bool = false
     var index: Int = 0
     weak var longpressTarget: NSObject? = nil
     var longpressSelector: Selector? = nil
     
     
+    
+    //
     // MARK: -
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clear
-        
-        
-        nameLabel = UILabel(frame: CGRect.zero)
-        nameLabel.textAlignment = .left
-        nameLabel.adjustsFontSizeToFitWidth = true
-        contentView.addSubview(nameLabel)
-        
-        icon = UIImageView(image: UIImage())
-        icon.contentMode = .scaleAspectFit
-        contentView.addSubview(icon)
-        
-        progress = UIProgressView()
-        progress.progress = 0.0
-        progress.trackTintColor = UIColor.clear
-        contentView.addSubview(progress)
+    //
+    override func awakeFromNib() {
+        super.awakeFromNib()
         
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -45,17 +36,19 @@ class FileListViewCell: UITableViewCell {
         self.addGestureRecognizer(tapGesture)
     }
     
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder: ) has not been implemented")
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
     }
     
     
+    
+    //
     // MARK: -
-    func set(fileInfo: FileInfo!) {
+    //
+    func set(fileInfo: FileInfo?) {
+        guard let fileInfo = fileInfo else {
+            return
+        }
         isAudioFile = fileInfo.isAudioFile()
         nameLabel.text = fileInfo.name()
         
@@ -66,18 +59,38 @@ class FileListViewCell: UITableViewCell {
         else if fileInfo.isAudioFile() {
             iconName = "icon_cell_audio.png"
         }
-        icon.image = UIImage(named: iconName)
+        icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
         
-        if DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo) {
-            progress.progress = 1
+        var progress: Float = 0.0
+        if isAudioFile {
+            if DownloadFileManager.sharedManager.isExistAudioFile(fileInfo: fileInfo) {
+                progress = 1.0
+            }
         }
-        else {
-            progress.progress = 0
-        }
+        setProgress(progress)
         
         if fileInfo.isFile() {
             updateObserber(identifier: fileInfo.id()!)
         }
+    }
+    
+    func setProgress(_ progress: Float) {
+        var p = progress
+        if p < 0.0 { p = 0.0 }
+        else if p > 1.0 { p = 1.0 }
+        if isAudioFile {
+            if 1.0 == p {
+                p = 0.0
+                icon.tintColor = UIColor(displayP3Red: 46/255, green: 123/255, blue: 255/255, alpha: 1)
+            }
+            else {
+                icon.tintColor = .lightGray
+            }
+        }
+        else {
+            icon.tintColor = .black
+        }
+        progressView.progress = p
     }
     
     
@@ -85,7 +98,7 @@ class FileListViewCell: UITableViewCell {
         NotificationCenter.default.removeObserver(self)
         if isAudioFile {
             NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(setProgress(notification:)),
+                                                   selector: #selector(setDownloadProgress(notification:)),
                                                    name: NSNotification.Name(rawValue: identifier),
                                                    object: nil)
         }
@@ -94,10 +107,9 @@ class FileListViewCell: UITableViewCell {
     
     
     // MARK: -
-    @objc func setProgress(notification: Notification) {
-        var p = Float(truncating: notification.object as! NSNumber)
-        if p < 0 { p = 0.0 }
-        self.progress.progress = p
+    @objc func setDownloadProgress(notification: Notification) {
+        let p = Float(truncating: notification.object as! NSNumber)
+        self.setProgress(p)
     }
     
     @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
@@ -117,8 +129,5 @@ class FileListViewCell: UITableViewCell {
     // MARK: -
     override func layoutSubviews() {
         super.layoutSubviews()
-        nameLabel.frame = CGRect(x: 45, y: 0, width: frame.width - 50, height: frame.height)
-        icon.frame = CGRect(x: 5, y: 5, width: frame.height - 10, height: frame.height - 10)
-        progress.frame = CGRect(x: 0, y: frame.height-2.5, width: frame.width, height: frame.height - 5)
     }
 }

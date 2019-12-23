@@ -34,7 +34,6 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
             .flexibleWidth,
             .flexibleHeight
         ]
-        _tableView.rowHeight = 70
         _tableView.delegate = self
         _tableView.dataSource = self
         _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)

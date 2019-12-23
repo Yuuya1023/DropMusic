@@ -21,6 +21,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     var _isLoading: Bool = false
     var _refreshControll: UIRefreshControl!
     
+    private let _cellIdentifier = "FileListViewCell"
     
     
     //
@@ -62,7 +63,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(FileListViewCell.self, forCellReuseIdentifier: NSStringFromClass(FileListViewCell.self))
+        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
         
         self.view.addSubview(_tableView)
 
@@ -192,7 +193,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                 if isExist {
                                     deleteCache()
                                     MetadataCacheManager.sharedManager.remove(audioData: d)
-                                    sender.progress.progress = 0
+                                    sender.setProgress(0)
                                 }
                                 DownloadFileManager.sharedManager.addQueue(audioData: d)
                                 DownloadFileManager.sharedManager.startDownload()
@@ -205,7 +206,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             deleteCache()
-                            sender.progress.progress = 0
+                            sender.setProgress(0)
             })
         
         // キャンセル.
@@ -296,13 +297,14 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     //
     // MARK: - TableViewController Delegate.
     //
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40.0
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _datas.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let temp = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(FileListViewCell.self))
-            ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(FileListViewCell.self))
-        let c = temp as! FileListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! FileListViewCell
         let fileInfo = _datas[indexPath.row]
         
         c.set(fileInfo: fileInfo)

@@ -51,7 +51,6 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         // tableview.
         _tableView = UITableView()
         _tableView.backgroundColor = UIColor.clear
-        _tableView.rowHeight = 80
         _tableView.autoresizingMask = [
             .flexibleWidth,
             .flexibleHeight
@@ -216,6 +215,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     //
     // MARK: - TableViewController Delegate.
     //
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80.0
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
         if playlist != nil {
