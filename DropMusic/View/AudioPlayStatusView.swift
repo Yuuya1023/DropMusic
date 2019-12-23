@@ -131,7 +131,7 @@ class AudioPlayStatusView: UIView {
             AudioPlayManager.sharedManager.pause()
         }
         else {
-            AudioPlayManager.sharedManager.play()
+            _ = AudioPlayManager.sharedManager.play()
         }
         layoutPlayButton()
     }

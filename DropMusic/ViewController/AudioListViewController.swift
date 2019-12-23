@@ -15,7 +15,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     var _tableView: UITableView!
     var _playListId: String!
     
-    
+    private let _cellIdentifier = "AudioListViewCell"
     
     //
     // MARK: -
@@ -27,36 +27,38 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     public init(playListId: String){
         super.init(nibName: nil, bundle: nil)
         _playListId = playListId
-        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
-        if playlist != nil {
-            self.title = playlist?.name
+        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+            self.title = playlist.name
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.delegate = self
-//        self.navigationController?.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.tintColor = .white
+        if let navigationController = self.navigationController {
+            navigationController.delegate = self
+            navigationController.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
+            navigationController.navigationBar.tintColor = .white
+        }
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
-                                                                 style: .plain,
-                                                                 target: self,
-                                                                 action: #selector(selectorMenuButton))
-        
-        //
+        if let image = UIImage(named: "icon_menu.png") {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image.resizeImage(reSize: CGSize(width:30,height:30)),
+                                                                     style: .plain,
+                                                                     target: self,
+                                                                     action: #selector(selectorMenuButton))
+        }
+        // tableview.
         _tableView = UITableView()
         _tableView.backgroundColor = UIColor.clear
-        _tableView.rowHeight = 60
+        _tableView.rowHeight = 80
         _tableView.autoresizingMask = [
             .flexibleWidth,
             .flexibleHeight
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(AudioListViewCell.self, forCellReuseIdentifier: NSStringFromClass(AudioListViewCell.self))
+        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
         
         self.view.addSubview(_tableView)
         
@@ -88,6 +90,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     // MARK: -
     @objc func selectorMenuButton() {
+        guard let playlist = PlayListManager.sharedManager.getPlaylistData(id: self._playListId) else {
+            return
+        }
         let alert: UIAlertController = UIAlertController(title: nil,
                                                          message: nil,
                                                          preferredStyle: .actionSheet)
@@ -95,13 +100,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         let downloadAction:UIAlertAction =
             UIAlertAction(title: "Download all",
                           style: .default,
-                          handler:{
-                            (action:UIAlertAction!) -> Void in
-                            let playlist = PlayListManager.sharedManager.getPlaylistData(id: self._playListId)
-                            if playlist != nil {
-                                for audioData in (playlist?.audioList)! {
-                                    DownloadFileManager.sharedManager.addQueue(audioData: audioData)
-                                }
+                          handler:{ (action:UIAlertAction!) -> Void in
+                            for audioData in (playlist.audioList) {
+                                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
                             }
                             DownloadFileManager.sharedManager.startDownload()
             })
@@ -110,8 +111,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         let cancelAction:UIAlertAction =
             UIAlertAction(title: "Cancel",
                           style: .cancel,
-                          handler:{
-                            (action:UIAlertAction!) -> Void in
+                          handler:{ (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
         
@@ -151,8 +151,8 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                           style: .destructive,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: (playlist.id),
-                                                                                  audioId: (audioData.id),
+                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: playlist.id,
+                                                                                  audioId: audioData.id,
                                                                                   isSave: true)
                             self.updateScroll()
             })
@@ -164,7 +164,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                             (action:UIAlertAction!) -> Void in
                             if isExist {
                                 deleteCache()
-                                sender.progress.progress = 0
+                                sender._progressView.progress = 0
                             }
                             MetadataCacheManager.sharedManager.remove(audioData: audioData)
                             DownloadFileManager.sharedManager.addQueue(audioData: audioData)
@@ -224,13 +224,10 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let temp = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(AudioListViewCell.self))
-            ?? UITableViewCell(style: .default, reuseIdentifier: NSStringFromClass(AudioListViewCell.self))
-        let c = temp as! AudioListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! AudioListViewCell
         
-        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
-        if playlist != nil {
-            let audioData = playlist?.audioList[indexPath.row]
+        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+            let audioData = playlist.audioList[indexPath.row]
             
             c.set(audioData: audioData)
             c.index = indexPath.row
@@ -240,20 +237,19 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
-        if playlist != nil {
-            let audioData = playlist?.audioList[indexPath.row]
-            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData!) {
+        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+            let audioData = playlist.audioList[indexPath.row]
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
+                // 再生.
                 AudioPlayManager.sharedManager.set(selectType: .Playlist,
-                                                   selectPath: (playlist?.name)!,
-                                                   audioList: (playlist?.audioList)!,
+                                                   selectPath: playlist.name,
+                                                   audioList: playlist.audioList,
                                                    playIndex: indexPath.row)
-                AudioPlayManager.sharedManager.play()
+                _ = AudioPlayManager.sharedManager.play()
             }
             else {
                 // ダウンロード.
-                DownloadFileManager.sharedManager.addQueue(audioData: audioData!)
+                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
                 DownloadFileManager.sharedManager.startDownload()
             }
         }

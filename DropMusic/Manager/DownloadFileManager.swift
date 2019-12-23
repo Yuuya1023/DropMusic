@@ -194,7 +194,7 @@ class DownloadFileManager  {
                                                     object: progressData.fractionCompleted-0.1)
                 }
                 .response { response, error in
-                    if let (metadata, url) = response {
+                    if let (_, _) = response {
 //                        print("*** Download file ***")
 //                        print("Downloaded file name: \(metadata.name)")
 //                        print("Downloaded file url: \(url)")

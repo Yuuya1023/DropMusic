@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // プレイリスト.
         PlayListManager.sharedManager.checkPlaylistFile()
         // AudioPlayManager.
-        AudioPlayManager.sharedManager
+        _ = AudioPlayManager.sharedManager
         
         _rootViewController = RootTabBarController()
         
@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     override func remoteControlReceived(with event: UIEvent?) {
         switch event?.subtype {
         case .remoteControlPlay?:
-            AudioPlayManager.sharedManager.play()
+            _ = AudioPlayManager.sharedManager.play()
         case .remoteControlPause?:
             AudioPlayManager.sharedManager.pause()
         case .remoteControlStop?:

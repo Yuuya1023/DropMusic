@@ -210,7 +210,7 @@ class PlayListManager {
         
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
-                if let (metadata, url) = response {
+                if let (_, _) = response {
                     if let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath) {
                         if let localFile = localFile {
                             // ローカルにある場合はバージョンのチェック.
@@ -282,7 +282,7 @@ class PlayListManager {
         //
         if let client = DropboxClientsManager.authorizedClient {
             client.files.upload(path: self._playlistFilePath+JSON_NAME_PLAYLIST, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
-                if let metadata = response {
+                if let _ = response {
                     // 成功したら再チェック.
                     self.checkPlaylistFile()
                 } else {
@@ -323,7 +323,7 @@ class PlayListManager {
             
             if let client = DropboxClientsManager.authorizedClient {
                 client.files.upload(path: self._playlistFilePath+JSON_NAME_PLAYLIST, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
-                    if let metadata = response {
+                    if let _ = response {
                         // おわり.
                         completion()
                     } else {
@@ -337,7 +337,7 @@ class PlayListManager {
         
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._playlistFilePath+JSON_NAME_PLAYLIST, destination: destination).response { response, error in
-                if let (metadata, url) = response {
+                if let (_, _) = response {
                     if let tempData = self.loadPlaylistData(path: self._localTempPlaylistFilePath) {
                         // バージョンチェック.
                         if Int(tempData.version)! > Int(localFile.version)! {

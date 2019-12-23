@@ -26,7 +26,6 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     //
     // MARK: -
     //
-    
     ///
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -41,11 +40,13 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         super.viewDidLoad()
         
         self.title = _pathList.count != 0 ? _pathList.last : "Cloud"
-        self.navigationController?.delegate = self
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
         self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.tintColor = .white
+        if let navigationController = self.navigationController {
+            navigationController.delegate = self
+            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationController.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+            navigationController.navigationBar.tintColor = .white
+        }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
                                                                  style: .plain,
@@ -97,50 +98,58 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: -
     //
     
-    ///
+    /// 一覧読み込み.
     func load(){
+        guard let client = DropboxClientsManager.authorizedClient else {
+            return
+        }
         if _isLoading {
             return
         }
+            
         _isLoading = true
         let path = makePath()
-        let cacheData = DropboxFileListManager.sharedManager.get(pathLower: path)
-        if cacheData != nil && cacheData?.count != 0 {
-            // キャッシュから.
-            self._datas = cacheData!
-            sortAndReloadList()
+        if let cacheData = DropboxFileListManager.sharedManager.get(pathLower: path) {
+            if cacheData.count != 0 {
+                // キャッシュから.
+                self._datas = cacheData
+                sortAndReloadList()
+            }
         }
         else {
-            if let client = DropboxClientsManager.authorizedClient {
-                client.files.listFolder(path: path).response { response, error in
-                    if let metadata = response {
-                        self._datas = []
-//                        print("Entries: \(metadata.entries)")
-                        for entry in metadata.entries {
-                            let info = FileInfo(metadata: entry)
-                            if info.isFolder() || info.isAudioFile() {
-                                // フォルダか音声ファイルのみ.
-                                self._datas.append(FileInfo(metadata: entry))
-                            }
+            client.files.listFolder(path: path).response { response, error in
+                if let metadata = response {
+                    self._datas = []
+//                    print("Entries: \(metadata.entries)")
+                    for entry in metadata.entries {
+                        let info = FileInfo(metadata: entry)
+                        if info.isFolder() || info.isAudioFile() {
+                            // フォルダか音声ファイルのみ.
+                            self._datas.append(FileInfo(metadata: entry))
                         }
-                    } else {
-                        print(error!)
-                        self.navigationController?.popViewController(animated: true)
-                        return
                     }
-                    
-                    if self._datas.count != 0 {
-                        // 登録.
-                        DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
-                        // 更新.
-                        self.sortAndReloadList()
+                } else {
+                    if let error = error {
+                        print(error)
                     }
+                    if let controller = self.navigationController {
+                        controller.popViewController(animated: true)
+                    }
+                    self._isLoading = false
+                    return
+                }
+                
+                if self._datas.count != 0 {
+                    // 登録.
+                    DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
+                    // 更新.
+                    self.sortAndReloadList()
                 }
             }
         }
     }
     
-    
+    /// 一覧更新.
     func sortAndReloadList() {
         self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
         self._tableView.reloadData()
@@ -148,7 +157,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         _refreshControll.endRefreshing()
     }
     
-    
+    /// パス作成.
     func makePath() -> (String) {
         var ret: String = ""
         for v in _pathList {
@@ -273,12 +282,12 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     
+    
     //
     // MARK: - NavigationController Delegate.
     //
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
     }
-    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
     }
 
@@ -331,7 +340,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                                    selectPath: makePath(),
                                                    audioList: list,
                                                    playIndex: indexPath.row)
-                AudioPlayManager.sharedManager.play()
+                _ = AudioPlayManager.sharedManager.play()
             }
             else {
                 DownloadFileManager.sharedManager.addQueue(audioData: audioData)
