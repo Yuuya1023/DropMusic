@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TWTRTwitter.sharedInstance().start(withConsumerKey: TWITTER_CONSUMER_KEY,
                                            consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
         // AppData.
-        AppDataManager.sharedManager.checkFile()
+        AppDataManager.sharedManager.checkFile() {}
         // AudioPlayManager.
         _ = AudioPlayManager.sharedManager
         

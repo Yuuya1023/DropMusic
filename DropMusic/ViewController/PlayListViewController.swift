@@ -125,7 +125,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     @objc func selectorRefreshControll() {
         print("selectorRefreshControll")
         
-        AppDataManager.sharedManager.updateCheck {
+        AppDataManager.sharedManager.checkFile {
             print("update")
             self.updateScrollView()
             self._refreshControll.endRefreshing()

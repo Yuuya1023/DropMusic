@@ -126,7 +126,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                         let info = FileInfo(metadata: entry)
                         if info.isFolder() || info.isAudioFile() {
                             // フォルダか音声ファイルのみ.
-                            self._datas.append(FileInfo(metadata: entry))
+                            self._datas.append(info)
                         }
                     }
                 } else {
@@ -180,34 +180,78 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             catch {}
         }
         
-        let alert: UIAlertController = UIAlertController(title: fileInfo.name(),
-                                                         message: nil,
-                                                         preferredStyle: .actionSheet)
-        // ダウンロード.
-        let downloadAction:UIAlertAction =
-            UIAlertAction(title: isExist ? "Download again": "Download",
-                          style: .default,
-                          handler:{
-                            (action:UIAlertAction!) -> Void in
-                            if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
-                                if isExist {
-                                    deleteCache()
-                                    MetadataCacheManager.sharedManager.remove(audioData: d)
-                                    sender.setProgress(0)
+        let alert = UIAlertController(title: fileInfo.name(),
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
+        
+        if fileInfo.isAudioFile() {
+            // ダウンロード.
+            let downloadAction:UIAlertAction =
+                UIAlertAction(title: isExist ? "Download again" : "Download",
+                              style: .default,
+                              handler:{
+                                (action:UIAlertAction!) -> Void in
+                                if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                    if isExist {
+                                        deleteCache()
+                                        MetadataCacheManager.sharedManager.remove(audioData: d)
+                                        sender.setProgress(0)
+                                    }
+                                    DownloadFileManager.sharedManager.addQueue(audioData: d)
+                                    DownloadFileManager.sharedManager.startDownload()
                                 }
-                                DownloadFileManager.sharedManager.addQueue(audioData: d)
-                                DownloadFileManager.sharedManager.startDownload()
-                            }
-            })
-        // キャッシュ削除.
-        let deleteCacheAction:UIAlertAction =
-            UIAlertAction(title: "Delete cache",
-                          style: .destructive,
-                          handler:{
-                            (action:UIAlertAction!) -> Void in
-                            deleteCache()
-                            sender.setProgress(0)
-            })
+                })
+            alert.addAction(downloadAction)
+            
+            // プレイリスト追加.
+            if isExist {
+                let playlistAction:UIAlertAction =
+                    UIAlertAction(title: "Add to playlist",
+                                  style: .default,
+                                  handler:{
+                                    (action:UIAlertAction!) -> Void in
+                                    let playlistvc = PlayListSelectViewController()
+                                    if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                        playlistvc.setAudioData(data: d)
+                                        let vc = UINavigationController(rootViewController: playlistvc)
+                                        vc.modalTransitionStyle = .coverVertical
+                                        self.present(vc, animated: true, completion: nil)
+                                    }
+                    })
+                alert.addAction(playlistAction)
+            }
+            
+            // キャッシュ削除.
+            let deleteCacheAction:UIAlertAction =
+                UIAlertAction(title: "Delete cache",
+                              style: .destructive,
+                              handler:{
+                                (action:UIAlertAction!) -> Void in
+                                deleteCache()
+                                sender.setProgress(0)
+                })
+            alert.addAction(deleteCacheAction)
+        }
+
+        // お気に入り.
+        if let fav = AppDataManager.sharedManager.favorite {
+            let isFavorite = fav.isFavorite(fileInfo)
+            let favoriteAction:UIAlertAction =
+                UIAlertAction(title: isFavorite ? "Delete favorite" : "Add favorite",
+                              style: .default,
+                              handler:{
+                                (action:UIAlertAction!) -> Void in
+                                if isFavorite {
+                                    fav.deleteFavorite(fileInfo)
+                                }
+                                else {
+                                    fav.addFavorite(fileInfo)
+                                }
+                                AppDataManager.sharedManager.save()
+                })
+            alert.addAction(favoriteAction)
+        }
+        
         
         // キャンセル.
         let cancelAction:UIAlertAction =
@@ -218,25 +262,6 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                             // 閉じるだけ.
             })
         
-        if isExist {
-            let playlistAction:UIAlertAction =
-                UIAlertAction(title: "Add to playlist",
-                              style: .default,
-                              handler:{
-                                (action:UIAlertAction!) -> Void in
-                                let playlistvc = PlayListSelectViewController()
-                                if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
-                                    playlistvc.setAudioData(data: d)
-                                    let vc = UINavigationController(rootViewController: playlistvc)
-                                    vc.modalTransitionStyle = .coverVertical
-                                    self.present(vc, animated: true, completion: nil)
-                                }
-                })
-            alert.addAction(playlistAction)
-        }
-        
-        alert.addAction(downloadAction)
-        alert.addAction(deleteCacheAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
     }

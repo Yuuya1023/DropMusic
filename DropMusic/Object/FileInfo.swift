@@ -10,14 +10,25 @@ import SwiftyDropbox
 
 class FileInfo {
     
+    //
+    // MARK: - Properties.
+    //
     var _metaData: Files.Metadata!
     
     
+    
+    //
+    // MARK: -
+    //
     init(metadata: Files.Metadata!){
         _metaData = metadata
     }
     
-    // MARK: - internal
+    
+    
+    //
+    // MARK: - 
+    //
     internal func folderMetadata() -> (Files.FolderMetadata) {
         return _metaData as! Files.FolderMetadata
     }

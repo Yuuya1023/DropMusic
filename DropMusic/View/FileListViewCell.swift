@@ -113,15 +113,13 @@ class FileListViewCell: UITableViewCell {
     }
     
     @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
-        if isAudioFile {
-            switch sender.state {
-            case .began:
-                if longpressTarget != nil && longpressSelector != nil {
-                    longpressTarget?.perform(longpressSelector, with: self)
-                }
-            default:
-                break
+        switch sender.state {
+        case .began:
+            if longpressTarget != nil && longpressSelector != nil {
+                longpressTarget?.perform(longpressSelector, with: self)
             }
+        default:
+            break
         }
     }
     

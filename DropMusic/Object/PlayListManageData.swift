@@ -13,26 +13,21 @@ class PlayListManageData: Codable {
     // MARK: - Properties.
     //
     private var latestId: String = "0"
+    private var playlists: Array<PlayListData> = []
+    
+    
+    
+    //
+    // MARK: - Public.
+    //
+    /// 最終ID取得.
     func getLatestId() -> String {
         return latestId
     }
-    private var playlists: Array<PlayListData> = []
+    
+    /// プレイリスト取得.
     func getPlaylists() -> Array<PlayListData> {
         return playlists
-    }
-    
-    //
-    // MARK: -
-    //
-    /// プレイリストのインデックスを取得.
-    private func getPlayListIndex(playListId: String) -> Int? {
-        for i in 0..<playlists.count {
-            let d: PlayListData = playlists[i]
-            if d.id == playListId {
-                return i
-            }
-        }
-        return nil
     }
     
     /// プレイリスト情報取得.
@@ -133,4 +128,21 @@ class PlayListManageData: Codable {
             playlists.remove(at: index)
         }
     }
+    
+    
+    
+    //
+    // MARK: - Private.
+    //
+    /// プレイリストのインデックスを取得.
+    private func getPlayListIndex(playListId: String) -> Int? {
+        for i in 0..<playlists.count {
+            let d: PlayListData = playlists[i]
+            if d.id == playListId {
+                return i
+            }
+        }
+        return nil
+    }
+    
 }

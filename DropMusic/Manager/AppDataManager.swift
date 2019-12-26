@@ -27,6 +27,12 @@ class AppDataManager {
     //
     // MARK: - Properties.
     //
+    private var _isLoading: Bool = false
+    var isLoading: Bool {
+        get {
+            return _isLoading
+        }
+    }
     private var _isLoaded: Bool = false
     var isLoaded: Bool {
         get {
@@ -100,7 +106,7 @@ class AppDataManager {
             client.files.upload(path: self._manageDataFilePath+JSON_NAME, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
                 if let _ = response {
                     // 成功したら再チェック.
-                    self.checkFile()
+                    self.checkFile() {}
                 } else {
                     print(error!)
                 }
@@ -128,85 +134,17 @@ class AppDataManager {
     }
     
     /// ファイルの確認.
-    func checkFile() {
-        _isLoaded = false
+    func checkFile(completion: @escaping () -> ()) {
+        if _isLoading {
+            completion()
+            return
+        }
         if DropboxClientsManager.authorizedClient == nil {
+            completion()
             return
         }
+        _isLoading = true
         let localFile = loadData(path: _savePath)
-        
-        // 保存先.
-        let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-            return URL(fileURLWithPath: self._localTempFilePath)
-        }
-        
-        // tempがあれば削除しておく.
-        do {
-            try FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
-        }
-        catch {}
-        
-        if let client = DropboxClientsManager.authorizedClient {
-            client.files.download(path: self._manageDataFilePath+JSON_NAME, destination: destination).response { response, error in
-                if let (_, _) = response {
-                    if let tempData = self.loadData(path: self._localTempFilePath) {
-                        if let localFile = localFile {
-                            // ローカルにある場合はバージョンのチェック.
-                            if Int(tempData.version)! > Int(localFile.version)! {
-                                // サーバーの方が上の場合はtempを使う.
-                                self.setManageData(data: tempData)
-                                self.save()
-                            }
-                            else {
-                                self.setManageData(data: localFile)
-                            }
-                        }
-                        else {
-                            // ない場合は保存.
-                            self.setManageData(data: tempData)
-                            self.save()
-                        }
-                    }
-                } else {
-                    if let error = error {
-                        print(error)
-                        //                        if let callError = error {
-                        //                            switch callError {
-                        //                            case .clientError(let _clientError):
-                        //                                print(_clientError)
-                        //                            case .routeError(let _routeError):
-                        //                                print("route error")
-                        //                            default :
-                        //                                print("unknown error")
-                        //                            }
-                        //                        }
-                        //                        // エラー判定したい.
-                        //                        print(error?.description)
-                    }
-                    
-                    if let localFile = localFile {
-                        // ローカルにある場合はとりあえず読み込んでおく.
-                        self.setManageData(data: localFile)
-                    }
-                    else {
-                        // ファイルがなかったら作成してアップロード.
-                        self.createManageData()
-                    }
-                }
-            }
-        }
-    }
-    
-    /// 更新チェック.
-    func updateCheck(completion: @escaping () -> ()) {
-        if !_isLoaded || DropboxClientsManager.authorizedClient == nil {
-            completion()
-            return
-        }
-        guard let localFile = loadData(path: _savePath) else {
-            completion()
-            return
-        }
         
         // 保存先.
         let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
@@ -226,41 +164,62 @@ class AppDataManager {
             
             if let client = DropboxClientsManager.authorizedClient {
                 client.files.upload(path: self._manageDataFilePath+JSON_NAME, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
-                    if let _ = response {
+                    if let response = response {
                         // おわり.
-                        completion()
+                        print(response)
                     } else {
-                        print(error!)
                         // おわり.
-                        completion()
+                        print(error!)
                     }
                 }
             }
         }
         
+        // ダウンロード.
         if let client = DropboxClientsManager.authorizedClient {
             client.files.download(path: self._manageDataFilePath+JSON_NAME, destination: destination).response { response, error in
                 if let (_, _) = response {
                     if let tempData = self.loadData(path: self._localTempFilePath) {
-                        // バージョンチェック.
-                        if Int(tempData.version)! > Int(localFile.version)! {
-                            // サーバーの方が上の場合はtempを使う.
-                            self.setManageData(data: tempData)
-                            self.save()
-                            // おわり.
-                            completion()
+                        if let localFile = localFile {
+                            // ローカルにある場合はバージョンのチェック.
+                            if Int(tempData.version)! == Int(localFile.version)! {
+                                // セットだけする.
+                                self.setManageData(data: localFile)
+                            }
+                            else if Int(tempData.version)! > Int(localFile.version)! {
+                                // サーバーの方が上の場合はtempを使う.
+                                self.setManageData(data: tempData)
+                                self.save()
+                            }
+                            else {
+                                // ローカルの方が強い場合、保存してアップロード.
+                                self.setManageData(data: localFile)
+                                upload()
+                            }
                         }
                         else {
-                            // ローカルが強い.
-                            self.setManageData(data: localFile)
-                            // アップロード.
-                            upload()
+                            // ない場合は保存.
+                            self.setManageData(data: tempData)
+                            self.save()
                         }
                     }
                 } else {
-                    // とりあえず.
-                    completion()
+                    if let error = error {
+                        print(error)
+                    }
+                    
+                    if let localFile = localFile {
+                        // ローカルにある場合はとりあえず読み込んでおく.
+                        self.setManageData(data: localFile)
+                        upload()
+                    }
+                    else {
+                        // ファイルがなかったら作成してアップロード.
+                        self.createManageData()
+                    }
                 }
+                self._isLoading = false
+                completion()
             }
         }
     }

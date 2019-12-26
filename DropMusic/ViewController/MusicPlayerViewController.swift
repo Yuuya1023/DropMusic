@@ -139,7 +139,7 @@ class MusicPlayerViewControlloer: UIViewController {
         do {
             // AirPlay.
             if #available(iOS 11.0, *) {
-                let view:AVRoutePickerView = AVRoutePickerView()
+                let view = AVRoutePickerView()
                 view.frame = CGRect(x:0,
                                     y:0,
                                     width:_airPlayView.bounds.width,
@@ -230,7 +230,9 @@ class MusicPlayerViewControlloer: UIViewController {
         }
         else {
             TWTRTwitter.sharedInstance().logIn { success, error in
-                tweet()
+                if let _ = success {
+                    tweet()
+                }
             }
         }
     }
