@@ -27,7 +27,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     public init(playListId: String){
         super.init(nibName: nil, bundle: nil)
         _playListId = playListId
-        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
             self.title = playlist.name
         }
     }
@@ -89,7 +89,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     // MARK: -
     @objc func selectorMenuButton() {
-        guard let playlist = PlayListManager.sharedManager.getPlaylistData(id: self._playListId) else {
+        guard let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: self._playListId) else {
             return
         }
         let alert: UIAlertController = UIAlertController(title: nil,
@@ -123,7 +123,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     
     // MARK: -
     @objc func showActionSheet(_ sender: AudioListViewCell) {
-        guard let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) else {
+        guard let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) else {
             return
         }
         guard playlist.audioList.indices.contains(sender.index) else {
@@ -150,9 +150,9 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                           style: .destructive,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            PlayListManager.sharedManager.deleteAudioFromPlayList(playListId: playlist.id,
-                                                                                  audioId: audioData.id,
-                                                                                  isSave: true)
+                            AppDataManager.sharedManager.playlist.deleteAudioFromPlayList(playListId: playlist.id,
+                                                                                          audioId: audioData.id)
+                            AppDataManager.sharedManager.save()
                             self.updateScroll()
             })
         // ダウンロード.
@@ -219,7 +219,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         return 80.0
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId)
+        let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId)
         if playlist != nil {
             return (playlist?.audioList.count)!
         }
@@ -228,7 +228,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! AudioListViewCell
         
-        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
             let audioData = playlist.audioList[indexPath.row]
             
             c.set(audioData: audioData)
@@ -239,7 +239,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let playlist = PlayListManager.sharedManager.getPlaylistData(id: _playListId) {
+        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
             let audioData = playlist.audioList[indexPath.row]
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // 再生.

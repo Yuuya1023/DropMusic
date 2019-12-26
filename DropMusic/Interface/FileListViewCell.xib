@@ -55,10 +55,10 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y1l-Wg-B1s" userLabel="Base_Progress">
-                        <rect key="frame" x="0.0" y="49.5" width="404" height="3"/>
+                        <rect key="frame" x="0.0" y="48.5" width="404" height="1"/>
                         <subviews>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="muf-BV-pKL" userLabel="ProgressView">
-                                <rect key="frame" x="0.0" y="0.0" width="404" height="3"/>
+                                <rect key="frame" x="0.0" y="0.0" width="404" height="1"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
@@ -67,7 +67,7 @@
                         <constraints>
                             <constraint firstItem="muf-BV-pKL" firstAttribute="height" secondItem="y1l-Wg-B1s" secondAttribute="height" id="GEP-Ch-EnQ"/>
                             <constraint firstItem="muf-BV-pKL" firstAttribute="width" secondItem="y1l-Wg-B1s" secondAttribute="width" id="Gyb-dv-rfn"/>
-                            <constraint firstAttribute="height" constant="3" id="Pxx-LJ-Qcc"/>
+                            <constraint firstAttribute="height" constant="1" id="Pxx-LJ-Qcc"/>
                             <constraint firstItem="muf-BV-pKL" firstAttribute="centerX" secondItem="y1l-Wg-B1s" secondAttribute="centerX" id="YGi-Xt-4sv"/>
                             <constraint firstItem="muf-BV-pKL" firstAttribute="centerY" secondItem="y1l-Wg-B1s" secondAttribute="centerY" id="tjC-dE-gVp"/>
                         </constraints>
@@ -77,7 +77,7 @@
                     <constraint firstItem="XVY-cP-ikp" firstAttribute="height" secondItem="gA2-xp-mt6" secondAttribute="height" id="2xi-16-LQi"/>
                     <constraint firstItem="Vi8-GL-Zd3" firstAttribute="leading" secondItem="XVY-cP-ikp" secondAttribute="trailing" id="4KQ-eL-dnf"/>
                     <constraint firstItem="Vi8-GL-Zd3" firstAttribute="height" secondItem="gA2-xp-mt6" secondAttribute="height" id="4fR-qv-1Dc"/>
-                    <constraint firstItem="y1l-Wg-B1s" firstAttribute="bottom" secondItem="gA2-xp-mt6" secondAttribute="bottom" constant="3" id="6Ii-fS-NFD"/>
+                    <constraint firstItem="y1l-Wg-B1s" firstAttribute="bottom" secondItem="gA2-xp-mt6" secondAttribute="bottom" id="6Ii-fS-NFD"/>
                     <constraint firstItem="y1l-Wg-B1s" firstAttribute="centerX" secondItem="gA2-xp-mt6" secondAttribute="centerX" id="ChC-av-jCk"/>
                     <constraint firstItem="XVY-cP-ikp" firstAttribute="width" secondItem="gA2-xp-mt6" secondAttribute="width" multiplier="0.1" id="EPa-hH-RWL"/>
                     <constraint firstItem="XVY-cP-ikp" firstAttribute="leading" secondItem="gA2-xp-mt6" secondAttribute="leading" id="bXu-J1-Yge"/>

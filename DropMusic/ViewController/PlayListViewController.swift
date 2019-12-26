@@ -59,7 +59,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         _tableView.refreshControl = _refreshControll
         
         // プレイリストの読み込み確認.
-        if !PlayListManager.sharedManager.isLoaded {
+        if !AppDataManager.sharedManager.isLoaded {
             setScheduler()
         }
     }
@@ -115,7 +115,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     // MARK: - Selector
     @objc func selectorLoagingCheck() {
-        if PlayListManager.sharedManager.isLoaded {
+        if AppDataManager.sharedManager.isLoaded {
             _timer.invalidate()
             updateScrollView()
         }
@@ -125,7 +125,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     @objc func selectorRefreshControll() {
         print("selectorRefreshControll")
         
-        PlayListManager.sharedManager.updateCheck {
+        AppDataManager.sharedManager.updateCheck {
             print("update")
             self.updateScrollView()
             self._refreshControll.endRefreshing()
@@ -142,7 +142,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
                           style: .default,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            let playlistId = PlayListManager.sharedManager.addPlaylist(isSave: true)
+                            let playlistId = AppDataManager.sharedManager.playlist.addPlaylist()
+                            AppDataManager.sharedManager.save()
                             self.updateScrollView()
                             self.editPlaylist(playlistId: playlistId)
             })
@@ -162,7 +163,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     @objc func showEdit(_ sender: PlayListViewCell) {
-        editPlaylist(playlistId: PlayListManager.sharedManager.playlistManageData.playlists[sender.index].id)
+        editPlaylist(playlistId: AppDataManager.sharedManager.playlist.getPlaylists()[sender.index].id)
     }
     
     
@@ -174,7 +175,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         return 100.0
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PlayListManager.sharedManager.playlistManageData.playlists.count
+        return AppDataManager.sharedManager.playlist.getPlaylists().count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! PlayListViewCell
@@ -182,14 +183,14 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         c.index = indexPath.row
         c.longpressTarget = self
         c.longpressSelector = #selector(showEdit(_:))
-        c.set(data: PlayListManager.sharedManager.playlistManageData.playlists[indexPath.row])
+        c.set(data: AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row])
         
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        print(indexPath.row)
         // 曲一覧へ.
-        let d = PlayListManager.sharedManager.playlistManageData.playlists[indexPath.row]
+        let d = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
         self.navigationController?.pushViewController(AudioListViewController(playListId: d.id),
                                                       animated: true)
     }

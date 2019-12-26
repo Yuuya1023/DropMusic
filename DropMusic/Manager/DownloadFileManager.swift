@@ -12,7 +12,14 @@ import SwiftyDropbox
 class DownloadFileManager  {
     
     //
-    // MARK: - Properties
+    // MARK: - Singleton.
+    //
+    static let sharedManager = DownloadFileManager()
+    
+    
+    
+    //
+    // MARK: - Properties.
     //
     struct DownloadQueueData {
         var _audioData: AudioData
@@ -24,7 +31,6 @@ class DownloadFileManager  {
     var _isDownloading: Bool = false
     var _downloadQueue: [DownloadQueueData] = []
     
-    static let sharedManager = DownloadFileManager()
     
     
     //
@@ -46,7 +52,7 @@ class DownloadFileManager  {
         return true
     }
     
-    public func getCachePath(storageType: AudioData.StorageType, add: String) ->(String){
+    public func getCachePath(storageType: AppManageData.StorageType, add: String) ->(String){
         var storageTypePath = ""
         switch storageType {
         case .None:

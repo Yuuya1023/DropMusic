@@ -7,20 +7,14 @@
 
 import UIKit
 
-
 struct AudioData: Codable {
     
     //
     // MARK: - Properties.
     //
-    enum StorageType:Int,Codable {
-        case None = 0
-        case DropBox = 1
-    }
-
     var id: String = ""
     var fileName: String = ""
-    var storageType: StorageType = .None
+    var storageType: AppManageData.StorageType = .None
     var path: String = ""
     var extensionString: String = ""
     

@@ -51,7 +51,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
                                                                  action: #selector(close))
         
         // プレイリストの読み込み確認.
-        if !PlayListManager.sharedManager.isLoaded {
+        if !AppDataManager.sharedManager.isLoaded {
             setScheduler()
         }
     }
@@ -96,7 +96,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     
     // MARK: - Selector
     @objc func selectorLoagingCheck() {
-        if PlayListManager.sharedManager.isLoaded {
+        if AppDataManager.sharedManager.isLoaded {
             _timer.invalidate()
             updateScrollView()
         }
@@ -106,7 +106,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     @objc func selectorRefreshControll() {
         print("selectorRefreshControll")
         
-        PlayListManager.sharedManager.updateCheck {
+        AppDataManager.sharedManager.updateCheck {
             self.updateScrollView()
             self._refreshControll.endRefreshing()
         }
@@ -119,13 +119,13 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         return 100.0
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PlayListManager.sharedManager.playlistManageData.playlists.count
+        return AppDataManager.sharedManager.playlist.getPlaylists().count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
-        c.set(data: PlayListManager.sharedManager.playlistManageData.playlists[indexPath.row])
+        c.set(data: AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row])
         
         return c
     }
@@ -134,8 +134,10 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         
         // 追加.
         if _audioData != nil {
-            let playlist = PlayListManager.sharedManager.playlistManageData.playlists[indexPath.row]
-            PlayListManager.sharedManager.addAudioToPlayList(playListId: playlist.id, addList: [_audioData!], isSave: true)
+            let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
+            AppDataManager.sharedManager.playlist.addAudioToPlayList(playListId: playlist.id,
+                                                                     addList: [_audioData!])
+            AppDataManager.sharedManager.save()
         }
         close()
     }

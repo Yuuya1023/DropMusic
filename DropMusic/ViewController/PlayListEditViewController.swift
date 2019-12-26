@@ -66,7 +66,7 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
     func setPlaylistId(id: String) {
         playlistId = id
         
-        let data: PlayListData? = PlayListManager.sharedManager.getPlaylistData(id: playlistId)
+        let data: PlayListData? = AppDataManager.sharedManager.playlist.getPlaylistData(id: playlistId)
         if data != nil {
             textField.text = data?.name
         }
@@ -81,9 +81,10 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
     
     
     @objc func selectorApplyButton(_ sender: UIButton) {
-        PlayListManager.sharedManager.updatePlaylist(id: playlistId,
-                                                     name: textField.text!,
-                                                     isSave: true)
+        AppDataManager.sharedManager.playlist.updatePlaylist(id: playlistId,
+                                                             name: textField.text!)
+        AppDataManager.sharedManager.save()
+        
         // 呼び出し元の表示更新.
         if rootViewController != nil {
             let vc = rootViewController as! PlayListViewController
@@ -94,8 +95,8 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
     
     
     @objc func selectorDeleteButton(_ sender: UIButton) {
-        PlayListManager.sharedManager.deletePlaylist(id: playlistId,
-                                                     isSave: true)
+        AppDataManager.sharedManager.playlist.deletePlaylist(id: playlistId)
+        AppDataManager.sharedManager.save()
         // 呼び出し元の表示更新.
         if rootViewController != nil {
             let vc = rootViewController as! PlayListViewController

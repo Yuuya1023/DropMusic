@@ -20,14 +20,17 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     //
-    // MARK: - Properties
+    // MARK: - Constant.
     //
     private let USER_DEFAULT_KEY = "audio"
     private let MAX_HISTORY_LENGTH: Int = 32
     private let MIN_QUEUE_LENGTH: Int = 2
-
-    var _audioPlayer: AVAudioPlayer!
     
+    
+    
+    //
+    // MARK: - Enumeration.
+    //
     enum AudioSelectType {
         case None
         case Cloud
@@ -44,6 +47,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         case List
     }
     
+    
+    //
+    // MARK: - Properties.
+    //
+    var _audioPlayer: AVAudioPlayer!
     var _playing: AudioData?
     var _audioSelect: AudioSelectType = .None
     var _audioSelectPath: String = ""
