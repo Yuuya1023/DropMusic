@@ -70,6 +70,10 @@ class AppDataManager {
         _savePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME
         _manageDataFilePath = "/DropMusic/"
         _localTempFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/temp_" + JSON_NAME
+        // 通信環境などにより読み込めなかった時のためにローカルファイルを読み込んでおく.
+        if let data = loadData(path: _savePath) {
+            _manageData = data
+        }
     }
     
     
@@ -99,6 +103,9 @@ class AppDataManager {
     
     /// 初回作成.
     private func createManageData(){
+        // 作成.
+        setManageData(data: AppManageData())
+        
         let encoder = JSONEncoder()
         let data = try! encoder.encode(_manageData)
         //
@@ -121,6 +128,10 @@ class AppDataManager {
     //
     /// 保存.
     func save(isUpdate: Bool = true) {
+        // 読み込みが成功していない場合は事故防止のためセーブしない.
+        if !isLoaded {
+            return
+        }
         // 保存する時にバージョンをあげる.
         if isUpdate {
             _manageData.version = String(Int(_manageData.version)!+1)
@@ -179,49 +190,51 @@ class AppDataManager {
         
         // ダウンロード.
         if let client = DropboxClientsManager.authorizedClient {
-            client.files.download(path: self._manageDataFilePath+JSON_NAME, destination: destination).response { response, error in
-                if let (_, _) = response {
-                    if let tempData = self.loadData(path: self._localTempFilePath) {
-                        if let localFile = localFile {
-                            // ローカルにある場合はバージョンのチェック.
-                            if Int(tempData.version)! == Int(localFile.version)! {
-                                // セットだけする.
-                                self.setManageData(data: localFile)
+            client.files.download(path: self._manageDataFilePath+JSON_NAME,
+                                  destination: destination)
+                .response{ response, error in
+                    if let (_, _) = response {
+                        if let tempData = self.loadData(path: self._localTempFilePath) {
+                            if let localFile = localFile {
+                                // ローカルにある場合はバージョンのチェック.
+                                if Int(tempData.version)! == Int(localFile.version)! {
+                                    // セットだけする.
+                                    self.setManageData(data: localFile)
+                                }
+                                else if Int(tempData.version)! > Int(localFile.version)! {
+                                    // サーバーの方が上の場合はtempを使う.
+                                    self.setManageData(data: tempData)
+                                    self.save(isUpdate: false)
+                                }
+                                else {
+                                    // ローカルの方が強い場合、保存してアップロード.
+                                    self.setManageData(data: localFile)
+                                    upload()
+                                }
                             }
-                            else if Int(tempData.version)! > Int(localFile.version)! {
-                                // サーバーの方が上の場合はtempを使う.
+                            else {
+                                // ない場合は保存.
                                 self.setManageData(data: tempData)
                                 self.save(isUpdate: false)
                             }
-                            else {
-                                // ローカルの方が強い場合、保存してアップロード.
-                                self.setManageData(data: localFile)
-                                upload()
-                            }
+                        }
+                    } else {
+                        if let error = error {
+                            print(error)
+                        }
+                        
+                        if let localFile = localFile {
+                            // ローカルにある場合はとりあえず読み込んでおく.
+                            self.setManageData(data: localFile)
+                            upload()
                         }
                         else {
-                            // ない場合は保存.
-                            self.setManageData(data: tempData)
-                            self.save(isUpdate: false)
+                            // ファイルがなかったら作成してアップロード.
+                            self.createManageData()
                         }
                     }
-                } else {
-                    if let error = error {
-                        print(error)
-                    }
-                    
-                    if let localFile = localFile {
-                        // ローカルにある場合はとりあえず読み込んでおく.
-                        self.setManageData(data: localFile)
-                        upload()
-                    }
-                    else {
-                        // ファイルがなかったら作成してアップロード.
-                        self.createManageData()
-                    }
-                }
-                self._isLoading = false
-                completion()
+                    self._isLoading = false
+                    completion()
             }
         }
     }
