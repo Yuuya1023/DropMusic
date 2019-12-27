@@ -17,6 +17,13 @@ struct AppManageData: Codable {
         case DropBox = 1
     }
     
+    enum FileType:Int,Codable {
+        case None = 0
+        case Folder = 1
+        case Audio = 2
+        case Other = 99
+    }
+    
     
     
     //

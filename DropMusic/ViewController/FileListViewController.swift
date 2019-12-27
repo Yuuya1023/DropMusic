@@ -238,7 +238,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             let isFavorite = fav.isFavorite(fileInfo)
             let favoriteAction:UIAlertAction =
                 UIAlertAction(title: isFavorite ? "Delete favorite" : "Add favorite",
-                              style: .default,
+                              style: isFavorite ? .destructive : .default,
                               handler:{
                                 (action:UIAlertAction!) -> Void in
                                 if isFavorite {

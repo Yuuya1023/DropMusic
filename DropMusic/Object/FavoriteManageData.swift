@@ -12,8 +12,7 @@ class FavoriteManageData: Codable {
     //
     // MARK: - Properties.
     //
-    private var folder: Array<FavoriteData> = []
-    private var audio: Array<FavoriteData> = []
+    private var list: Array<FavoriteData> = []
     
     
     
@@ -22,18 +21,19 @@ class FavoriteManageData: Codable {
     //
     /// お気に入りか.
     func isFavorite(_ fileInfo: FileInfo) -> Bool {
-        if fileInfo.isFolder() {
-            for item in folder {
-                if fileInfo.pathLower() == item.path  {
-                    return true
-                }
+        for item in list {
+            if fileInfo.pathLower() == item.path  {
+                return true
             }
         }
-        else if fileInfo.isFile() {
-            for item in audio {
-                if fileInfo.pathLower() == item.path  {
-                    return true
-                }
+        return false
+    }
+    
+    /// お気に入りか.
+    func isFavorite(_ favoriteData: FavoriteData) -> Bool {
+        for item in list {
+            if favoriteData.path == item.path  {
+                return true
             }
         }
         return false
@@ -43,12 +43,7 @@ class FavoriteManageData: Codable {
     func addFavorite(_ fileInfo: FileInfo) {
         if !isFavorite(fileInfo) {
             if let data = FavoriteData.createFromFileInfo(fileInfo) {
-                if fileInfo.isFolder() {
-                    folder.append(data)
-                }
-                else if fileInfo.isFile() {
-                    audio.append(data)
-                }
+                list.append(data)
             }
         }
     }
@@ -56,23 +51,34 @@ class FavoriteManageData: Codable {
     /// お気に入りから削除.
     func deleteFavorite(_ fileInfo: FileInfo) {
         if isFavorite(fileInfo) {
-            if fileInfo.isFolder() {
-                for i in 0..<folder.count {
-                    if folder[i].path == fileInfo.pathLower() {
-                        folder.remove(at: i)
-                        return
-                    }
-                }
-            }
-            else if fileInfo.isFile() {
-                for i in 0..<audio.count {
-                    if audio[i].path == fileInfo.pathLower() {
-                        audio.remove(at: i)
-                        return
-                    }
+            for i in 0..<list.count {
+                if list[i].path == fileInfo.pathLower() {
+                    list.remove(at: i)
+                    return
                 }
             }
         }
+    }
+    
+    /// お気に入りから削除.
+    func deleteFavorite(_ favoriteData: FavoriteData) {
+        for i in 0..<list.count {
+            if list[i].path == favoriteData.path {
+                list.remove(at: i)
+                return
+            }
+        }
+    }
+    
+    /// 一覧取得.
+    func getList(_ type: AppManageData.FileType) -> Array<FavoriteData> {
+        var ret: Array<FavoriteData> = []
+        for item in list {
+            if type == item.fileType {
+                ret.append(item)
+            }
+        }
+        return ret
     }
     
     

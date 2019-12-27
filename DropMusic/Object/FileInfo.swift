@@ -18,7 +18,7 @@ class FileInfo {
     
     
     //
-    // MARK: -
+    // MARK: - Initialize.
     //
     init(metadata: Files.Metadata!){
         _metaData = metadata
@@ -27,7 +27,7 @@ class FileInfo {
     
     
     //
-    // MARK: - 
+    // MARK: -
     //
     internal func folderMetadata() -> (Files.FolderMetadata) {
         return _metaData as! Files.FolderMetadata
@@ -37,7 +37,21 @@ class FileInfo {
         return _metaData as! Files.FileMetadata
     }
     
+    
+    
+    //
     // MARK: -
+    //
+    func getFileType() -> AppManageData.FileType {
+        if isFolder() {
+            return .Folder
+        }
+        else if isAudioFile() {
+            return .Audio
+        }
+        return .Other
+    }
+    
     func isFolder() -> (Bool) {
         return _metaData is Files.FolderMetadata
     }

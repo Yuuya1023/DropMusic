@@ -105,8 +105,8 @@ class AppDataManager {
         if let client = DropboxClientsManager.authorizedClient {
             client.files.upload(path: self._manageDataFilePath+JSON_NAME, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
                 if let _ = response {
-                    // 成功したら再チェック.
-                    self.checkFile() {}
+                    // 成功したら保存.
+                    self.save(isUpdate: false)
                 } else {
                     print(error!)
                 }
@@ -120,9 +120,11 @@ class AppDataManager {
     // MARK: - Public.
     //
     /// 保存.
-    func save() {
+    func save(isUpdate: Bool = true) {
         // 保存する時にバージョンをあげる.
-        _manageData.version = String(Int(_manageData.version)!+1)
+        if isUpdate {
+            _manageData.version = String(Int(_manageData.version)!+1)
+        }
         
         let encoder = JSONEncoder()
         do {
@@ -189,7 +191,7 @@ class AppDataManager {
                             else if Int(tempData.version)! > Int(localFile.version)! {
                                 // サーバーの方が上の場合はtempを使う.
                                 self.setManageData(data: tempData)
-                                self.save()
+                                self.save(isUpdate: false)
                             }
                             else {
                                 // ローカルの方が強い場合、保存してアップロード.
@@ -200,7 +202,7 @@ class AppDataManager {
                         else {
                             // ない場合は保存.
                             self.setManageData(data: tempData)
-                            self.save()
+                            self.save(isUpdate: false)
                         }
                     }
                 } else {

@@ -14,6 +14,7 @@ class FileListViewCell: UITableViewCell {
     //
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var icon: UIImageView!
+    @IBOutlet var favorite: UIImageView!
     @IBOutlet var progressView: UIProgressView!
     
     var isAudioFile: Bool = false
@@ -28,6 +29,10 @@ class FileListViewCell: UITableViewCell {
     //
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        // お気に入りアイコン.
+        favorite.image = favorite.image?.withRenderingMode(.alwaysTemplate)
+        favorite.tintColor = .yellow
         
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -60,6 +65,7 @@ class FileListViewCell: UITableViewCell {
             iconName = "icon_cell_audio.png"
         }
         icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
+        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(fileInfo)
         
         var progress: Float = 0.0
         if isAudioFile {
@@ -72,6 +78,24 @@ class FileListViewCell: UITableViewCell {
         if fileInfo.isFile() {
             updateObserber(identifier: fileInfo.id()!)
         }
+    }
+    
+    func set(favoriteData: FavoriteData?) {
+        guard let favoriteData = favoriteData else {
+            return
+        }
+        isAudioFile = favoriteData.fileType == .Audio
+        nameLabel.text = favoriteData.name
+        var iconName = "icon_cell_question.png"
+        if favoriteData.fileType == .Folder {
+            iconName = "icon_cell_folder.png"
+        }
+        else if favoriteData.fileType == .Audio {
+            iconName = "icon_cell_audio.png"
+        }
+        icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
+        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(favoriteData)
+        setProgress(0.0)
     }
     
     func setProgress(_ progress: Float) {

@@ -20,8 +20,7 @@ class RootTabBarController: UITabBarController {
     //
     // MARK: -
     //
-    
-    /// viewDidLoad
+    /// viewDidLoad.
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -31,7 +30,8 @@ class RootTabBarController: UITabBarController {
         // タブバーの設定.
         let vc1 = DropBoxRootNavigactionController()
         let vc2 = UINavigationController(rootViewController: PlayListViewController())
-        let vc3 = UINavigationController(rootViewController: SettingsViewController())
+        let vc3 = UINavigationController(rootViewController: FavoriteListViewController())
+        let vc4 = UINavigationController(rootViewController: SettingsViewController())
         
         let size = CGSize(width: 25, height: 25)
         vc1.tabBarItem = UITabBarItem(title: "Cloud",
@@ -40,11 +40,14 @@ class RootTabBarController: UITabBarController {
         vc2.tabBarItem = UITabBarItem(title: "Playlist",
                                       image: UIImage(named: "tab_playlist.png")?.resizeImage(reSize: size),
                                       tag: 2)
-        vc3.tabBarItem = UITabBarItem(title: "Settings",
-                                      image: UIImage(named: "tab_settings.png")?.resizeImage(reSize: size),
+        vc3.tabBarItem = UITabBarItem(title: "Favorite",
+                                      image: UIImage(named: "tab_favorite.png")?.resizeImage(reSize: CGSize(width: 30, height: 30)),
                                       tag: 3)
+        vc4.tabBarItem = UITabBarItem(title: "Settings",
+                                      image: UIImage(named: "tab_settings.png")?.resizeImage(reSize: size),
+                                      tag: 4)
         
-        let tabs = NSArray(objects: vc1, vc2, vc3)
+        let tabs = NSArray(objects: vc1, vc2, vc3, vc4)
         self.setViewControllers(tabs as? [UIViewController], animated: false)
 
         // ステータス表示.
