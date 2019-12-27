@@ -157,8 +157,11 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     
     // MARK: -
     @objc func selectorRefreshControll() {
-        // 読み込み.
-        load()
+        AppDataManager.sharedManager.checkFile {
+            // 読み込み.
+            self.load()
+            self._refreshControll.endRefreshing()
+        }
     }
 
     @objc func selectorMenuButton() {

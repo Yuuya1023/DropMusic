@@ -48,16 +48,10 @@ class AppDataManager {
         get {
             return _manageData.playlist
         }
-        set(p) {
-            _manageData.playlist = p
-        }
     }
     var favorite: FavoriteManageData! {
         get {
             return _manageData.favorite
-        }
-        set(p) {
-            _manageData.favorite = p
         }
     }
     

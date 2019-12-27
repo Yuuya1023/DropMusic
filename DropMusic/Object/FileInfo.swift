@@ -99,13 +99,14 @@ class FileInfo {
         return false
     }
     
-    func localFileName() ->(String?){
+    func localFileName() ->(String?) {
         if isFile() {
-            var id = self.id()
-            if let range = id?.range(of: "id:") {
-                id?.replaceSubrange(range, with: "")
+            if var id = self.id() {
+                if let range = id.range(of: "id:") {
+                    id.replaceSubrange(range, with: "")
+                }
+                return id + "." + fileExtension()!
             }
-            return id! + "." + fileExtension()!
         }
         return nil
     }
