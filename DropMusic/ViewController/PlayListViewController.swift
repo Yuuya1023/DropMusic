@@ -14,7 +14,6 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: - Properties.
     //
     var _tableView: UITableView!
-    var _timer: Timer!
     var _refreshControll: UIRefreshControl!
     
     private let _cellIdentifier = "PlayListViewCell"
@@ -22,7 +21,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     //
-    // MARK: -
+    // MARK: - Override.
     //
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,11 +56,6 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         _refreshControll = UIRefreshControl()
         _refreshControll.addTarget(self, action: #selector(selectorRefreshControll), for: .valueChanged)
         _tableView.refreshControl = _refreshControll
-        
-        // プレイリストの読み込み確認.
-        if !AppDataManager.sharedManager.isLoaded {
-            setScheduler()
-        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -89,15 +83,6 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     //
     // MARK: -
     //
-    func setScheduler() {
-        _timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                      target: self,
-                                      selector: #selector(selectorLoagingCheck),
-                                      userInfo: nil,
-                                      repeats: true)
-    }
-    
-    
     func updateScrollView() {
         self._tableView.reloadData()
     }
@@ -109,24 +94,14 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         vc.rootViewController = self
         vc.setPlaylistId(id: playlistId)
         present(vc, animated: true, completion: nil)
-        
     }
     
     
+    //
     // MARK: - Selector
-    @objc func selectorLoagingCheck() {
-        if AppDataManager.sharedManager.isLoaded {
-            _timer.invalidate()
-            updateScrollView()
-        }
-    }
-    
-    
+    //
     @objc func selectorRefreshControll() {
-        print("selectorRefreshControll")
-        
         AppDataManager.sharedManager.checkFile {
-            print("update")
             self.updateScrollView()
             self._refreshControll.endRefreshing()
         }
