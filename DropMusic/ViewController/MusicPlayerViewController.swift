@@ -1,5 +1,5 @@
 //
-//  MusicPlayerViewControlloer.swift
+//  MusicPlayerViewController.swift
 //  DropMusic
 //
 //  Copyright © 2018年 n.yuuya. All rights reserved.
@@ -12,7 +12,7 @@ import TwitterKit
 import MediaPlayer
 import MarqueeLabel
 
-class MusicPlayerViewControlloer: UIViewController {
+class MusicPlayerViewController: UIViewController {
     
     @IBOutlet var _effectView: UIVisualEffectView!
 

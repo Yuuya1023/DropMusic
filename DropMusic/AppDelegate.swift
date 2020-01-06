@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Properties
     //
     var window: UIWindow?
-    var _rootViewController: RootTabBarController!
 
     
     
@@ -25,22 +24,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
         // DropBox.
         DropboxClientsManager.setupWithAppKey(DROPBOX_APP_KEY)
         // Twitter.
         TWTRTwitter.sharedInstance().start(withConsumerKey: TWITTER_CONSUMER_KEY,
                                            consumerSecret: TWITTER_CONSUMER_SECRET_KEY)
-        // AppData.
-        AppDataManager.sharedManager.checkFile() {}
         // AudioPlayManager.
         _ = AudioPlayManager.sharedManager
         
-        _rootViewController = RootTabBarController()
-        
         // ViewController.
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = _rootViewController
+        self.window?.rootViewController = InitializeViewController()
         self.window?.makeKeyAndVisible()
 
         return true

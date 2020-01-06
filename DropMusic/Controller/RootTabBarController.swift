@@ -9,11 +9,24 @@ import UIKit
 import SwiftyDropbox
 
 class RootTabBarController: UITabBarController {
-
+    
     //
-    // MARK: - Properties
+    // MARK: - Enumeration.
+    //
+    enum Tab: Int {
+        case Cloud
+        case Playlist
+        case Favorite
+        case Settings
+    }
+
+    
+    
+    //
+    // MARK: - Properties.
     //
     var _statusView: AudioPlayStatusView = AudioPlayStatusView()
+    var _playerViewController: MusicPlayerViewController = MusicPlayerViewController()
     
     
     
@@ -28,7 +41,7 @@ class RootTabBarController: UITabBarController {
         UITabBar.appearance().barTintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
         
         // タブバーの設定.
-        let vc1 = DropBoxRootNavigactionController()
+        let vc1 = UINavigationController(rootViewController: FileListViewController(pathList: []))
         let vc2 = UINavigationController(rootViewController: PlayListViewController())
         let vc3 = UINavigationController(rootViewController: FavoriteListViewController())
         let vc4 = UINavigationController(rootViewController: SettingsViewController())
@@ -36,19 +49,18 @@ class RootTabBarController: UITabBarController {
         let size = CGSize(width: 25, height: 25)
         vc1.tabBarItem = UITabBarItem(title: "Cloud",
                                       image: UIImage(named: "tab_cloud.png")?.resizeImage(reSize: size),
-                                      tag: 1)
+                                      tag: Tab.Cloud.rawValue)
         vc2.tabBarItem = UITabBarItem(title: "Playlist",
                                       image: UIImage(named: "tab_playlist.png")?.resizeImage(reSize: size),
-                                      tag: 2)
+                                      tag: Tab.Playlist.rawValue)
         vc3.tabBarItem = UITabBarItem(title: "Favorite",
                                       image: UIImage(named: "tab_favorite.png")?.resizeImage(reSize: CGSize(width: 30, height: 30)),
-                                      tag: 3)
+                                      tag: Tab.Favorite.rawValue)
         vc4.tabBarItem = UITabBarItem(title: "Settings",
                                       image: UIImage(named: "tab_settings.png")?.resizeImage(reSize: size),
-                                      tag: 4)
+                                      tag: Tab.Settings.rawValue)
         
-        let tabs = NSArray(objects: vc1, vc2, vc3, vc4)
-        self.setViewControllers(tabs as? [UIViewController], animated: false)
+        self.setViewControllers([vc1, vc2, vc3, vc4], animated: false)
 
         // ステータス表示.
         self.view.addSubview(_statusView)
@@ -84,14 +96,13 @@ class RootTabBarController: UITabBarController {
     
     
     @objc private func selectorShowAudioPlayer(notification: Notification) {
-        let modalViewController = MusicPlayerViewControlloer()
-        modalViewController.modalPresentationStyle = .custom
-        modalViewController.transitioningDelegate = self
-        present(modalViewController, animated: true, completion: nil)
+        _playerViewController.modalPresentationStyle = .custom
+        _playerViewController.transitioningDelegate = self
+        present(_playerViewController, animated: true, completion: nil)
     }
     
     @objc private func selectorUpdateDownloadCount(notification: Notification) {
-        let value : String = notification.object as! String
+        let value = notification.object as! String
         self.tabBar.items![0].badgeValue = value == "0" ? nil : value
 //        self.tabBarController?.viewControllers?[0].tabBarItem.badgeValue = value
     }

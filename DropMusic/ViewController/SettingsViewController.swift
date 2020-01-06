@@ -111,13 +111,12 @@ class SettingsViewController: UIViewController {
         var fileCount = 0
         var totalFileSize: UInt64 = 0
         do {
-            let path = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "/audio")
-            let files: [String] = try FileManager.default.contentsOfDirectory(atPath: path)
-//            print(files)
+            let cachepath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "/audio")
+            let files = try FileManager.default.contentsOfDirectory(atPath: cachepath)
             fileCount = files.count
-            for i in 0..<fileCount {
-                let attr = try FileManager.default.attributesOfItem(atPath: path + "/" + files[i])
-                let fileSize: UInt64 = attr[FileAttributeKey.size] as! UInt64
+            for filePath in files {
+                let attr = try FileManager.default.attributesOfItem(atPath: cachepath + "/" + filePath)
+                let fileSize = attr[FileAttributeKey.size] as! UInt64
                 totalFileSize = totalFileSize+fileSize
             }
         }
@@ -125,7 +124,7 @@ class SettingsViewController: UIViewController {
             print("error")
         }
         fileCountLabel.text = String(fileCount) + "files"
-        var s:Double = Double(totalFileSize)
+        var s = Double(totalFileSize)
         var unit = ""
         
         var index = 0
