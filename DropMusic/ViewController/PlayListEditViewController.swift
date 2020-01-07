@@ -18,8 +18,8 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var _deleteButton: UIButton!
     @IBOutlet var _textField: UITextField!
     
-    private var _playlistId: String! = ""
-    weak var rootViewController: UIViewController? = nil
+    var _playlistId: String = ""
+    weak var _rootViewController: UIViewController? = nil
     
     
     
@@ -59,15 +59,6 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
     
     
     //
-    // MARK: -
-    //
-    func setPlaylistId(id: String) {
-        _playlistId = id
-    }
-    
-    
-    
-    //
     // MARK: - Selector
     //
     @objc func selectorCloseButton(_ sender: UIButton) {
@@ -80,8 +71,8 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
         AppDataManager.sharedManager.save()
         
         // 呼び出し元の表示更新.
-        if rootViewController != nil {
-            let vc = rootViewController as! PlayListViewController
+        if _rootViewController != nil {
+            let vc = _rootViewController as! PlayListViewController
             vc.updateScrollView()
         }
         self.dismiss(animated: true, completion: nil)
@@ -91,8 +82,8 @@ class PlayListEditViewController: UIViewController, UITextFieldDelegate {
         AppDataManager.sharedManager.playlist.deletePlaylist(id: _playlistId)
         AppDataManager.sharedManager.save()
         // 呼び出し元の表示更新.
-        if rootViewController != nil {
-            let vc = rootViewController as! PlayListViewController
+        if _rootViewController != nil {
+            let vc = _rootViewController as! PlayListViewController
             vc.updateScrollView()
         }
         self.dismiss(animated: true, completion: nil)

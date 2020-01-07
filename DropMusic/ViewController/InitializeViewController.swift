@@ -16,6 +16,7 @@ class InitializeViewController: UIViewController {
     enum State {
         case None
         case CheckDropbox
+        case CheckDropboxUser
         case CheckAppData
         case Complete
     }
@@ -66,7 +67,7 @@ class InitializeViewController: UIViewController {
         case .CheckDropbox:
             // Dropbox読み込み.
             if DropboxClientsManager.authorizedClient != nil {
-                self.changeState(.CheckAppData)
+                self.changeState(.CheckDropboxUser)
             }
             else {
                 // ログインボタン表示.
@@ -82,6 +83,17 @@ class InitializeViewController: UIViewController {
                                  for: .touchUpInside)
                 self.view.addSubview(button)
             }
+        case .CheckDropboxUser:
+            // Dropboxユーザー確認.
+            if let client = DropboxClientsManager.authorizedClient {
+                client.users.getCurrentAccount().response {
+                    (response, error) in
+                    if let account = response {
+                        AppDataManager.sharedManager.dropboxUserName = account.name.displayName
+                    }
+                }
+            }
+            self.changeState(.CheckAppData)
         case .CheckAppData:
             // アプリデータ読み込み.
             AppDataManager.sharedManager.checkFile {
@@ -111,7 +123,7 @@ class InitializeViewController: UIViewController {
     
     /// ログイン通知.
     @objc private func notificationDropboxLogin(notification: Notification) {
-        changeState(.CheckAppData)
+        changeState(.CheckDropboxUser)
     }
     
 }

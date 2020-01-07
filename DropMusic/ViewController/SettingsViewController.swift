@@ -7,23 +7,44 @@
 
 import UIKit
 import SwiftyDropbox
+import TwitterKit
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var acccountTitle: UILabel = UILabel()
-    var accountLabel: UILabel = UILabel()
-    var accountButton: UIButton = UIButton()
-    
-    var cacheTitle: UILabel = UILabel()
-    var fileCountTitle: UILabel = UILabel()
-    var fileSizeTitle: UILabel = UILabel()
-    var fileCountLabel: UILabel = UILabel()
-    var fileSizeLabel: UILabel = UILabel()
-    
-    var playlistTitle: UILabel = UILabel()
-    var playlistLabel: UILabel = UILabel()
+    //
+    // MARK: -
+    //
+    struct RowInfo {
+        var title: String = ""
+        var sub: String = ""
+    }
     
     
+    
+    //
+    // MARK: - Constant.
+    //
+    private let _cellIdentifier = "SettingViewCell"
+    
+    
+    
+    //
+    // MARK: - Properties.
+    //
+    private var _sections: Array<String> = []
+    private var _sectionCache: Array<RowInfo> = []
+    private var _sectionDropbox: Array<RowInfo> = []
+    private var _sectionTwitter: Array<RowInfo> = []
+    private var _fileCount: Int = 0
+    private var _fileSize: String = ""
+    
+    private var _tableView: UITableView!
+    
+    
+    
+    //
+    // MARK: - Override.
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -36,78 +57,65 @@ class SettingsViewController: UIViewController {
         }
         self.title = "Settings"
         
-        acccountTitle.frame = CGRect(x: 20, y: 100, width: 100, height: 30)
-        acccountTitle.textAlignment = .left
-        acccountTitle.text = "Account"
-        self.view.addSubview(acccountTitle)
+        // section設定.
+        _sections.append("Cache")
+        _sections.append("DropBox")
+        _sections.append("Twitter")
         
-        accountLabel.frame = CGRect(x: 30, y: 130, width: 100, height: 30)
-        accountLabel.textAlignment = .left
-        accountLabel.text = "..."
-        self.view.addSubview(accountLabel)
+        // tableview.
+        _tableView = UITableView()
+        _tableView.backgroundColor = UIColor.clear
+        _tableView.autoresizingMask = [
+            .flexibleWidth,
+            .flexibleHeight
+        ]
+        _tableView.delegate = self
+        _tableView.dataSource = self
+        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
         
-        accountButton.frame = CGRect(x: 220, y: 130, width: 80, height: 30)
-        accountButton.setTitle("login", for: UIControlState.normal)
-        accountButton.setTitleColor(UIColor.black, for: .normal)
-        accountButton.layer.cornerRadius = 10
-        accountButton.layer.borderWidth = 1
-        accountButton.addTarget(self, action: #selector(logout(_:)), for: UIControlEvents.touchUpInside)
-        self.view.addSubview(accountButton)
-        
-        //
-        cacheTitle.frame = CGRect(x: 20, y: 180, width: 100, height: 30)
-        cacheTitle.textAlignment = .left
-        cacheTitle.text = "Caches"
-        self.view.addSubview(cacheTitle)
-        
-        fileCountTitle.frame = CGRect(x: 30, y: 210, width: 100, height: 30)
-        fileCountTitle.textAlignment = .left
-        fileCountTitle.text = "file count"
-        self.view.addSubview(fileCountTitle)
-        
-        fileSizeTitle.frame = CGRect(x: 30, y: 240, width: 100, height: 30)
-        fileSizeTitle.textAlignment = .left
-        fileSizeTitle.text = "file size"
-        self.view.addSubview(fileSizeTitle)
-        
-        
-        fileCountLabel.frame = CGRect(x: 200, y: 210, width: 100, height: 30)
-        fileCountLabel.textAlignment = .right
-        self.view.addSubview(fileCountLabel)
-
-        fileSizeLabel.frame = CGRect(x: 200, y: 240, width: 100, height: 30)
-        fileSizeLabel.textAlignment = .right
-        self.view.addSubview(fileSizeLabel)
-
-        //
-        playlistTitle.frame = CGRect(x: 20, y: 290, width: 150, height: 30)
-        playlistTitle.textAlignment = .left
-        playlistTitle.text = "Playlist save path"
-        self.view.addSubview(playlistTitle)
-        
-        playlistLabel.frame = CGRect(x: 30, y: 320, width: 250, height: 30)
-        playlistLabel.textAlignment = .left
-        playlistLabel.text = "/DropMusic/playlist.json"
-        self.view.addSubview(playlistLabel)
-        
-        
-        
-        loadUser()
-        loadFiles()
+        self.view.addSubview(_tableView)
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        loadFiles()
+        // row設定.
+        _sectionDropbox.removeAll()
+        _sectionDropbox.append(RowInfo(title: "Account",
+                                       sub: AppDataManager.sharedManager.dropboxUserName))
+        _sectionDropbox.append(RowInfo(title: "AppData",
+                                       sub: AppDataManager.sharedManager.manageDataPath))
+        
+        _sectionTwitter.removeAll()
+        _sectionTwitter.append(RowInfo(title: "Account",
+                                       sub: "name"))
+        
+        _sectionCache.removeAll()
+        _sectionCache.append(RowInfo(title: "FileCount",
+                                     sub: String(_fileCount)+" files"))
+        _sectionCache.append(RowInfo(title: "FileSize",
+                                     sub: String(_fileSize)))
+        _tableView.reloadData()
+    }
+    override func viewWillLayoutSubviews() {
+        // tableview.
+        var frame = self.view.frame
+        var margin = AudioPlayStatusView._height
+        if let val = self.tabBarController {
+            margin += val.tabBar.frame.size.height
+        }
+        frame.size.height = frame.size.height-margin
+        _tableView.frame = frame
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-    }
     
     
-    
-    // MARK: -
-    func loadFiles() {
+    //
+    // MARK: - Private.
+    //
+    private func loadFiles() {
         var fileCount = 0
         var totalFileSize: UInt64 = 0
         do {
@@ -123,7 +131,7 @@ class SettingsViewController: UIViewController {
         catch {
             print("error")
         }
-        fileCountLabel.text = String(fileCount) + "files"
+        _fileCount = fileCount
         var s = Double(totalFileSize)
         var unit = ""
         
@@ -134,30 +142,15 @@ class SettingsViewController: UIViewController {
             unit = bytes[index]
             index = index+1
         }
-        fileSizeLabel.text = String(format: "%.02f",s) + unit
-    }
-    
-    
-    private func loadUser() {
-        if let client = DropboxClientsManager.authorizedClient {
-            client.users.getCurrentAccount().response {
-                (response, error) in
-                if let account = response {
-                    self.accountLabel.text = account.name.displayName
-                    self.accountButton.setTitle("logout", for: UIControlState.normal)
-                }
-                else {
-                    self.accountLabel.text = "not loggedin."
-                    self.accountButton.setTitle("login", for: UIControlState.normal)
-                }
-            }
-        }
+        _fileSize = String(format: "%.02f",s) + unit
     }
     
     
     
+    //
     // MARK: -
-    @objc func logout(_ sender: UIButton) {
+    //
+    func confirmLogoutDropbox() {
         let alert: UIAlertController = UIAlertController(title: "confirm",
                                                          message: "Will you unlink DropBox Account?",
                                                          preferredStyle: .alert)
@@ -168,7 +161,8 @@ class SettingsViewController: UIViewController {
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             DropboxClientsManager.unlinkClients()
-                            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT), object: nil)
+                            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT),
+                                                            object: nil)
             })
         
         // キャンセル.
@@ -184,6 +178,70 @@ class SettingsViewController: UIViewController {
         alert.addAction(okAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    //
+    // MARK: - TableView.
+    //
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return _sections.count
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return _sections[section]
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return _sectionCache.count
+        case 1:
+            return _sectionDropbox.count
+        case 2:
+            return _sectionTwitter.count
+            
+        default:
+            break
+        }
+        return 0
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! SettingViewCell
+        
+        var rowinfo: RowInfo? = nil
+        switch indexPath.section {
+        case 0:
+            rowinfo = _sectionCache[indexPath.row]
+        case 1:
+            rowinfo = _sectionDropbox[indexPath.row]
+        case 2:
+            rowinfo = _sectionTwitter[indexPath.row]
+            
+        default:
+            break
+        }
+        
+        if let rowinfo = rowinfo {
+            c.set(title: rowinfo.title, sub: rowinfo.sub)
+        }
+        
+        return c
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            break
+        case 1:
+            if indexPath.row == 0 {
+                // ログアウト.
+                confirmLogoutDropbox()
+            }
+        case 2:
+            break
+            
+        default:
+            break
+        }
     }
     
 }

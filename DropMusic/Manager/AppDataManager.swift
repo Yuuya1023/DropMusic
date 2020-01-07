@@ -41,8 +41,23 @@ class AppDataManager {
     }
     
     private let _savePath: String!
-    private let _manageDataFilePath: String!
+    private let _manageDataFilePathPrefix: String!
     private let _localTempFilePath: String!
+    private var _dropboxUserName: String = ""
+    var dropboxUserName: String {
+        get {
+            return _dropboxUserName
+        }
+        set {
+            _dropboxUserName = newValue
+        }
+    }
+    var manageDataPath: String {
+        get {
+            return _manageDataFilePathPrefix+JSON_NAME
+        }
+    }
+    
     private var _manageData: AppManageData = AppManageData()
     var playlist: PlayListManageData! {
         get {
@@ -62,7 +77,7 @@ class AppDataManager {
     //
     private init() {
         _savePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME
-        _manageDataFilePath = "/DropMusic/"
+        _manageDataFilePathPrefix = "/DropMusic/"
         _localTempFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/temp_" + JSON_NAME
         // 通信環境などにより読み込めなかった時のためにローカルファイルを読み込んでおく.
         if let data = loadData(path: _savePath) {
@@ -104,7 +119,7 @@ class AppDataManager {
         let data = try! encoder.encode(_manageData)
         //
         if let client = DropboxClientsManager.authorizedClient {
-            client.files.upload(path: self._manageDataFilePath+JSON_NAME, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
+            client.files.upload(path: self.manageDataPath, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
                 if let _ = response {
                     // 成功したら保存.
                     self.save(isUpdate: false)
@@ -170,7 +185,7 @@ class AppDataManager {
             let data = try! encoder.encode(_manageData)
             
             if let client = DropboxClientsManager.authorizedClient {
-                client.files.upload(path: self._manageDataFilePath+JSON_NAME, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
+                client.files.upload(path: self.manageDataPath, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
                     if let response = response {
                         // おわり.
                         print(response)
@@ -184,7 +199,7 @@ class AppDataManager {
         
         // ダウンロード.
         if let client = DropboxClientsManager.authorizedClient {
-            client.files.download(path: self._manageDataFilePath+JSON_NAME,
+            client.files.download(path: self.manageDataPath,
                                   destination: destination)
                 .response{ response, error in
                     if let (_, _) = response {

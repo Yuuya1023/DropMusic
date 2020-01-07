@@ -91,8 +91,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         let vc = PlayListEditViewController()
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
-        vc.rootViewController = self
-        vc.setPlaylistId(id: playlistId)
+        vc._rootViewController = self
+        vc._playlistId = playlistId
         present(vc, animated: true, completion: nil)
     }
     
