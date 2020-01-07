@@ -84,8 +84,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                                        sub: AppDataManager.sharedManager.manageDataPath))
         
         _sectionTwitter.removeAll()
-        _sectionTwitter.append(RowInfo(title: "Account",
-                                       sub: "name"))
+        if let name = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_NAME) {
+            self._sectionTwitter.append(RowInfo(title: "Account",
+                                                sub: name))
+        }
         
         _sectionCache.removeAll()
         _sectionCache.append(RowInfo(title: "FileCount",
@@ -144,13 +146,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         _fileSize = String(format: "%.02f",s) + unit
     }
     
-    
-    
-    //
-    // MARK: -
-    //
-    func confirmLogoutDropbox() {
-        let alert: UIAlertController = UIAlertController(title: "confirm",
+    private func confirmLogoutDropbox() {
+        let alert: UIAlertController = UIAlertController(title: "Confirm",
                                                          message: "Will you unlink DropBox Account?",
                                                          preferredStyle: .alert)
         // アンリンク.
@@ -164,6 +161,40 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                                          animated: false,
                                          completion: nil)
                             
+            })
+        
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+        
+        
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func confirmLogoutTwitter() {
+        let alert: UIAlertController = UIAlertController(title: "Confirm",
+                                                         message: "Will you logout Twitter Account?",
+                                                         preferredStyle: .alert)
+        // アンリンク.
+        let okAction:UIAlertAction =
+            UIAlertAction(title: "Logout",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if let id = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_ID) {
+                                TWTRTwitter.sharedInstance().sessionStore.logOutUserID(id)
+                                UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_ID)
+                                UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_NAME)
+                                self._sectionTwitter.removeAll()
+                                self._tableView.reloadData()
+                            }
             })
         
         // キャンセル.
@@ -238,6 +269,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 confirmLogoutDropbox()
             }
         case 2:
+            // ログアウト.
+            confirmLogoutTwitter()
             break
             
         default:

@@ -229,8 +229,10 @@ class MusicPlayerViewController: UIViewController {
             tweet()
         }
         else {
-            TWTRTwitter.sharedInstance().logIn { success, error in
-                if let _ = success {
+            TWTRTwitter.sharedInstance().logIn { (session, error) in
+                if let session = session {
+                    UserDefaults.standard.set(session.userID, forKey: USER_DEFAULT_TWITTER_ID)
+                    UserDefaults.standard.set(session.userName, forKey: USER_DEFAULT_TWITTER_NAME)
                     tweet()
                 }
             }
