@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftyDropbox
 import TwitterKit
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -80,7 +79,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         // row設定.
         _sectionDropbox.removeAll()
         _sectionDropbox.append(RowInfo(title: "Account",
-                                       sub: AppDataManager.sharedManager.dropboxUserName))
+                                       sub: AppDataManager.sharedManager.dropboxUserName ?? ""))
         _sectionDropbox.append(RowInfo(title: "AppData",
                                        sub: AppDataManager.sharedManager.manageDataPath))
         
@@ -160,9 +159,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                           style: .default,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            DropboxClientsManager.unlinkClients()
-                            NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DROPBOX_LOGGED_OUT),
-                                                            object: nil)
+                            AppDataManager.sharedManager.reset()
+                            self.present(InitializeViewController(),
+                                         animated: false,
+                                         completion: nil)
+                            
             })
         
         // キャンセル.

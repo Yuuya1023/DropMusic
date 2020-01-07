@@ -11,6 +11,12 @@ import SwiftyDropbox
 class InitializeViewController: UIViewController {
     
     //
+    // MARK: - Constant.
+    //
+    
+    
+    
+    //
     // MARK: - Enumeration.
     //
     enum State {
@@ -85,11 +91,13 @@ class InitializeViewController: UIViewController {
             }
         case .CheckDropboxUser:
             // Dropboxユーザー確認.
-            if let client = DropboxClientsManager.authorizedClient {
-                client.users.getCurrentAccount().response {
-                    (response, error) in
-                    if let account = response {
-                        AppDataManager.sharedManager.dropboxUserName = account.name.displayName
+            if AppDataManager.sharedManager.dropboxUserName == nil {
+                if let client = DropboxClientsManager.authorizedClient {
+                    client.users.getCurrentAccount().response {
+                        (response, error) in
+                        if let account = response {
+                            AppDataManager.sharedManager.dropboxUserName = account.name.displayName
+                        }
                     }
                 }
             }

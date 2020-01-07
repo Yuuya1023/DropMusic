@@ -21,6 +21,7 @@ class AppDataManager {
     // MARK: - Constant.
     //
     private let JSON_NAME = "appdata.json"
+    private let USER_DEFAULT_DROPBOX_USERNAME = "dropboxusername"
     
     
     
@@ -44,12 +45,18 @@ class AppDataManager {
     private let _manageDataFilePathPrefix: String!
     private let _localTempFilePath: String!
     private var _dropboxUserName: String = ""
-    var dropboxUserName: String {
+    var dropboxUserName: String? {
         get {
+            if _dropboxUserName == "" {
+                return nil
+            }
             return _dropboxUserName
         }
         set {
-            _dropboxUserName = newValue
+            if let v = newValue {
+                _dropboxUserName = v
+                UserDefaults.standard.set(_dropboxUserName, forKey: USER_DEFAULT_DROPBOX_USERNAME)
+            }
         }
     }
     var manageDataPath: String {
@@ -76,6 +83,9 @@ class AppDataManager {
     // MARK: - Initialize.
     //
     private init() {
+        if let username = UserDefaults.standard.string(forKey: USER_DEFAULT_DROPBOX_USERNAME) {
+            _dropboxUserName = username
+        }
         _savePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME
         _manageDataFilePathPrefix = "/DropMusic/"
         _localTempFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/temp_" + JSON_NAME
@@ -108,26 +118,6 @@ class AppDataManager {
             }
         }
         return nil
-    }
-    
-    /// 初回作成.
-    private func createManageData(){
-        // 作成.
-        setManageData(data: AppManageData())
-        
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(_manageData)
-        //
-        if let client = DropboxClientsManager.authorizedClient {
-            client.files.upload(path: self.manageDataPath, mode: .add, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
-                if let _ = response {
-                    // 成功したら保存.
-                    self.save(isUpdate: false)
-                } else {
-                    print(error!)
-                }
-            }
-        }
     }
     
     
@@ -180,12 +170,19 @@ class AppDataManager {
         catch {}
         
         // アップロード関数.
-        func upload() {
+        func upload(isFirst: Bool) {
             let encoder = JSONEncoder()
             let data = try! encoder.encode(_manageData)
             
             if let client = DropboxClientsManager.authorizedClient {
-                client.files.upload(path: self.manageDataPath, mode: .overwrite, autorename: false, clientModified: nil, mute: false, propertyGroups: nil, input: data).response { response, error in
+                client.files.upload(path: self.manageDataPath,
+                                    mode: isFirst ? .add : .overwrite,
+                                    autorename: false,
+                                    clientModified: nil,
+                                    mute: false,
+                                    propertyGroups: nil,
+                                    input: data)
+                    .response { response, error in
                     if let response = response {
                         // おわり.
                         print(response)
@@ -218,7 +215,7 @@ class AppDataManager {
                                 else {
                                     // ローカルの方が強い場合、保存してアップロード.
                                     self.setManageData(data: localFile)
-                                    upload()
+                                    upload(isFirst: false)
                                 }
                             }
                             else {
@@ -235,17 +232,30 @@ class AppDataManager {
                         if let localFile = localFile {
                             // ローカルにある場合はとりあえず読み込んでおく.
                             self.setManageData(data: localFile)
-                            upload()
                         }
                         else {
                             // ファイルがなかったら作成してアップロード.
-                            self.createManageData()
+                            self.setManageData(data: AppManageData())
+                            self.save(isUpdate: false)
                         }
+                        upload(isFirst: true)
                     }
                     self._isLoading = false
                     completion()
             }
         }
+    }
+    
+    /// リセット.
+    func reset() {
+        DropboxClientsManager.unlinkClients()
+        _isLoaded = false
+        _manageData = AppManageData()
+        _dropboxUserName = ""
+        UserDefaults.standard.removeObject(forKey: USER_DEFAULT_DROPBOX_USERNAME)
+        // ファイル削除.
+        try! FileManager.default.removeItem(at: URL(fileURLWithPath: self._savePath))
+        try! FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
     }
     
 }
