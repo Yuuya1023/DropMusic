@@ -32,8 +32,9 @@ class InitializeViewController: UIViewController {
     //
     // MARK: - Properties.
     //
-    var _state: State = .None
-
+    private var _state: State = .None
+    private var _launchView: LaunchView = LaunchView()
+    
     
     
     //
@@ -43,6 +44,10 @@ class InitializeViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = .gray
+        
+        // 起動画面.
+        _launchView.frame = self.view.frame
+        self.view.addSubview(_launchView)
         
         // ログイン.
         NotificationCenter.default.addObserver(self,
@@ -76,6 +81,7 @@ class InitializeViewController: UIViewController {
                 self.changeState(.CheckDropboxUser)
             }
             else {
+                _launchView.removeFromSuperview()
                 // ログインボタン表示.
                 let button = UIButton()
                 button.frame = CGRect(x: self.view.center.x-30,
