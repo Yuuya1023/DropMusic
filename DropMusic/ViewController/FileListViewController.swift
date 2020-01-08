@@ -356,17 +356,22 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // AudioDataのリストを作成する.
+                var index = 0
                 var list: Array<AudioData> = []
                 for i in 0 ..< _datas.count {
                     if let d = AudioData.createFromFileInfo(fileInfo: _datas[i]) {
+                        if d.isEqualData(audioData: audioData) {
+                            index = list.count
+                        }
                         list.append(d)
                     }
                 }
+                
                 // 再生.
                 AudioPlayManager.sharedManager.set(selectType: .Cloud,
                                                    selectPath: makePath(),
                                                    audioList: list,
-                                                   playIndex: indexPath.row)
+                                                   playIndex: index)
                 _ = AudioPlayManager.sharedManager.play()
             }
             else {
