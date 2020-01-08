@@ -25,14 +25,15 @@ class FileListViewCell: UITableViewCell {
     
     
     //
-    // MARK: -
+    // MARK: - Override.
     //
     override func awakeFromNib() {
         super.awakeFromNib()
         
         // お気に入りアイコン.
         favorite.image = favorite.image?.withRenderingMode(.alwaysTemplate)
-        favorite.tintColor = .yellow
+        favorite.isHidden = true
+//        favorite.tintColor = .yellow
         
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -48,7 +49,7 @@ class FileListViewCell: UITableViewCell {
     
     
     //
-    // MARK: -
+    // MARK: - Public.
     //
     func set(fileInfo: FileInfo?) {
         guard let fileInfo = fileInfo else {
@@ -56,6 +57,7 @@ class FileListViewCell: UITableViewCell {
         }
         isAudioFile = fileInfo.isAudioFile()
         nameLabel.text = fileInfo.name()
+        nameLabel.lineBreakMode = .byTruncatingTail
         
         var iconName = "icon_cell_question.png"
         if fileInfo.isFolder() {
@@ -65,7 +67,7 @@ class FileListViewCell: UITableViewCell {
             iconName = "icon_cell_audio.png"
         }
         icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
-        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(fileInfo)
+//        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(fileInfo)
         
         var progress: Float = 0.0
         if isAudioFile {
@@ -85,7 +87,13 @@ class FileListViewCell: UITableViewCell {
             return
         }
         isAudioFile = favoriteData.fileType == .Audio
-        nameLabel.text = favoriteData.name
+        // 文字列生成.
+        let prefix = favoriteData.getParentFolderName()+"/"
+        let attributeString = NSMutableAttributedString(string: prefix+favoriteData.name)
+        attributeString.addAttribute(.foregroundColor, value: UIColor.gray, range: NSMakeRange(0, prefix.count))
+        nameLabel.attributedText = attributeString
+        nameLabel.lineBreakMode = .byTruncatingHead
+        
         var iconName = "icon_cell_question.png"
         if favoriteData.fileType == .Folder {
             iconName = "icon_cell_folder.png"
@@ -94,7 +102,7 @@ class FileListViewCell: UITableViewCell {
             iconName = "icon_cell_audio.png"
         }
         icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
-        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(favoriteData)
+//        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(favoriteData)
         setProgress(0.0)
     }
     
@@ -130,7 +138,9 @@ class FileListViewCell: UITableViewCell {
     
     
     
+    //
     // MARK: -
+    //
     @objc func setDownloadProgress(notification: Notification) {
         let p = Float(truncating: notification.object as! NSNumber)
         self.setProgress(p)
@@ -147,9 +157,4 @@ class FileListViewCell: UITableViewCell {
         }
     }
     
-    
-    // MARK: -
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
 }

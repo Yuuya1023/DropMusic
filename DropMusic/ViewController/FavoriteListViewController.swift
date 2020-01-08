@@ -113,6 +113,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     
     /// 一覧更新.
     func sortAndReloadList() {
+        self._datas.sort(by: {$0.getParentFolderName().lowercased() < $1.getParentFolderName().lowercased()})
         self._tableView.reloadData()
         _isLoading = false
         _refreshControll.endRefreshing()

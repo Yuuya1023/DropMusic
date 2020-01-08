@@ -51,4 +51,16 @@ struct FavoriteData: Codable {
         return path.components(separatedBy: "/")
     }
     
+    /// 親フォルダ名取得.
+    func getParentFolderName() -> String {
+        var pathList = createPathList()
+        pathList.removeLast()   // 最後のはフォルダ名なので消す.
+        if pathList.count > 0 {
+            if let str = pathList.last {
+                return str
+            }
+        }
+        return ""
+    }
+    
 }
