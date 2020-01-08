@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InitializeViewController" customModule="DropMusic" customModuleProvider="target">
+            <connections>
+                <outlet property="_launchView" destination="a7X-v5-0oE" id="anw-pQ-H2W"/>
+                <outlet property="_loginButton" destination="W3a-3Z-Ixs" id="A5y-hZ-URH"/>
+                <outlet property="_messageLabel" destination="8hj-Ql-nWm" id="5fe-dT-o3p"/>
+                <outlet property="_skilButton" destination="aSD-NQ-3P0" id="AVB-s3-8Lf"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a7X-v5-0oE" userLabel="LaunchView" customClass="LaunchView" customModule="DropMusic" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8hj-Ql-nWm" userLabel="LabelMessage">
+                    <rect key="frame" x="187.5" y="467" width="0.0" height="0.0"/>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aSD-NQ-3P0" userLabel="ButtonSkip">
+                    <rect key="frame" x="172.5" y="485.5" width="30" height="30"/>
+                    <state key="normal" title="Skip"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3a-3Z-Ixs" userLabel="ButtonLogin">
+                    <rect key="frame" x="168.5" y="318.5" width="38" height="30"/>
+                    <state key="normal" title="Login"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="a7X-v5-0oE" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="R9A-cM-uEF"/>
+                <constraint firstItem="8hj-Ql-nWm" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Tnv-hJ-sWi"/>
+                <constraint firstItem="aSD-NQ-3P0" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="VHT-sN-6Br"/>
+                <constraint firstItem="W3a-3Z-Ixs" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ckk-TW-rhO"/>
+                <constraint firstItem="8hj-Ql-nWm" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="1.4" id="cpK-5F-x2B"/>
+                <constraint firstItem="a7X-v5-0oE" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="dcP-7h-s3f"/>
+                <constraint firstItem="a7X-v5-0oE" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="jcD-XL-Dyn"/>
+                <constraint firstItem="a7X-v5-0oE" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="q2V-s9-PeY"/>
+                <constraint firstItem="aSD-NQ-3P0" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="1.5" id="u3o-hJ-beH"/>
+                <constraint firstItem="W3a-3Z-Ixs" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="zJt-mk-Wkl"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

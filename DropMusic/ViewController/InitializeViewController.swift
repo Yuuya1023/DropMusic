@@ -25,6 +25,38 @@ class InitializeViewController: UIViewController {
         case CheckDropboxUser
         case CheckAppData
         case Complete
+        
+        /// メッセージ取得.
+        func getMessage() -> String {
+            var ret = ""
+            switch self {
+            case .CheckDropbox:
+                ret = "Checking Dropbox..."
+            case .CheckDropboxUser:
+                ret = "Checking Dropbox Account..."
+            case .CheckAppData:
+                ret = "Checking App Data..."
+                
+            default:
+                break
+            }
+            return ret
+        }
+        
+        /// スキップが有効か.
+        func isEnableSkip() -> Bool {
+            var ret = false
+            switch self {
+            case .CheckDropboxUser,
+                 .CheckAppData:
+                ret = true
+
+            default:
+                break
+            }
+            return ret
+        }
+        
     }
     
     
@@ -32,23 +64,37 @@ class InitializeViewController: UIViewController {
     //
     // MARK: - Properties.
     //
+    @IBOutlet var _launchView: LaunchView!
+    @IBOutlet var _messageLabel: UILabel!
+    @IBOutlet var _skilButton: UIButton!
+    @IBOutlet var _loginButton: UIButton!
     private var _state: State = .None
-    private var _launchView: LaunchView = LaunchView()
     
     
     
     //
     // MARK: - Override.
     //
+    override func loadView() {
+        let nib = UINib(nibName: "InitializeView", bundle: .main)
+        self.view = nib.instantiate(withOwner: self).first as? UIView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = .gray
         
-        // 起動画面.
-        _launchView.frame = self.view.frame
-        self.view.addSubview(_launchView)
-        
+        // ログインボタン.
+        _loginButton.isHidden = true
+        _loginButton.addTarget(self,
+                               action: #selector(loginDropbox(_:)),
+                               for: .touchUpInside)
+        // スキップボタン.
+        _skilButton.isHidden = true
+        _skilButton.addTarget(self,
+                              action: #selector(skip(_:)),
+                              for: .touchUpInside)
         // ログイン.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(notificationDropboxLogin(notification:)),
@@ -74,6 +120,9 @@ class InitializeViewController: UIViewController {
     /// 状態変更.
     func changeState(_ state: State) {
         _state = state
+        _messageLabel.text = _state.getMessage()
+        _skilButton.isHidden = !_state.isEnableSkip()
+        
         switch _state {
         case .CheckDropbox:
             // Dropbox読み込み.
@@ -81,19 +130,10 @@ class InitializeViewController: UIViewController {
                 self.changeState(.CheckDropboxUser)
             }
             else {
-                _launchView.removeFromSuperview()
-                // ログインボタン表示.
-                let button = UIButton()
-                button.frame = CGRect(x: self.view.center.x-30,
-                                      y: self.view.center.y-30,
-                                      width: 60,
-                                      height: 60)
-                button.setTitle("login",
-                                for: .normal)
-                button.addTarget(self,
-                                 action: #selector(loginDropbox(_:)),
-                                 for: .touchUpInside)
-                self.view.addSubview(button)
+                // ログインへ.
+                _messageLabel.text = ""
+                _launchView.isHidden = true
+                _loginButton.isHidden = false
             }
         case .CheckDropboxUser:
             // Dropboxユーザー確認.
@@ -135,8 +175,21 @@ class InitializeViewController: UIViewController {
         })
     }
     
+    /// スキップ.
+    @objc func skip(_ sender: UIButton) {
+        switch _state {
+        case .CheckAppData:
+            changeState(.Complete)
+    
+        default:
+            break
+        }
+    }
+    
     /// ログイン通知.
     @objc private func notificationDropboxLogin(notification: Notification) {
+        _launchView.isHidden = false
+        _loginButton.isHidden = true
         changeState(.CheckDropboxUser)
     }
     
