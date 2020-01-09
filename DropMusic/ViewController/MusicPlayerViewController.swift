@@ -14,32 +14,33 @@ import MarqueeLabel
 
 class MusicPlayerViewController: UIViewController {
     
+    //
+    // MARK: - Properties.
+    //
     @IBOutlet var _effectView: UIVisualEffectView!
-
     @IBOutlet var _artwork: UIImageView!
-
     @IBOutlet var _playButton: UIButton!
     @IBOutlet var _nextButton: UIButton!
-
     @IBOutlet var _seakBar: UISlider!
     @IBOutlet var _currentTimeLabel: UILabel!
     @IBOutlet var _durationLabel: UILabel!
-
     @IBOutlet var _repeatButton: UIButton!
     @IBOutlet var _shuffleButton: UIButton!
-    
     @IBOutlet var _menuButton: UIButton!
     @IBOutlet var _twitterButton: UIButton!
-    
     @IBOutlet var _titleView: UIView!
     @IBOutlet var _artistView: UIView!
     var _titleLabel: MarqueeLabel!
     var _artistLabel: MarqueeLabel!
-    
     @IBOutlet var _airPlayView: UIView!
     
     var _timer: Timer = Timer()
     
+    
+    
+    //
+    // MARK: - Override.
+    //
     override func loadView() {
         let nib = UINib(nibName: "MusicPlayerView", bundle: .main)
         self.view = nib.instantiate(withOwner: self).first as? UIView
@@ -48,14 +49,6 @@ class MusicPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-//        // nibNameにはxibファイル名が入る。
-//        let view:UIView = UINib(nibName: "MusicPlayerView", bundle: nil).instantiate(withOwner: self, options: nil)[0] as! UIView
-//
-//        // 呼び出したコントローラーのviewに設定する
-//        self.view.addSubview(view)
-        
-//        self.view.backgroundColor = UIColor.clear
-        
         // アートワーク.
         _artwork.contentMode = .scaleAspectFit
         _artwork.layer.shadowOpacity = 0.5
@@ -171,8 +164,6 @@ class MusicPlayerViewController: UIViewController {
         selectorProgressCheck()
     }
     
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -184,7 +175,11 @@ class MusicPlayerViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: -
+    
+    
+    //
+    // MARK: - Public.
+    //
     func layoutUpdate() {
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
             return
@@ -240,7 +235,10 @@ class MusicPlayerViewController: UIViewController {
     }
     
     
+    
+    //
     // MARK: -
+    //
     @objc func selectorPlayButton(_ sender: UIButton) {
         if AudioPlayManager.sharedManager.isPlaying() {
             AudioPlayManager.sharedManager.pause()
@@ -342,17 +340,17 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorProgressCheck() {
-        let player = AudioPlayManager.sharedManager._audioPlayer
-        if player != nil {
-            let current = Double((player?.currentTime)!)
-            let duration = Double(AudioPlayManager.sharedManager._duration)
-            let v = current/duration
-            _seakBar.setValue(Float(v), animated: true)
-
-            let min = Int(current)/60
-            let sec = Int(current)%60
-            _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
+        guard let player = AudioPlayManager.sharedManager.audioPlayer else {
+            return
         }
+        let current = Double((player.currentTime))
+        let duration = Double(AudioPlayManager.sharedManager._duration)
+        let v = current/duration
+        _seakBar.setValue(Float(v), animated: true)
+
+        let min = Int(current)/60
+        let sec = Int(current)%60
+        _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
     }
     
     @objc func selectorAudioSessionRouteChanged(_ notification: Notification) {
@@ -370,7 +368,6 @@ class MusicPlayerViewController: UIViewController {
             }
         }
     }
-    
     
     @objc func selectorDidChangeAudio(_ notification: Notification) {
         layoutUpdate()

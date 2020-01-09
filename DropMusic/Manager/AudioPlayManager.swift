@@ -51,7 +51,12 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     //
     // MARK: - Properties.
     //
-    var _audioPlayer: AVAudioPlayer!
+    private var _audioPlayer: AVAudioPlayer!
+    var audioPlayer: AVAudioPlayer? {
+        get {
+            return _audioPlayer
+        }
+    }
     var _playing: AudioData?
     var _audioSelect: AudioSelectType = .None
     var _audioSelectPath: String = ""
@@ -78,7 +83,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     //
-    // MARK: -
+    // MARK: - Override.
     //
     private override init() {
         super.init()
@@ -118,6 +123,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
                                                object: nil)
     }
     
+    
+    
+    //
+    // MARK: - Public.
+    //
     /// 再生中か.
     func isPlaying() -> (Bool) {
         if _audioPlayer != nil {
@@ -222,9 +232,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if _audioPlayer != nil {
             if !_audioPlayer.isPlaying {
                 _audioPlayer.play()
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = _audioPlayer.currentTime
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyPlaybackDuration] = _audioPlayer.duration
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = _audioPlayer.rate
+                updateInfoCenter()
                 return true
             }
         }
@@ -263,9 +271,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if _audioPlayer != nil {
             if _audioPlayer.isPlaying {
                 _audioPlayer.pause()
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = _audioPlayer.currentTime
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPMediaItemPropertyPlaybackDuration] = _audioPlayer.duration
-                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = _audioPlayer.rate
+                updateInfoCenter()
             }
         }
     }
@@ -273,7 +279,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     
     //
-    // MARK: - private function
+    // MARK: - Private.
     //
     /// リピート設定.
     private func settingRpeat() {
@@ -425,6 +431,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         _deviceName = ""
     }
+    
+    
     
     //
     // MARK: - AVAudioPlayer Delegate.
