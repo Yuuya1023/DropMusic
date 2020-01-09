@@ -11,8 +11,6 @@
 		050279812142AFA50094CC40 /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797E2142AFA40094CC40 /* FileListViewController.swift */; };
 		050279822142AFA50094CC40 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502797F2142AFA50094CC40 /* SettingsViewController.swift */; };
 		050279842142BDA70094CC40 /* global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279832142BDA70094CC40 /* global.swift */; };
-		050279862146B2600094CC40 /* DropBoxLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279852146B25F0094CC40 /* DropBoxLinkViewController.swift */; };
-		050279882146B3040094CC40 /* DropBoxRootNavigactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050279872146B3040094CC40 /* DropBoxRootNavigactionController.swift */; };
 		0502798B214809580094CC40 /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798A214809580094CC40 /* AudioData.swift */; };
 		0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798C21480B9F0094CC40 /* FileListViewCell.swift */; };
 		0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0502798E21492ED20094CC40 /* DownloadFileManager.swift */; };
@@ -54,7 +52,6 @@
 		05617F682153DD1C0025F07E /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F642153DD1B0025F07E /* twitter.png */; };
 		05617F692153DD1C0025F07E /* tab_cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F652153DD1C0025F07E /* tab_cloud.png */; };
 		05617F6B2156786B0025F07E /* PlayListManageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F6A2156786B0025F07E /* PlayListManageData.swift */; };
-		05617F6D215A87E20025F07E /* PlayListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05617F6C215A87E20025F07E /* PlayListManager.swift */; };
 		05617F72215D02900025F07E /* icon_shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F70215D028F0025F07E /* icon_shuffle.png */; };
 		05617F73215D02900025F07E /* icon_nonshuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F71215D028F0025F07E /* icon_nonshuffle.png */; };
 		05617F76215D06FD0025F07E /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F74215D06FD0025F07E /* icon_back.png */; };
@@ -83,6 +80,22 @@
 		05E108A721650C79001CC35F /* AudioListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A621650C78001CC35F /* AudioListViewCell.swift */; };
 		05E108A921679A44001CC35F /* MetadataCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A821679A44001CC35F /* MetadataCacheManager.swift */; };
 		3174D8F122F177E4006DB79D /* PlayListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3174D8F022F177E4006DB79D /* PlayListViewCell.xib */; };
+		31EB903023B08B90009A2C88 /* AudioListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */; };
+		31EB903223B0A9C0009A2C88 /* FileListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */; };
+		31EB903423B1FF59009A2C88 /* AppManageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB903323B1FF58009A2C88 /* AppManageData.swift */; };
+		31EB903623B20002009A2C88 /* FavoriteManageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB903523B20001009A2C88 /* FavoriteManageData.swift */; };
+		31EB903823B2003B009A2C88 /* FavoriteData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB903723B2003B009A2C88 /* FavoriteData.swift */; };
+		31EB903A23B47885009A2C88 /* AppDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB903923B47884009A2C88 /* AppDataManager.swift */; };
+		31EB903C23B594E3009A2C88 /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB903B23B594E2009A2C88 /* FavoriteListViewController.swift */; };
+		31EB903E23B5B000009A2C88 /* tab_favorite.png in Resources */ = {isa = PBXBuildFile; fileRef = 31EB903D23B5AFFF009A2C88 /* tab_favorite.png */; };
+		31EB904023B5B201009A2C88 /* icon_favorite.png in Resources */ = {isa = PBXBuildFile; fileRef = 31EB903F23B5B201009A2C88 /* icon_favorite.png */; };
+		31EB904223C316AF009A2C88 /* InitializeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB904123C316AE009A2C88 /* InitializeViewController.swift */; };
+		31EB904423C43EA0009A2C88 /* PlayListEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB904323C43E9F009A2C88 /* PlayListEditView.xib */; };
+		31EB904623C450E2009A2C88 /* SettingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB904523C450E1009A2C88 /* SettingViewCell.swift */; };
+		31EB904823C451E0009A2C88 /* SettingViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB904723C451E0009A2C88 /* SettingViewCell.xib */; };
+		31EB904A23C587FF009A2C88 /* LaunchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB904923C587FE009A2C88 /* LaunchView.xib */; };
+		31EB904C23C5880B009A2C88 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EB904B23C5880A009A2C88 /* LaunchView.swift */; };
+		31EB904E23C58C06009A2C88 /* InitializeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB904D23C58C06009A2C88 /* InitializeView.xib */; };
 		648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */; };
 /* End PBXBuildFile section */
 
@@ -91,8 +104,6 @@
 		0502797E2142AFA40094CC40 /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
 		0502797F2142AFA50094CC40 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		050279832142BDA70094CC40 /* global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global.swift; sourceTree = "<group>"; };
-		050279852146B25F0094CC40 /* DropBoxLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxLinkViewController.swift; sourceTree = "<group>"; };
-		050279872146B3040094CC40 /* DropBoxRootNavigactionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxRootNavigactionController.swift; sourceTree = "<group>"; };
 		0502798A214809580094CC40 /* AudioData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioData.swift; sourceTree = "<group>"; };
 		0502798C21480B9F0094CC40 /* FileListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewCell.swift; sourceTree = "<group>"; };
 		0502798E21492ED20094CC40 /* DownloadFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileManager.swift; sourceTree = "<group>"; };
@@ -136,7 +147,6 @@
 		05617F642153DD1B0025F07E /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		05617F652153DD1C0025F07E /* tab_cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_cloud.png; sourceTree = "<group>"; };
 		05617F6A2156786B0025F07E /* PlayListManageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManageData.swift; sourceTree = "<group>"; };
-		05617F6C215A87E20025F07E /* PlayListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManager.swift; sourceTree = "<group>"; };
 		05617F70215D028F0025F07E /* icon_shuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_shuffle.png; sourceTree = "<group>"; };
 		05617F71215D028F0025F07E /* icon_nonshuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_nonshuffle.png; sourceTree = "<group>"; };
 		05617F74215D06FD0025F07E /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
@@ -167,6 +177,22 @@
 		05E108A621650C78001CC35F /* AudioListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioListViewCell.swift; sourceTree = "<group>"; };
 		05E108A821679A44001CC35F /* MetadataCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataCacheManager.swift; sourceTree = "<group>"; };
 		3174D8F022F177E4006DB79D /* PlayListViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayListViewCell.xib; sourceTree = "<group>"; };
+		31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioListViewCell.xib; sourceTree = "<group>"; };
+		31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileListViewCell.xib; sourceTree = "<group>"; };
+		31EB903323B1FF58009A2C88 /* AppManageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManageData.swift; sourceTree = "<group>"; };
+		31EB903523B20001009A2C88 /* FavoriteManageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteManageData.swift; sourceTree = "<group>"; };
+		31EB903723B2003B009A2C88 /* FavoriteData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteData.swift; sourceTree = "<group>"; };
+		31EB903923B47884009A2C88 /* AppDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataManager.swift; sourceTree = "<group>"; };
+		31EB903B23B594E2009A2C88 /* FavoriteListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
+		31EB903D23B5AFFF009A2C88 /* tab_favorite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_favorite.png; sourceTree = "<group>"; };
+		31EB903F23B5B201009A2C88 /* icon_favorite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_favorite.png; sourceTree = "<group>"; };
+		31EB904123C316AE009A2C88 /* InitializeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitializeViewController.swift; sourceTree = "<group>"; };
+		31EB904323C43E9F009A2C88 /* PlayListEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayListEditView.xib; sourceTree = "<group>"; };
+		31EB904523C450E1009A2C88 /* SettingViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewCell.swift; sourceTree = "<group>"; };
+		31EB904723C451E0009A2C88 /* SettingViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewCell.xib; sourceTree = "<group>"; };
+		31EB904923C587FE009A2C88 /* LaunchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchView.xib; sourceTree = "<group>"; };
+		31EB904B23C5880A009A2C88 /* LaunchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+		31EB904D23C58C06009A2C88 /* InitializeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializeView.xib; sourceTree = "<group>"; };
 		33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.release.xcconfig"; sourceTree = "<group>"; };
 		4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DropMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DropMusic/Pods-DropMusic.debug.xcconfig"; sourceTree = "<group>"; };
 		D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -189,9 +215,11 @@
 			children = (
 				05617F652153DD1C0025F07E /* tab_cloud.png */,
 				05617F632153DD1B0025F07E /* tab_playlist.png */,
+				31EB903D23B5AFFF009A2C88 /* tab_favorite.png */,
 				05617F622153DD1B0025F07E /* tab_settings.png */,
 				05617F642153DD1B0025F07E /* twitter.png */,
 				0533A5DD21514973006E625A /* no_image.gif */,
+				31EB903F23B5B201009A2C88 /* icon_favorite.png */,
 				05841A6E224BBB700054E51C /* icon_airplay.png */,
 				05617F71215D028F0025F07E /* icon_nonshuffle.png */,
 				05617F70215D028F0025F07E /* icon_shuffle.png */,
@@ -215,11 +243,14 @@
 		05027989214809300094CC40 /* Object */ = {
 			isa = PBXGroup;
 			children = (
+				31EB903323B1FF58009A2C88 /* AppManageData.swift */,
+				05617F6A2156786B0025F07E /* PlayListManageData.swift */,
+				05617F602153CC690025F07E /* PlayListData.swift */,
+				31EB903523B20001009A2C88 /* FavoriteManageData.swift */,
+				31EB903723B2003B009A2C88 /* FavoriteData.swift */,
 				0502798A214809580094CC40 /* AudioData.swift */,
 				05E10898215E7287001CC35F /* AudioMetadata.swift */,
 				05027994214BE87E0094CC40 /* FileInfo.swift */,
-				05617F602153CC690025F07E /* PlayListData.swift */,
-				05617F6A2156786B0025F07E /* PlayListManageData.swift */,
 			);
 			path = Object;
 			sourceTree = "<group>";
@@ -297,7 +328,6 @@
 			isa = PBXGroup;
 			children = (
 				05A016B3213ED0A40057B459 /* RootTabBarController.swift */,
-				050279872146B3040094CC40 /* DropBoxRootNavigactionController.swift */,
 				0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */,
 				05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */,
 			);
@@ -307,10 +337,10 @@
 		05617F5D2153C8AD0025F07E /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				31EB903923B47884009A2C88 /* AppDataManager.swift */,
 				05027990214959750094CC40 /* AudioPlayManager.swift */,
 				0502798E21492ED20094CC40 /* DownloadFileManager.swift */,
 				05027992214BDCE30094CC40 /* DropboxFileListManager.swift */,
-				05617F6C215A87E20025F07E /* PlayListManager.swift */,
 				05E108A821679A44001CC35F /* MetadataCacheManager.swift */,
 			);
 			path = Manager;
@@ -319,9 +349,15 @@
 		05841A69224BB3F60054E51C /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				31EB904923C587FE009A2C88 /* LaunchView.xib */,
+				31EB904D23C58C06009A2C88 /* InitializeView.xib */,
 				05841A6A224BB4290054E51C /* MusicPlayerView.xib */,
+				31EB904323C43E9F009A2C88 /* PlayListEditView.xib */,
 				3174D8F022F177E4006DB79D /* PlayListViewCell.xib */,
+				31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */,
+				31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */,
 				05841A70225B99930054E51C /* AudioPlayStatusView.xib */,
+				31EB904723C451E0009A2C88 /* SettingViewCell.xib */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -368,8 +404,9 @@
 		05A016C72141645C0057B459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				31EB904123C316AE009A2C88 /* InitializeViewController.swift */,
 				05A016C5214164300057B459 /* MusicPlayerViewController.swift */,
-				050279852146B25F0094CC40 /* DropBoxLinkViewController.swift */,
+				31EB903B23B594E2009A2C88 /* FavoriteListViewController.swift */,
 				0502797E2142AFA40094CC40 /* FileListViewController.swift */,
 				0502797D2142AFA40094CC40 /* PlayListViewController.swift */,
 				05E108A22164FCFC001CC35F /* PlayListSelectViewController.swift */,
@@ -383,10 +420,12 @@
 		05A016C82141670D0057B459 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				31EB904B23C5880A009A2C88 /* LaunchView.swift */,
 				0502798C21480B9F0094CC40 /* FileListViewCell.swift */,
 				05E108A621650C78001CC35F /* AudioListViewCell.swift */,
 				05617F5E2153C99B0025F07E /* PlayListViewCell.swift */,
 				0533A5D921513E09006E625A /* AudioPlayStatusView.swift */,
+				31EB904523C450E1009A2C88 /* SettingViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -491,11 +530,14 @@
 				0533A5CF214EAAE3006E625A /* appicon-76@2x.png in Resources */,
 				0533A5C1214EAAE3006E625A /* appicon.png in Resources */,
 				05617F682153DD1C0025F07E /* twitter.png in Resources */,
+				31EB904423C43EA0009A2C88 /* PlayListEditView.xib in Resources */,
 				3174D8F122F177E4006DB79D /* PlayListViewCell.xib in Resources */,
 				0533A5CD214EAAE3006E625A /* appicon@2x.png in Resources */,
 				0533A59D214D72AE006E625A /* play.png in Resources */,
 				0533A5D1214EAAE3006E625A /* appicon-Small@3x.png in Resources */,
+				31EB904023B5B201009A2C88 /* icon_favorite.png in Resources */,
 				0533A5C7214EAAE3006E625A /* appicon-76.png in Resources */,
+				31EB904823C451E0009A2C88 /* SettingViewCell.xib in Resources */,
 				0533A5D0214EAAE3006E625A /* appicon-83.5@2x.png in Resources */,
 				05841A6B224BB4290054E51C /* MusicPlayerView.xib in Resources */,
 				05617F73215D02900025F07E /* icon_nonshuffle.png in Resources */,
@@ -507,6 +549,8 @@
 				05617F4A215273620025F07E /* close.png in Resources */,
 				05617F672153DD1C0025F07E /* tab_playlist.png in Resources */,
 				0533A5DE21514973006E625A /* no_image.gif in Resources */,
+				31EB904A23C587FF009A2C88 /* LaunchView.xib in Resources */,
+				31EB903E23B5B000009A2C88 /* tab_favorite.png in Resources */,
 				0533A5C5214EAAE3006E625A /* appicon-72@2x.png in Resources */,
 				05617F692153DD1C0025F07E /* tab_cloud.png in Resources */,
 				05617F4C215273B30025F07E /* down.png in Resources */,
@@ -514,9 +558,12 @@
 				0533A5C2214EAAE3006E625A /* appicon-60@3x.png in Resources */,
 				0533A5C6214EAAE3006E625A /* iTunesArtwork@2x in Resources */,
 				05841A71225B99930054E51C /* AudioPlayStatusView.xib in Resources */,
+				31EB904E23C58C06009A2C88 /* InitializeView.xib in Resources */,
 				0533A5C9214EAAE3006E625A /* appicon-Small-40@2x.png in Resources */,
 				05841A6D224BBA4B0054E51C /* icon_menu.png in Resources */,
 				05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */,
+				31EB903223B0A9C0009A2C88 /* FileListViewCell.xib in Resources */,
+				31EB903023B08B90009A2C88 /* AudioListViewCell.xib in Resources */,
 				056AF8CD214BFFA400A5E497 /* icon_cell_folder.png in Resources */,
 				05617F50215290250025F07E /* pause.png in Resources */,
 				056AF8D7214D416600A5E497 /* icon_repeat_one.png in Resources */,
@@ -606,34 +653,39 @@
 				0533A5D7215063F2006E625A /* String+Digest.swift in Sources */,
 				050279802142AFA50094CC40 /* PlayListViewController.swift in Sources */,
 				0533A5DA21513E09006E625A /* AudioPlayStatusView.swift in Sources */,
+				31EB903623B20002009A2C88 /* FavoriteManageData.swift in Sources */,
 				0502798F21492ED20094CC40 /* DownloadFileManager.swift in Sources */,
 				05E108A921679A44001CC35F /* MetadataCacheManager.swift in Sources */,
-				05617F6D215A87E20025F07E /* PlayListManager.swift in Sources */,
 				0502798B214809580094CC40 /* AudioData.swift in Sources */,
 				05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */,
+				31EB904C23C5880B009A2C88 /* LaunchView.swift in Sources */,
 				05E10897215D12BB001CC35F /* Array+Shuffle.swift in Sources */,
 				05E108A521650B11001CC35F /* AudioListViewController.swift in Sources */,
 				0533A5D4215003D7006E625A /* UIColor+UIImage.swift in Sources */,
 				05027995214BE87E0094CC40 /* FileInfo.swift in Sources */,
 				0502798D21480BA00094CC40 /* FileListViewCell.swift in Sources */,
 				05617F6B2156786B0025F07E /* PlayListManageData.swift in Sources */,
-				050279882146B3040094CC40 /* DropBoxRootNavigactionController.swift in Sources */,
+				31EB904223C316AF009A2C88 /* InitializeViewController.swift in Sources */,
+				31EB903A23B47885009A2C88 /* AppDataManager.swift in Sources */,
 				05E108A32164FCFC001CC35F /* PlayListSelectViewController.swift in Sources */,
 				05E108A721650C79001CC35F /* AudioListViewCell.swift in Sources */,
 				05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */,
+				31EB903C23B594E3009A2C88 /* FavoriteListViewController.swift in Sources */,
+				31EB904623C450E2009A2C88 /* SettingViewCell.swift in Sources */,
 				050279812142AFA50094CC40 /* FileListViewController.swift in Sources */,
 				05027991214959750094CC40 /* AudioPlayManager.swift in Sources */,
 				05617F612153CC690025F07E /* PlayListData.swift in Sources */,
 				05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */,
 				05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */,
 				05E1089F216106B8001CC35F /* PlayListEditViewController.swift in Sources */,
-				050279862146B2600094CC40 /* DropBoxLinkViewController.swift in Sources */,
 				05617F5F2153C99B0025F07E /* PlayListViewCell.swift in Sources */,
 				0533A5A2214D7B8B006E625A /* UIImage+Resize.swift in Sources */,
 				05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */,
+				31EB903823B2003B009A2C88 /* FavoriteData.swift in Sources */,
 				0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */,
 				050279822142AFA50094CC40 /* SettingsViewController.swift in Sources */,
 				05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */,
+				31EB903423B1FF59009A2C88 /* AppManageData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
