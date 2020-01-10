@@ -151,12 +151,16 @@ class InitializeViewController: UIViewController {
         case .CheckAppData:
             // アプリデータ読み込み.
             AppDataManager.sharedManager.checkFile {
-                self.changeState(.Complete)
+                if self._state == .CheckAppData {
+                    self.changeState(.Complete)
+                }
             }
         case .Complete:
             // 画面遷移.
-            self.present(RootTabBarController(),
-                         animated: false,
+            let vc = RootTabBarController()
+            vc.modalTransitionStyle = .crossDissolve
+            self.present(vc,
+                         animated: true,
                          completion: nil)
             
         default:
@@ -177,6 +181,9 @@ class InitializeViewController: UIViewController {
     
     /// スキップ.
     @objc func skip(_ sender: UIButton) {
+        if !_state.isEnableSkip() {
+            return
+        }
         switch _state {
         case .CheckAppData:
             changeState(.Complete)

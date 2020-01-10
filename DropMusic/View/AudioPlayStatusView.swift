@@ -78,10 +78,14 @@ class AudioPlayStatusView: UIView {
         _artwork.layer.shadowOffset = CGSize(width: 3, height: 3)
         
         // タイトル.
-        _titleLabel = MarqueeLabel(frame: CGRect(x: 0, y: 0, width: _titleView.frame.width, height: _titleView.frame.height),
+        _titleLabel = MarqueeLabel(frame: CGRect(x: 0,
+                                                 y: 0,
+                                                 width: _titleView.frame.width,
+                                                 height: _titleView.frame.height),
                                    duration: 10,
                                    fadeLength: 10)
-        _titleLabel.textColor = UIColor.black
+        _titleLabel.textColor = .black
+        _titleLabel.font = UIFont(name: "Avenir Heavy", size: 17.0)
         _titleView.addSubview(_titleLabel)
         
         // 情報.
@@ -89,7 +93,8 @@ class AudioPlayStatusView: UIView {
                                     duration: 10,
                                     fadeLength: 10)
         _detailLabel.font = UIFont.systemFont(ofSize: 12)
-        _detailLabel.textColor = UIColor.darkGray
+        _detailLabel.textColor = .darkGray
+        _detailLabel.font = UIFont(name: "Avenir Book", size: 15.0)
         _descView.addSubview(_detailLabel)
         // 再生.
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)

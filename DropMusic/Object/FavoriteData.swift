@@ -48,7 +48,15 @@ struct FavoriteData: Codable {
     //
     /// パス配列作成.
     func createPathList() -> Array<String> {
-        return path.components(separatedBy: "/")
+        var ret = path.components(separatedBy: "/")
+        // 空文字を削除.
+        ret.removeAll { (str) -> Bool in
+            if str == "" {
+                return true
+            }
+            return false
+        }
+        return ret
     }
     
     /// 親フォルダ名取得.

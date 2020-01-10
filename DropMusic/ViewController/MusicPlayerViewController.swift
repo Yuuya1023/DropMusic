@@ -62,7 +62,7 @@ class MusicPlayerViewController: UIViewController {
                                    fadeLength: 10)
         _titleLabel.animationDelay = 2.0
         _titleLabel.textAlignment = .center
-        _titleLabel.font = UIFont.systemFont(ofSize: 30)
+        _titleLabel.font = UIFont(name: "Avenir Heavy", size: 30.0)
         _titleView.addSubview(_titleLabel)
         // アーティスト.
         _artistLabel = MarqueeLabel(frame: CGRect(x:0,
@@ -73,6 +73,7 @@ class MusicPlayerViewController: UIViewController {
                                    fadeLength: 10)
         _artistLabel.animationDelay = 2.0
         _artistLabel.textAlignment = .center
+        _artistLabel.font = UIFont(name: "Avenir Book", size: 17.0)
         _artistLabel.textColor = UIColor(displayP3Red: 90/255, green: 90/255, blue: 255/255, alpha: 1)
         _artistView.addSubview(_artistLabel)
         

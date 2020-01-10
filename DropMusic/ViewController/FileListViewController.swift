@@ -162,7 +162,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     func makePath() -> (String) {
         var ret: String = ""
         for v in _pathList {
-            ret += "/" + v
+            ret += "/" + v.lowercased()
         }
         return ret
     }
