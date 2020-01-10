@@ -34,7 +34,8 @@ class MusicPlayerViewController: UIViewController {
     var _artistLabel: MarqueeLabel!
     @IBOutlet var _airPlayView: UIView!
     
-    var _timer: Timer = Timer()
+    private var _timer: Timer = Timer()
+    private let _color: UIColor = UIColor(displayP3Red: 29/255, green: 70/255, blue: 143/255, alpha: 1)
     
     
     
@@ -74,82 +75,52 @@ class MusicPlayerViewController: UIViewController {
         _artistLabel.animationDelay = 2.0
         _artistLabel.textAlignment = .center
         _artistLabel.font = UIFont(name: "Avenir Book", size: 17.0)
-        _artistLabel.textColor = UIColor(displayP3Red: 90/255, green: 90/255, blue: 255/255, alpha: 1)
+        _artistLabel.textColor = _color
         _artistView.addSubview(_artistLabel)
         
-        do {
-            // シークバーまわり.
-            _seakBar.setThumbImage(UIImage(), for: .normal)
-//            _seakBar.setThumbImage(UIColor.blue.circleImage(width: 20, height: 20), for: .normal)
-            
-            _currentTimeLabel.font = UIFont.systemFont(ofSize: 12)
-            _currentTimeLabel.textAlignment = .center
-            _currentTimeLabel.textColor = UIColor.gray
-            _currentTimeLabel.text = "0:00"
-            
-            _durationLabel.font = UIFont.systemFont(ofSize: 12)
-            _durationLabel.textAlignment = .center
-            _durationLabel.textColor = UIColor.gray
-            _durationLabel.text = "0:00"
+        // シークバーまわり.
+        _seakBar.setThumbImage(UIImage(), for: .normal)
+        
+        // 再生ボタン.
+        updatePlayButton()
+        _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
+        
+        // ネクストボタン.
+        _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
+        
+        // メニュー.
+        updateMenuButton()
+        _menuButton.addTarget(self, action: #selector(selectorMenuButton(_:)), for: .touchUpInside)
+        
+        // リピート.
+        updateRepeatButton()
+        _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
+        
+        // シャッフル.
+        updateShuffleButton()
+        _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
+        
+        // ツイート.
+        updateTwitterButton()
+        _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
+        let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(selectorLongpressTwitterButton(_:)))
+        _twitterButton.addGestureRecognizer(tapGesture)
+        
+        // AirPlay.
+        if #available(iOS 11.0, *) {
+            let view = AVRoutePickerView()
+            view.tintColor = _color
+            view.frame = CGRect(x:0,
+                                y:0,
+                                width:_airPlayView.bounds.width,
+                                height:_airPlayView.bounds.height)
+            _airPlayView.addSubview(view)
+        } else {
+            // Fallback on earlier versions
         }
         
-        do {
-            _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"), for: .normal)
-            _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
-
-            _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
-        }
-        
-        do {
-            // メニュー.
-            _menuButton.addTarget(self, action: #selector(selectorMenuButton(_:)), for: .touchUpInside)
-            
-            // リピート.
-            switch AudioPlayManager.sharedManager._repeatType {
-            case .One:
-                _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
-            case .List:
-                _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
-            }
-            _repeatButton.addTarget(self, action: #selector(selectorRepeatButton(_:)), for: .touchUpInside)
-            
-            // シャッフル.
-            switch AudioPlayManager.sharedManager._shuffleType {
-            case .None:
-                _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
-            case .List:
-                _shuffleButton.setImage(UIImage(named: "icon_shuffle.png"), for: .normal)
-            }
-            _shuffleButton.addTarget(self, action: #selector(selectorShuffleButton(_:)), for: .touchUpInside)
-            
-            // ツイート.
-            _twitterButton.addTarget(self, action: #selector(selectorTwitterButton(_:)), for: .touchUpInside)
-            let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
-                target: self,
-                action: #selector(selectorLongpressTwitterButton(_:)))
-            _twitterButton.addGestureRecognizer(tapGesture)
-        }
-        
-        do {
-            // AirPlay.
-            if #available(iOS 11.0, *) {
-                let view = AVRoutePickerView()
-                view.frame = CGRect(x:0,
-                                    y:0,
-                                    width:_airPlayView.bounds.width,
-                                    height:_airPlayView.bounds.height)
-                _airPlayView.addSubview(view)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-        
-        // 進捗の監視.
-        _timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                      target: self,
-                                      selector: #selector(selectorProgressCheck),
-                                      userInfo: nil,
-                                      repeats: true)
         // イヤホン接続監視.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(selectorAudioSessionRouteChanged),
@@ -160,15 +131,27 @@ class MusicPlayerViewController: UIViewController {
                                                selector: #selector(selectorDidChangeAudio),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
-        
-        // 進捗の更新.
-        selectorProgressCheck()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        layoutUpdate()
+        updateLayout()
+        if !_timer.isValid {
+            _timer = Timer.scheduledTimer(timeInterval: 1.0 / 30.0,
+                                          target: self,
+                                          selector: #selector(update),
+                                          userInfo: nil,
+                                          repeats: true)
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if _timer.isValid {
+            _timer.invalidate()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -179,9 +162,13 @@ class MusicPlayerViewController: UIViewController {
     
     
     //
-    // MARK: - Public.
+    // MARK: - Private.
     //
-    func layoutUpdate() {
+    @objc private func update() {
+        updateProgress()
+    }
+    
+    private func updateLayout() {
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
             return
         }
@@ -197,21 +184,75 @@ class MusicPlayerViewController: UIViewController {
         let min = AudioPlayManager.sharedManager._duration/60
         let sec = AudioPlayManager.sharedManager._duration%60
         _durationLabel.text = String(min) + ":" + String(format: "%02d", sec)
-
+        
         // 再生ボタン.
-        layoutPlayButton()
+        updatePlayButton()
     }
     
-    func layoutPlayButton() {
-        _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"), for: .normal)
+    private func updatePlayButton() {
+        _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"),
+                             for: .normal)
     }
     
+    private func updateProgress() {
+        guard let player = AudioPlayManager.sharedManager.audioPlayer else {
+            _seakBar.setValue(0.0, animated: false)
+            _currentTimeLabel.text = "0:00"
+            _durationLabel.text = "0:00"
+            return
+        }
+        let current = Double((player.currentTime))
+        let duration = Double(AudioPlayManager.sharedManager._duration)
+        let v = current/duration
+        _seakBar.setValue(Float(v), animated: true)
+        
+        let min = Int(current)/60
+        let sec = Int(current)%60
+        _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
+    }
     
-    func postTwitter(withImage: Bool) {
+    private func updateRepeatButton() {
+        switch AudioPlayManager.sharedManager._repeatType {
+        case .One:
+            _repeatButton.setImage(UIImage(named: "icon_repeat_one.png")?.withRenderingMode(.alwaysTemplate),
+                                   for: .normal)
+        case .List:
+            _repeatButton.setImage(UIImage(named: "icon_repeat.png")?.withRenderingMode(.alwaysTemplate),
+                                   for: .normal)
+        }
+        _repeatButton.imageView?.tintColor = _color
+    }
+    
+    private func updateShuffleButton() {
+        switch AudioPlayManager.sharedManager._shuffleType {
+        case .None:
+            _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png")?.withRenderingMode(.alwaysTemplate),
+                                    for: .normal)
+        case .List:
+            _shuffleButton.setImage(UIImage(named: "icon_shuffle.png")?.withRenderingMode(.alwaysTemplate),
+                                    for: .normal)
+        }
+        _shuffleButton.imageView?.tintColor = _color
+    }
+    
+    private func updateMenuButton() {
+        _menuButton.setImage(UIImage(named: "icon_menu.png")?.withRenderingMode(.alwaysTemplate),
+                             for: .normal)
+        _menuButton.imageView?.tintColor = _color
+    }
+    
+    private func updateTwitterButton() {
+        _twitterButton.setImage(UIImage(named: "twitter.png")?.withRenderingMode(.alwaysTemplate),
+                                for: .normal)
+        _twitterButton.imageView?.tintColor = _color
+    }
+    
+    private func postTwitter(withImage: Bool) {
+        updateTwitterButton()
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
             return
         }
-
+        
         func tweet() {
             let twitter = TWTRComposer()
             twitter.setText(metadata.title + " ─ " + metadata.artist + "\n#DJさとし")
@@ -220,7 +261,7 @@ class MusicPlayerViewController: UIViewController {
             }
             twitter.show(from: self, completion: nil)
         }
-
+        
         if TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() {
             tweet()
         }
@@ -247,17 +288,17 @@ class MusicPlayerViewController: UIViewController {
         else {
             _ = AudioPlayManager.sharedManager.play()
         }
-        layoutPlayButton()
+        updatePlayButton()
     }
     
     @objc func selectorNextButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playNext()
-        layoutUpdate()
+        updateLayout()
     }
     
     @objc func selectorBackButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playBack()
-        layoutUpdate()
+        updateLayout()
     }
     
     @objc func selectorRepeatButton(_ sender: UIButton) {
@@ -269,14 +310,9 @@ class MusicPlayerViewController: UIViewController {
         case .List:
             next = .One
         }
-
-        switch next {
-        case .One:
-            _repeatButton.setImage(UIImage(named: "icon_repeat_one.png"), for: .normal)
-        case .List:
-            _repeatButton.setImage(UIImage(named: "icon_repeat.png"), for: .normal)
-        }
+        
         AudioPlayManager.sharedManager._repeatType = next
+        updateRepeatButton()
     }
     
     @objc func selectorShuffleButton(_ sender: UIButton) {
@@ -288,17 +324,12 @@ class MusicPlayerViewController: UIViewController {
         case .List:
             next = .None
         }
-
-        switch next {
-        case .None:
-            _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png"), for: .normal)
-        case .List:
-            _shuffleButton.setImage(UIImage(named: "icon_shuffle.png"), for: .normal)
-        }
         AudioPlayManager.sharedManager._shuffleType = next
+        updateShuffleButton()
     }
     
     @objc func selectorMenuButton(_ sender: UIButton) {
+        updateMenuButton()
         guard let playing = AudioPlayManager.sharedManager._playing else {
             return
         }
@@ -340,20 +371,6 @@ class MusicPlayerViewController: UIViewController {
         postTwitter(withImage: false)
     }
     
-    @objc func selectorProgressCheck() {
-        guard let player = AudioPlayManager.sharedManager.audioPlayer else {
-            return
-        }
-        let current = Double((player.currentTime))
-        let duration = Double(AudioPlayManager.sharedManager._duration)
-        let v = current/duration
-        _seakBar.setValue(Float(v), animated: true)
-
-        let min = Int(current)/60
-        let sec = Int(current)%60
-        _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
-    }
-    
     @objc func selectorAudioSessionRouteChanged(_ notification: Notification) {
         let reasonObj = (notification as NSNotification).userInfo![AVAudioSessionRouteChangeReasonKey] as! NSNumber
         if let reason = AVAudioSessionRouteChangeReason(rawValue: reasonObj.uintValue) {
@@ -362,7 +379,7 @@ class MusicPlayerViewController: UIViewController {
                 break
             case .oldDeviceUnavailable:
                 AudioPlayManager.sharedManager.pause()
-                layoutPlayButton()
+                updatePlayButton()
                 break
             default:
                 break
@@ -371,6 +388,6 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorDidChangeAudio(_ notification: Notification) {
-        layoutUpdate()
+        updateLayout()
     }
 }
