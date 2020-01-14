@@ -29,7 +29,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         self.title = "Playlist"
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+        self.navigationController?.navigationBar.barTintColor = AppColor.main
         self.navigationController?.navigationBar.tintColor = .white
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),

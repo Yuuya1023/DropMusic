@@ -33,7 +33,7 @@ struct FavoriteData: Codable {
         ret.fileType = fileInfo.getFileType()
         ret.storageType = .DropBox
         ret.name = fileInfo.name()
-        ret.path = fileInfo.pathLower()
+        ret.path = fileInfo.pathDisplay()
         ret.extensionString = ""
         if let str = fileInfo.fileExtension() {
             ret.extensionString = str

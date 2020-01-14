@@ -32,7 +32,7 @@ struct AudioData: Codable {
         ret.id = fileInfo.id()!
         ret.fileName = fileInfo.name()
         ret.storageType = .DropBox
-        ret.path = fileInfo.pathLower()
+        ret.path = fileInfo.pathDisplay()
         ret.extensionString = fileInfo.fileExtension()!
         
         return ret

@@ -38,7 +38,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         self.view.backgroundColor = UIColor.white
         if let navigationController = self.navigationController {
             navigationController.delegate = self
-            navigationController.navigationBar.tintColor = UIColor(displayP3Red: 20/255, green: 29/255, blue: 80/255, alpha: 1)
+            navigationController.navigationBar.tintColor = AppColor.main
             navigationController.navigationBar.tintColor = .white
         }
         

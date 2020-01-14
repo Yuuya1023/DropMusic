@@ -50,7 +50,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         if #available(iOS 10.0, *) {
-            self.navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+            self.navigationController?.navigationBar.barTintColor = AppColor.main
         } else {
             // Fallback on earlier versions
         }
@@ -192,13 +192,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                           style: .default,
                           handler:{
                             (action:UIAlertAction!) -> Void in
-                            if let id = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_ID) {
-                                TWTRTwitter.sharedInstance().sessionStore.logOutUserID(id)
-                            }
-                            else if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
+                            if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
                                 TWTRTwitter.sharedInstance().sessionStore.logOutUserID(session.userID)
                             }
-                            UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_ID)
+                            UserDefaults.standard.removeObject(forKey: USER_DEFAULT_TWITTER_NAME)
                             UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_NAME)
                             self._sectionTwitter.removeAll()
                             self._tableView.reloadData()

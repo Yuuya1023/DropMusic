@@ -75,6 +75,10 @@ class FileInfo {
         return _metaData.pathLower!
     }
     
+    func pathDisplay() -> String {
+        return _metaData.pathDisplay!
+    }
+    
     func contentHash() -> (String?) {
         if isFile() {
             return fileMetadata().contentHash!

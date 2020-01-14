@@ -45,7 +45,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         if let navigationController = self.navigationController {
             navigationController.delegate = self
             navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-            navigationController.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+            navigationController.navigationBar.barTintColor = AppColor.main
             navigationController.navigationBar.tintColor = .white
         }
         
