@@ -88,6 +88,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             self._sectionTwitter.append(RowInfo(title: "Account",
                                                 sub: name))
         }
+        else if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
+            self._sectionTwitter.append(RowInfo(title: "Account",
+                                                sub: session.userID))
+        }
         
         _sectionCache.removeAll()
         _sectionCache.append(RowInfo(title: "FileCount",
@@ -190,11 +194,14 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                             (action:UIAlertAction!) -> Void in
                             if let id = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_ID) {
                                 TWTRTwitter.sharedInstance().sessionStore.logOutUserID(id)
-                                UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_ID)
-                                UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_NAME)
-                                self._sectionTwitter.removeAll()
-                                self._tableView.reloadData()
                             }
+                            else if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
+                                TWTRTwitter.sharedInstance().sessionStore.logOutUserID(session.userID)
+                            }
+                            UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_ID)
+                            UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_NAME)
+                            self._sectionTwitter.removeAll()
+                            self._tableView.reloadData()
             })
         
         // キャンセル.
