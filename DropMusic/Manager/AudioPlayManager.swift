@@ -35,6 +35,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         case None
         case Cloud
         case Playlist
+        case Favorite
     }
     
     enum RepeatType {
@@ -138,7 +139,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     /// 曲を設定.
     func set(selectType: AudioSelectType, selectPath: String, audioList: Array<AudioData>, playIndex: Int) {
-        if _audioSelect != selectType || _audioSelectPath != selectPath {
+        if _audioSelect != selectType || _audioSelectPath != selectPath || _audioList.count != audioList.count {
             // 選択した場所が変わった場合はそこのリストを保存しておく.
             _audioSelect = selectType
             _audioSelectPath = selectPath
@@ -169,6 +170,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
                 return
             }
         }
+        
         // 履歴に追加.
         addHistory(_playing)
         // 再生中を保持.
@@ -184,6 +186,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
+//            _audioPlayer.isMeteringEnabled = true
             _audioPlayer.currentTime = 0
             _audioPlayer.delegate = self
             _audioPlayer.prepareToPlay()

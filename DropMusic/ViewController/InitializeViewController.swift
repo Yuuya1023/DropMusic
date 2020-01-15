@@ -36,6 +36,8 @@ class InitializeViewController: UIViewController {
                 ret = "Checking Dropbox Account..."
             case .CheckAppData:
                 ret = "Checking App Data..."
+            case .Complete:
+                ret = "Complete!"
                 
             default:
                 break

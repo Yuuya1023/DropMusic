@@ -74,7 +74,8 @@ class FavoriteManageData: Codable {
     func getList(_ type: AppManageData.FileType) -> Array<FavoriteData> {
         var ret: Array<FavoriteData> = []
         for item in list {
-            if type == item.fileType {
+            // 指定なしの場合は全部.
+            if type == .None || type == item.fileType {
                 ret.append(item)
             }
         }

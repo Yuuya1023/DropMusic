@@ -11,17 +11,23 @@ import SwiftyDropbox
 class FileListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
     //
+    // MARK: - Constant.
+    //
+    private let _cellIdentifier = "FileListViewCell"
+    
+    
+    
+    //
     // MARK: - Properties
     //
-    var _pathList: [String] = []
+    private var _pathList: [String] = []
     
-    var _tableView: UITableView!
-    var _datas: Array<FileInfo> = []
+    private var _tableView: UITableView!
+    private var _datas: Array<FileInfo> = []
     
-    var _isLoading: Bool = false
-    var _refreshControll: UIRefreshControl!
+    private var _isLoading: Bool = false
+    private var _refreshControll: UIRefreshControl!
     
-    private let _cellIdentifier = "FileListViewCell"
     
     
     //
@@ -191,7 +197,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                               style: .default,
                               handler:{
                                 (action:UIAlertAction!) -> Void in
-                                if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                if let d = AudioData.createFromFileInfo(fileInfo) {
                                     if isExist {
                                         deleteCache()
                                         MetadataCacheManager.sharedManager.remove(audioData: d)
@@ -211,7 +217,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                   handler:{
                                     (action:UIAlertAction!) -> Void in
                                     let playlistvc = PlayListSelectViewController()
-                                    if let d = AudioData.createFromFileInfo(fileInfo: fileInfo) {
+                                    if let d = AudioData.createFromFileInfo(fileInfo) {
                                         playlistvc.setAudioData(data: d)
                                         let vc = UINavigationController(rootViewController: playlistvc)
                                         vc.modalTransitionStyle = .coverVertical
@@ -286,7 +292,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             for info in self._datas {
-                                if let d = AudioData.createFromFileInfo(fileInfo: info) {
+                                if let d = AudioData.createFromFileInfo(info) {
                                     DownloadFileManager.sharedManager.addQueue(audioData: d)
                                 }
                             }
@@ -350,16 +356,16 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         }
         else if fileInfo.isFile() {
             // ファイル.
-            guard let audioData = AudioData.createFromFileInfo(fileInfo: fileInfo) else {
+            guard let audioData = AudioData.createFromFileInfo(fileInfo) else {
                 return
             }
             
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // AudioDataのリストを作成する.
                 var index = 0
-                var list: Array<AudioData> = []
+                var list: [AudioData] = []
                 for i in 0 ..< _datas.count {
-                    if let d = AudioData.createFromFileInfo(fileInfo: _datas[i]) {
+                    if let d = AudioData.createFromFileInfo(_datas[i]) {
                         if d.isEqualData(audioData: audioData) {
                             index = list.count
                         }

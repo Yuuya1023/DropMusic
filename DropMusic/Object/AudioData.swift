@@ -21,9 +21,9 @@ struct AudioData: Codable {
     
     
     //
-    // MARK: - Static
+    // MARK: - Static.
     //
-    static func createFromFileInfo(fileInfo: FileInfo) -> (AudioData?) {
+    static func createFromFileInfo(_ fileInfo: FileInfo) -> AudioData? {
         guard fileInfo.isFile() else {
             return nil
         }
@@ -38,19 +38,32 @@ struct AudioData: Codable {
         return ret
     }
     
-    
+    static func createFromFavorite(_ favoriteData: FavoriteData) -> AudioData? {
+        guard favoriteData.fileType == .Audio else {
+            return nil
+        }
+        
+        var ret: AudioData = AudioData()
+        ret.id = favoriteData.fileId
+        ret.fileName = favoriteData.name
+        ret.storageType = .DropBox
+        ret.path = favoriteData.path
+        ret.extensionString = favoriteData.extensionString
+        
+        return ret
+    }
     
     //
     // MARK: - Public.
     //
-    func isEqualData(audioData: AudioData?) ->(Bool){
+    func isEqualData(audioData: AudioData?) -> Bool {
         guard let audioData = audioData else {
             return false
         }
         return id == audioData.id
     }
     
-    func localFileName() ->(String){
+    func localFileName() -> String {
         var _id = self.id
         if let range = _id.range(of: "id:") {
             _id.replaceSubrange(range, with: "")
@@ -58,7 +71,7 @@ struct AudioData: Codable {
         return _id + "." + extensionString
     }
     
-    func fullPath() -> (String){
+    func fullPath() -> String {
         return self.path
     }
     

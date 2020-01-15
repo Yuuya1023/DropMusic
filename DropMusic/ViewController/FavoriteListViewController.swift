@@ -11,22 +11,37 @@ import SwiftyDropbox
 class FavoriteListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
     //
-    // MARK: - Properties
+    // MARK: - Constant.
     //
-    var _tableView: UITableView!
-    var _datas: Array<FavoriteData> = []
-    
-    var _isLoading: Bool = false
-    var _refreshControll: UIRefreshControl!
-    
     private let _cellIdentifier = "FileListViewCell"
     
     
     
     //
-    // MARK: -
+    // MARK: - Enumeration.
     //
-    ///
+    enum ListType {
+        case All
+        case Folder
+        case Audio
+    }
+    
+    
+    
+    //
+    // MARK: - Properties
+    //
+    private var _tableView: UITableView!
+    private var _datas: Array<FavoriteData> = []
+    private var _listType: ListType = .Folder
+
+    private var _refreshControll: UIRefreshControl!
+    
+    
+    
+    //
+    // MARK: - Initialize.
+    //
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -35,6 +50,11 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         super.init(nibName: nil, bundle: nil)
     }
     
+    
+    
+    //
+    // MARK: - Override.
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,7 +63,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         if let navigationController = self.navigationController {
             navigationController.delegate = self
             navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-            navigationController.navigationBar.barTintColor = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+            navigationController.navigationBar.barTintColor = AppColor.main
             navigationController.navigationBar.tintColor = .white
         }
         
@@ -77,12 +97,10 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         // Dispose of any resources that can be recreated.
     }
     
-    ///
     override func viewWillAppear(_ animated: Bool) {
-        load()
+        sortAndReloadList()
     }
     
-    ///
     override func viewWillLayoutSubviews() {
         // tableview.
         var frame = self.view.frame
@@ -100,22 +118,21 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     //
     // MARK: -
     //
-    /// 一覧読み込み.
-    func load(){
-        if _isLoading {
-            return
-        }
-            
-        _isLoading = true
-        _datas = AppDataManager.sharedManager.favorite.getList(.Folder)
-        sortAndReloadList()
-    }
-    
     /// 一覧更新.
     func sortAndReloadList() {
+        var type: AppManageData.FileType = .None
+        switch _listType {
+        case .Folder:
+            type = .Folder
+        case .Audio:
+            type = .Audio
+
+        default:
+            break
+        }
+        _datas = AppDataManager.sharedManager.favorite.getList(type)
         self._datas.sort(by: {$0.getParentFolderName().lowercased() < $1.getParentFolderName().lowercased()})
         self._tableView.reloadData()
-        _isLoading = false
         _refreshControll.endRefreshing()
     }
     
@@ -136,12 +153,10 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                                 fav.deleteFavorite(favoriteData)
                                 AppDataManager.sharedManager.save()
                                 // 更新.
-                                self.load()
+                                self.sortAndReloadList()
                 })
             alert.addAction(favoriteAction)
         }
-        
-        
         // キャンセル.
         let cancelAction:UIAlertAction =
             UIAlertAction(title: "Cancel",
@@ -160,41 +175,62 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     @objc func selectorRefreshControll() {
         AppDataManager.sharedManager.checkFile {
             // 読み込み.
-            self.load()
-            self._refreshControll.endRefreshing()
+            self.sortAndReloadList()
         }
     }
 
     @objc func selectorMenuButton() {
-//        let alert: UIAlertController = UIAlertController(title: nil,
-//                                                         message: nil,
-//                                                         preferredStyle: .actionSheet)
-//        // ダウンロード.
-//        let downloadAction:UIAlertAction =
-//            UIAlertAction(title: "Download all",
-//                          style: .default,
-//                          handler:{
-//                            (action:UIAlertAction!) -> Void in
-//                            for info in self._datas {
-//                                if let d = AudioData.createFromFileInfo(fileInfo: info) {
-//                                    DownloadFileManager.sharedManager.addQueue(audioData: d)
-//                                }
-//                            }
-//                            DownloadFileManager.sharedManager.startDownload()
-//            })
-//
-//        // キャンセル.
-//        let cancelAction:UIAlertAction =
-//            UIAlertAction(title: "Cancel",
-//                          style: .cancel,
-//                          handler:{
-//                            (action:UIAlertAction!) -> Void in
-//                            // 閉じるだけ.
-//            })
-//
-//        alert.addAction(downloadAction)
-//        alert.addAction(cancelAction)
-//        present(alert, animated: true, completion: nil)
+        let alert: UIAlertController = UIAlertController(title: "Select display type.",
+                                                         message: nil,
+                                                         preferredStyle: .actionSheet)
+        // All.
+        let actionAll:UIAlertAction =
+            UIAlertAction(title: "All",
+                          style: _listType == .All ? .destructive : .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if self._listType != .All {
+                                self._listType = .All
+                                self.sortAndReloadList()
+                            }
+            })
+        // Folder.
+        let actionFolder:UIAlertAction =
+            UIAlertAction(title: "Folder",
+                          style: _listType == .Folder ? .destructive : .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if self._listType != .Folder {
+                                self._listType = .Folder
+                                self.sortAndReloadList()
+                            }
+            })
+        // Audio.
+        let actionAudio:UIAlertAction =
+            UIAlertAction(title: "Audio",
+                          style: _listType == .Audio ? .destructive : .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if self._listType != .Audio {
+                                self._listType = .Audio
+                                self.sortAndReloadList()
+                            }
+            })
+
+        // キャンセル.
+        let cancelAction:UIAlertAction =
+            UIAlertAction(title: "Cancel",
+                          style: .cancel,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            // 閉じるだけ.
+            })
+
+        alert.addAction(actionAll)
+        alert.addAction(actionFolder)
+        alert.addAction(actionAudio)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
     
@@ -237,30 +273,36 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                                                           animated: true)
         }
         else if favoriteData.fileType == .Audio {
-//            // ファイル.
-//            guard let audioData = AudioData.createFromFileInfo(fileInfo: fileInfo) else {
-//                return
-//            }
-//
-//            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
-//                // AudioDataのリストを作成する.
-//                var list: Array<AudioData> = []
-//                for i in 0 ..< _datas.count {
-//                    if let d = AudioData.createFromFileInfo(fileInfo: _datas[i]) {
-//                        list.append(d)
-//                    }
-//                }
-//                // 再生.
-//                AudioPlayManager.sharedManager.set(selectType: .Cloud,
-//                                                   selectPath: makePath(),
-//                                                   audioList: list,
-//                                                   playIndex: indexPath.row)
-//                _ = AudioPlayManager.sharedManager.play()
-//            }
-//            else {
-//                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
-//                DownloadFileManager.sharedManager.startDownload()
-//            }
+            // ファイル.
+            guard let audioData = AudioData.createFromFavorite(favoriteData) else {
+                return
+            }
+            
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
+                // AudioDataのリストを作成する.
+                var index = 0
+                var list: [AudioData] = []
+                let favoriteList = AppDataManager.sharedManager.favorite.getList(.Audio)
+                for i in 0 ..< favoriteList.count {
+                    if let d = AudioData.createFromFavorite(favoriteList[i]) {
+                        if d.isEqualData(audioData: audioData) {
+                            index = list.count
+                        }
+                        list.append(d)
+                    }
+                }
+                
+                // 再生.
+                AudioPlayManager.sharedManager.set(selectType: .Favorite,
+                                                   selectPath: "",
+                                                   audioList: list,
+                                                   playIndex: index)
+                _ = AudioPlayManager.sharedManager.play()
+            }
+            else {
+                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
+                DownloadFileManager.sharedManager.startDownload()
+            }
         }
     }
 }

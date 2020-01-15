@@ -11,12 +11,17 @@ import SwiftyDropbox
 class PlayListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
     //
+    // MARK: - Constant.
+    //
+    private let _cellIdentifier = "PlayListViewCell"
+    
+    
+    
+    //
     // MARK: - Properties.
     //
-    var _tableView: UITableView!
-    var _refreshControll: UIRefreshControl!
-    
-    private let _cellIdentifier = "PlayListViewCell"
+    private var _tableView: UITableView!
+    private var _refreshControll: UIRefreshControl!
     
     
     
