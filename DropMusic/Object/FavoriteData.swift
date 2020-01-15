@@ -12,17 +12,17 @@ struct FavoriteData: Codable {
     //
     // MARK: - Properties.
     //
-    var fileId: String = ""
-    var fileType: AppManageData.FileType = .None
-    var storageType: AppManageData.StorageType = .None
-    var name: String = ""
-    var path: String = ""
-    var extensionString: String = ""
+    fileprivate(set) var fileId: String = ""
+    fileprivate(set) var fileType: AppManageData.FileType = .None
+    fileprivate(set) var storageType: AppManageData.StorageType = .None
+    fileprivate(set) var name: String = ""
+    fileprivate(set) var path: String = ""
+    fileprivate(set) var extensionString: String = ""
     
     
     
     //
-    // MARK: -
+    // MARK: - Static.
     //
     static func createFromFileInfo(_ fileInfo: FileInfo) -> FavoriteData? {
         var ret = FavoriteData()
@@ -44,7 +44,7 @@ struct FavoriteData: Codable {
     
     
     //
-    // MARK: -
+    // MARK: - Public.
     //
     /// パス配列作成.
     func createPathList() -> Array<String> {

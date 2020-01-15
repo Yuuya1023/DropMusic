@@ -33,4 +33,37 @@ struct AppManageData: Codable {
     var playlist: PlayListManageData = PlayListManageData()
     var favorite: FavoriteManageData = FavoriteManageData()
     
+    
+    
+    //
+    // MARK: - Static.
+    //
+    static func makeFromFile(path: String) -> AppManageData? {
+        if let data = NSData(contentsOfFile: path) {
+            let decoder: JSONDecoder = JSONDecoder()
+            do {
+                let newJson: AppManageData = try decoder.decode(AppManageData.self, from: data as Data)
+                return newJson
+            } catch {
+                print("json convert failed in JSONDecoder", error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    
+    
+    //
+    // MARK: - Public.
+    //
+    func writeFile(fileURLWithPath: String) {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(self)
+            try data.write(to: URL(fileURLWithPath: fileURLWithPath))
+        } catch {
+            print("json convert failed in JSONEncoder", error.localizedDescription)
+        }
+    }
+    
 }

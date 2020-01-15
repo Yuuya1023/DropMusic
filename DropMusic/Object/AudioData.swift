@@ -12,11 +12,11 @@ struct AudioData: Codable {
     //
     // MARK: - Properties.
     //
-    var id: String = ""
-    var fileName: String = ""
-    var storageType: AppManageData.StorageType = .None
-    var path: String = ""
-    var extensionString: String = ""
+    fileprivate(set) var id: String = ""
+    fileprivate(set) var fileName: String = ""
+    fileprivate(set) var storageType: AppManageData.StorageType = .None
+    fileprivate(set) var path: String = ""
+    fileprivate(set) var extensionString: String = ""
     
     
     
@@ -41,7 +41,7 @@ struct AudioData: Codable {
     
     
     //
-    // MARK: -
+    // MARK: - Public.
     //
     func isEqualData(audioData: AudioData?) ->(Bool){
         guard let audioData = audioData else {

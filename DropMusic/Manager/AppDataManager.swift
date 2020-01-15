@@ -90,7 +90,7 @@ class AppDataManager {
         _localFilePath = DownloadFileManager.sharedManager.getCachePath(storageType: .DropBox, add: "") + "/" + JSON_NAME
         _localTempFilePath = _localFilePath+".tmp"
         // 通信環境などにより読み込めなかった時のためにローカルファイルを読み込んでおく.
-        if let data = loadData(path: _localFilePath) {
+        if let data = AppManageData.makeFromFile(path: _localFilePath) {
             _manageData = data
         }
     }
@@ -104,20 +104,6 @@ class AppDataManager {
     private func setManageData(data: AppManageData) {
         _manageData = data
         _isLoaded = true
-    }
-    
-    /// ファイルの読み込み.
-    private func loadData(path: String) -> (AppManageData?) {
-        if let data = NSData(contentsOfFile: path) {
-            let decoder: JSONDecoder = JSONDecoder()
-            do {
-                let newJson: AppManageData = try decoder.decode(AppManageData.self, from: data as Data)
-                return newJson
-            } catch {
-                print("json convert failed in JSONDecoder", error.localizedDescription)
-            }
-        }
-        return nil
     }
     
     
@@ -136,13 +122,8 @@ class AppDataManager {
             _manageData.version = String(Int(_manageData.version)!+1)
         }
         
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(_manageData)
-            try data.write(to: URL(fileURLWithPath: _localFilePath))
-        } catch {
-            print("json convert failed in JSONEncoder", error.localizedDescription)
-        }
+        // 保存.
+        _manageData.writeFile(fileURLWithPath: _localFilePath)
     }
     
     /// ファイルの確認.
@@ -156,7 +137,7 @@ class AppDataManager {
             return
         }
         _isLoading = true
-        let localFile = loadData(path: _localFilePath)
+        let localFile = AppManageData.makeFromFile(path: _localFilePath)
         
         // 保存先.
         let destination : (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
@@ -164,10 +145,7 @@ class AppDataManager {
         }
         
         // tempがあれば削除しておく.
-        do {
-            try FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
-        }
-        catch {}
+        try! FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
         
         // アップロード関数.
         func upload(isFirst: Bool) {
@@ -200,7 +178,7 @@ class AppDataManager {
                                   destination: destination)
                 .response{ response, error in
                     if let (_, _) = response {
-                        if let tempData = self.loadData(path: self._localTempFilePath) {
+                        if let tempData = AppManageData.makeFromFile(path: self._localTempFilePath) {
                             if let localFile = localFile {
                                 // ローカルにある場合はバージョンのチェック.
                                 if Int(tempData.version)! == Int(localFile.version)! {

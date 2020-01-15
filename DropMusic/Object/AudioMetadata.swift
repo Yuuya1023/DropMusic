@@ -11,15 +11,30 @@ import UIKit
 
 class AudioMetadata {
     
-    var title: String = ""
-    var album: String = ""
-    var artist: String = ""
-    var artwork: UIImage? = nil
+    //
+    // MARK: - Properties.
+    //
+    fileprivate(set) var title: String = ""
+    fileprivate(set) var album: String = ""
+    fileprivate(set) var artist: String = ""
+    fileprivate(set) var artwork: UIImage? = nil
     
+    
+    
+    //
+    // MARK: - Initialize.
+    //
+    /// 初期化.
     init(){
         internalInit()
     }
     
+    
+    
+    //
+    // MARK: - Private.
+    //
+    /// 変数初期化.
     private func internalInit() {
         title = ""
         album = ""
@@ -27,6 +42,12 @@ class AudioMetadata {
         artwork = nil
     }
     
+    
+    
+    //
+    // MARK: - Public.
+    //
+    /// 曲情報を設定.
     func set(atPath: String) -> Bool {
         internalInit()
         if FileManager.default.fileExists(atPath: atPath) {
@@ -50,4 +71,5 @@ class AudioMetadata {
         }
         return false
     }
+    
 }
