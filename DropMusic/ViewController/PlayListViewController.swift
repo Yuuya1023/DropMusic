@@ -9,14 +9,7 @@ import UIKit
 import SwiftyDropbox
 
 class PlayListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    
-    //
-    // MARK: - Constant.
-    //
-    private let _cellIdentifier = "PlayListViewCell"
-    
-    
-    
+
     //
     // MARK: - Properties.
     //
@@ -53,7 +46,8 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
 //        _tableView.allowsSelectionDuringEditing = true
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: PlayListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: PlayListViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
         
@@ -152,13 +146,13 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: - TableViewDelegate
     //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return PlayListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return AppDataManager.sharedManager.playlist.getPlaylists().count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! PlayListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
         c.longpressTarget = self

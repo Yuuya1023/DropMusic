@@ -10,6 +10,14 @@ import UIKit
 class FileListViewCell: UITableViewCell {
     
     //
+    // MARK: - Constant.
+    //
+    static let cellIdentifier = "FileListViewCell"
+    static let height: CGFloat = 40.0
+    
+    
+    
+    //
     // MARK: - Properties.
     //
     @IBOutlet var nameLabel: UILabel!

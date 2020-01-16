@@ -9,6 +9,17 @@ import UIKit
 
 class PlayListViewCell: UITableViewCell {
     
+    //
+    // MARK: - Constant.
+    //
+    static let cellIdentifier = "PlayListViewCell"
+    static let height: CGFloat = 100.0
+    
+    
+    
+    //
+    // MARK: - Properties.
+    //
     @IBOutlet var _artwork: UIImageView!
     @IBOutlet var _titleLabel: UILabel!
     @IBOutlet var _tracksLabel: UILabel!
@@ -18,6 +29,10 @@ class PlayListViewCell: UITableViewCell {
     var longpressSelector: Selector? = nil
     
     
+    
+    //
+    // MARK: - Override.
+    //
     override func awakeFromNib() {
         super.awakeFromNib()
         // アートワーク.
@@ -30,7 +45,6 @@ class PlayListViewCell: UITableViewCell {
         self.addGestureRecognizer(tapGesture)
     }
     
-    
     override func prepareForReuse() {
         super.prepareForReuse()
     }
@@ -39,7 +53,11 @@ class PlayListViewCell: UITableViewCell {
         super.layoutSubviews()
     }
     
-    // MARK: -
+    
+    
+    //
+    // MARK: - Public.
+    //
     func set(data: PlayListData?) {
         guard let data = data else {
             return
@@ -59,8 +77,10 @@ class PlayListViewCell: UITableViewCell {
     
     
     
-    // MARK: -
-    @objc func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
+    //
+    // MARK: - Private.
+    //
+    @objc private func selectorLongpressLayer(_ sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
             if longpressTarget != nil && longpressSelector != nil {

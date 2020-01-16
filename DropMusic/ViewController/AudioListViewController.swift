@@ -15,7 +15,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     var _tableView: UITableView!
     var _playListId: String!
     
-    private let _cellIdentifier = "AudioListViewCell"
+    
     
     //
     // MARK: -
@@ -57,7 +57,8 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: AudioListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: AudioListViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
         
@@ -216,7 +217,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     // MARK: - TableViewController Delegate.
     //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80.0
+        return AudioListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId)
@@ -226,7 +227,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! AudioListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: AudioListViewCell.cellIdentifier ) as! AudioListViewCell
         
         if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
             let audioData = playlist.audioList[indexPath.row]

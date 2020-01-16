@@ -10,6 +10,14 @@ import UIKit
 class AudioListViewCell: UITableViewCell {
     
     //
+    // MARK: - Constant.
+    //
+    static let cellIdentifier = "AudioListViewCell"
+    static let height: CGFloat = 80.0
+    
+    
+    
+    //
     // MARK: - Properties.
     //
     @IBOutlet var _artwork: UIImageView!

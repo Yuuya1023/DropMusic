@@ -21,13 +21,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     //
-    // MARK: - Constant.
-    //
-    private let _cellIdentifier = "SettingViewCell"
-    
-    
-    
-    //
     // MARK: - Properties.
     //
     private var _sections: Array<String> = []
@@ -70,7 +63,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: SettingViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: SettingViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
     }
@@ -242,7 +236,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! SettingViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: SettingViewCell.cellIdentifier ) as! SettingViewCell
         
         var rowinfo: RowInfo? = nil
         switch indexPath.section {

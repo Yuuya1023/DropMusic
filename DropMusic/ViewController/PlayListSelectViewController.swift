@@ -10,14 +10,15 @@ import SwiftyDropbox
 
 class PlayListSelectViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Variable Declaration
+    //
+    // MARK: - Properties.
+    //
     var _tableView: UITableView!
     var _timer: Timer!
     var _refreshControll: UIRefreshControl!
     
     var _audioData: AudioData? = nil
     
-    private let _cellIdentifier = "PlayListViewCell"
     
     
     
@@ -36,7 +37,8 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: PlayListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: PlayListViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
         
@@ -55,7 +57,6 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
             setScheduler()
         }
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         //
@@ -104,8 +105,6 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     
     
     @objc func selectorRefreshControll() {
-        print("selectorRefreshControll")
-        
         AppDataManager.sharedManager.checkFile {
             self.updateScrollView()
             self._refreshControll.endRefreshing()
@@ -114,15 +113,17 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     
     
     
-    // MARK: - TableViewDelegate
+    //
+    // MARK: - TableViewDelegate.
+    //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return PlayListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return AppDataManager.sharedManager.playlist.getPlaylists().count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! PlayListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
         c.set(data: AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row])
@@ -130,8 +131,6 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(indexPath.row)
-        
         // 追加.
         if _audioData != nil {
             let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
@@ -141,6 +140,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         }
         close()
     }
+    
 }
 
 

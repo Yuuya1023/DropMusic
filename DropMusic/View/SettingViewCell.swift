@@ -10,6 +10,14 @@ import UIKit
 class SettingViewCell: UITableViewCell {
     
     //
+    // MARK: - Constant.
+    //
+    static let cellIdentifier = "SettingViewCell"
+    static let height: CGFloat = 100.0
+    
+    
+    
+    //
     // MARK: - Properties.
     //
     @IBOutlet var titleLabel: UILabel!

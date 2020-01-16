@@ -9,15 +9,7 @@ import UIKit
 import SwiftyDropbox
 
 class FavoriteListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    
-    //
-    // MARK: - Constant.
-    //
-    private let _cellIdentifierFile = "FileListViewCell"
-    private let _cellIdentifierAudio = "AudioListViewCell"
-    
-    
-    
+
     //
     // MARK: - Enumeration.
     //
@@ -81,8 +73,10 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifierFile, bundle: nil), forCellReuseIdentifier: _cellIdentifierFile)
-        _tableView.register(UINib(nibName: _cellIdentifierAudio, bundle: nil), forCellReuseIdentifier: _cellIdentifierAudio)
+        _tableView.register(UINib(nibName: FileListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: FileListViewCell.cellIdentifier)
+        _tableView.register(UINib(nibName: AudioListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: AudioListViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
 
@@ -239,9 +233,9 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         var height: CGFloat = 0.0
         switch _listType {
         case .Folder:
-            height = 40.0
+            height = FileListViewCell.height
         case .Audio:
-            height = 80.0
+            height = AudioListViewCell.height
         }
         return height
     }
@@ -251,7 +245,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch _listType {
         case .Folder:
-            let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifierFile ) as! FileListViewCell
+            let c = tableView.dequeueReusableCell(withIdentifier: FileListViewCell.cellIdentifier ) as! FileListViewCell
             let favoriteData = _datas[indexPath.row]
             
             c.set(favoriteData: favoriteData)
@@ -261,7 +255,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
             
             return c
         case .Audio:
-            let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifierAudio ) as! AudioListViewCell
+            let c = tableView.dequeueReusableCell(withIdentifier: AudioListViewCell.cellIdentifier ) as! AudioListViewCell
             let favoriteData = _datas[indexPath.row]
             
             c.set(audioData: AudioData.createFromFavorite(favoriteData))

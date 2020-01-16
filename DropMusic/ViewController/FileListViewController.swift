@@ -9,14 +9,7 @@ import UIKit
 import SwiftyDropbox
 
 class FileListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    
-    //
-    // MARK: - Constant.
-    //
-    private let _cellIdentifier = "FileListViewCell"
-    
-    
-    
+
     //
     // MARK: - Properties
     //
@@ -46,7 +39,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = _pathList.count != 0 ? _pathList.last : "Cloud"
+        self.title = _pathList.count != 0 ? _pathList.last : "File"
         self.view.backgroundColor = UIColor.white
         if let navigationController = self.navigationController {
             navigationController.delegate = self
@@ -69,7 +62,8 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: FileListViewCell.cellIdentifier, bundle: nil),
+                            forCellReuseIdentifier: FileListViewCell.cellIdentifier)
         
         self.view.addSubview(_tableView)
 
@@ -168,7 +162,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     func makePath() -> (String) {
         var ret: String = ""
         for v in _pathList {
-            ret += "/" + v.lowercased()
+            ret += "/" + v
         }
         return ret
     }
@@ -329,13 +323,13 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: - TableViewController Delegate.
     //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40.0
+        return FileListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _datas.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! FileListViewCell
+        let c = tableView.dequeueReusableCell(withIdentifier: FileListViewCell.cellIdentifier ) as! FileListViewCell
         let fileInfo = _datas[indexPath.row]
         
         c.set(fileInfo: fileInfo)
