@@ -21,6 +21,7 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _artwork: UIImageView!
     @IBOutlet var _playButton: UIButton!
     @IBOutlet var _nextButton: UIButton!
+    @IBOutlet var _favoriteButton: UIButton!
     @IBOutlet var _seakBar: UISlider!
     @IBOutlet var _currentTimeLabel: UILabel!
     @IBOutlet var _durationLabel: UILabel!
@@ -35,7 +36,7 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _airPlayView: UIView!
     
     private var _timer: Timer = Timer()
-    private let _color: UIColor = UIColor(displayP3Red: 29/255, green: 70/255, blue: 143/255, alpha: 1)
+    private let _color: UIColor = UIColor(displayP3Red: 29/255, green: 70/255, blue: 143/255, alpha: 0.8)
     
     
     
@@ -88,6 +89,9 @@ class MusicPlayerViewController: UIViewController {
         // ネクストボタン.
         _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
         
+        // お気に入りボタン.
+        _favoriteButton.addTarget(self, action: #selector(selectorFavoriteButton(_:)), for: .touchUpInside)
+        
         // メニュー.
         updateMenuButton()
         _menuButton.addTarget(self, action: #selector(selectorMenuButton(_:)), for: .touchUpInside)
@@ -136,6 +140,7 @@ class MusicPlayerViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        updateFavoriteButton()
         updateLayout()
         if !_timer.isValid {
             _timer = Timer.scheduledTimer(timeInterval: 1.0 / 30.0,
@@ -247,6 +252,19 @@ class MusicPlayerViewController: UIViewController {
         _twitterButton.imageView?.tintColor = _color
     }
     
+    private func updateFavoriteButton() {
+        guard let playing = AudioPlayManager.sharedManager._playing else {
+            return
+        }
+        var color = _color
+        if !AppDataManager.sharedManager.favorite.isFavorite(playing) {
+            color = .lightGray
+        }
+        _favoriteButton.setImage(UIImage(named: "icon_favorite.png")?.withRenderingMode(.alwaysTemplate),
+                                for: .normal)
+        _favoriteButton.imageView?.tintColor = color
+    }
+    
     private func postTwitter(withImage: Bool) {
         updateTwitterButton()
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
@@ -298,6 +316,20 @@ class MusicPlayerViewController: UIViewController {
     @objc func selectorBackButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playBack()
         updateLayout()
+    }
+    
+    @objc func selectorFavoriteButton(_ sender: UIButton) {
+        guard let playing = AudioPlayManager.sharedManager._playing else {
+            return
+        }
+        if AppDataManager.sharedManager.favorite.isFavorite(playing) {
+            AppDataManager.sharedManager.favorite.deleteFavorite(playing)
+        }
+        else {
+            AppDataManager.sharedManager.favorite.addFavorite(playing)
+        }
+        AppDataManager.sharedManager.save()
+        updateFavoriteButton()
     }
     
     @objc func selectorRepeatButton(_ sender: UIButton) {
