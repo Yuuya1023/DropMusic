@@ -13,7 +13,8 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     //
     // MARK: - Constant.
     //
-    private let _cellIdentifier = "FileListViewCell"
+    private let _cellIdentifierFile = "FileListViewCell"
+    private let _cellIdentifierAudio = "AudioListViewCell"
     
     
     
@@ -21,7 +22,6 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     // MARK: - Enumeration.
     //
     enum ListType {
-        case All
         case Folder
         case Audio
     }
@@ -81,7 +81,8 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         ]
         _tableView.delegate = self
         _tableView.dataSource = self
-        _tableView.register(UINib(nibName: _cellIdentifier, bundle: nil), forCellReuseIdentifier: _cellIdentifier)
+        _tableView.register(UINib(nibName: _cellIdentifierFile, bundle: nil), forCellReuseIdentifier: _cellIdentifierFile)
+        _tableView.register(UINib(nibName: _cellIdentifierAudio, bundle: nil), forCellReuseIdentifier: _cellIdentifierAudio)
         
         self.view.addSubview(_tableView)
 
@@ -126,12 +127,9 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
             type = .Folder
         case .Audio:
             type = .Audio
-
-        default:
-            break
         }
         _datas = AppDataManager.sharedManager.favorite.getList(type)
-        self._datas.sort(by: {$0.getParentFolderName().lowercased() < $1.getParentFolderName().lowercased()})
+        self._datas.sort(by: {$0.getParentFolderName() < $1.getParentFolderName()})
         self._tableView.reloadData()
         _refreshControll.endRefreshing()
     }
@@ -183,17 +181,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         let alert: UIAlertController = UIAlertController(title: "Select display type.",
                                                          message: nil,
                                                          preferredStyle: .actionSheet)
-        // All.
-        let actionAll:UIAlertAction =
-            UIAlertAction(title: "All",
-                          style: _listType == .All ? .destructive : .default,
-                          handler:{
-                            (action:UIAlertAction!) -> Void in
-                            if self._listType != .All {
-                                self._listType = .All
-                                self.sortAndReloadList()
-                            }
-            })
+        
         // Folder.
         let actionFolder:UIAlertAction =
             UIAlertAction(title: "Folder",
@@ -226,7 +214,6 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                             // 閉じるだけ.
             })
 
-        alert.addAction(actionAll)
         alert.addAction(actionFolder)
         alert.addAction(actionAudio)
         alert.addAction(cancelAction)
@@ -249,21 +236,41 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     // MARK: - TableViewController Delegate.
     //
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40.0
+        var height: CGFloat = 0.0
+        switch _listType {
+        case .Folder:
+            height = 40.0
+        case .Audio:
+            height = 80.0
+        }
+        return height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _datas.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifier ) as! FileListViewCell
-        let favoriteData = _datas[indexPath.row]
-        
-        c.set(favoriteData: favoriteData)
-        c.index = indexPath.row
-        c.longpressTarget = self
-        c.longpressSelector = #selector(showActionSheet(_:))
-        
-        return c
+        switch _listType {
+        case .Folder:
+            let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifierFile ) as! FileListViewCell
+            let favoriteData = _datas[indexPath.row]
+            
+            c.set(favoriteData: favoriteData)
+            c.index = indexPath.row
+            c.longpressTarget = self
+            c.longpressSelector = #selector(showActionSheet(_:))
+            
+            return c
+        case .Audio:
+            let c = tableView.dequeueReusableCell(withIdentifier: _cellIdentifierAudio ) as! AudioListViewCell
+            let favoriteData = _datas[indexPath.row]
+            
+            c.set(audioData: AudioData.createFromFavorite(favoriteData))
+            c.index = indexPath.row
+            c.longpressTarget = self
+            c.longpressSelector = #selector(showActionSheet(_:))
+            
+            return c
+        }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let favoriteData = _datas[indexPath.row]

@@ -41,6 +41,17 @@ struct FavoriteData: Codable {
         return ret
     }
     
+    static func createFromAudioData(_ audioData: AudioData) -> FavoriteData? {
+        var ret = FavoriteData()
+        ret.fileId = audioData.id
+        ret.fileType = .Audio
+        ret.storageType = .DropBox
+        ret.name = audioData.fileName
+        ret.path = audioData.path
+        ret.extensionString = audioData.extensionString
+        
+        return ret
+    }
     
     
     //

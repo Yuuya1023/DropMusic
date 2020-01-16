@@ -59,7 +59,7 @@ class DownloadFileManager  {
             break
         case .DropBox:
             storageTypePath = "/dropbox"
-            break
+            
         default:
             break
         }

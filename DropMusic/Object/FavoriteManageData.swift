@@ -39,6 +39,18 @@ class FavoriteManageData: Codable {
         return false
     }
     
+    /// お気に入りか.
+    func isFavorite(_ audiodata: AudioData) -> Bool {
+        for item in list {
+            if item.fileType == .Audio {
+                if audiodata.id == item.fileId {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     /// お気に入りに追加.
     func addFavorite(_ fileInfo: FileInfo) {
         if !isFavorite(fileInfo) {
@@ -48,26 +60,28 @@ class FavoriteManageData: Codable {
         }
     }
     
-    /// お気に入りから削除.
-    func deleteFavorite(_ fileInfo: FileInfo) {
-        if isFavorite(fileInfo) {
-            for i in 0..<list.count {
-                if list[i].path == fileInfo.pathDisplay() {
-                    list.remove(at: i)
-                    return
-                }
+    /// お気に入りに追加.
+    func addFavorite(_ audioData: AudioData) {
+        if !isFavorite(audioData) {
+            if let data = FavoriteData.createFromAudioData(audioData) {
+                list.append(data)
             }
         }
+    }
+ 
+    /// お気に入りから削除.
+    func deleteFavorite(_ fileInfo: FileInfo) {
+        deleteFavorite(path: fileInfo.pathDisplay())
     }
     
     /// お気に入りから削除.
     func deleteFavorite(_ favoriteData: FavoriteData) {
-        for i in 0..<list.count {
-            if list[i].path == favoriteData.path {
-                list.remove(at: i)
-                return
-            }
-        }
+        deleteFavorite(path: favoriteData.path)
+    }
+    
+    /// お気に入りから削除.
+    func deleteFavorite(_ audioData: AudioData) {
+        deleteFavorite(path: audioData.path)
     }
     
     /// 一覧取得.
@@ -87,6 +101,13 @@ class FavoriteManageData: Codable {
     //
     // MARK: - Private.
     //
-    
+    private func deleteFavorite(path: String) {
+        for i in 0..<list.count {
+            if list[i].path == path {
+                list.remove(at: i)
+                return
+            }
+        }
+    }
     
 }

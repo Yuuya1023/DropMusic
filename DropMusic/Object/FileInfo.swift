@@ -71,9 +71,9 @@ class FileInfo {
         return _metaData.name
     }
     
-    func pathLower() -> (String) {
-        return _metaData.pathLower!
-    }
+//    func pathLower() -> (String) {
+//        return _metaData.pathLower!
+//    }
     
     func pathDisplay() -> String {
         return _metaData.pathDisplay!
