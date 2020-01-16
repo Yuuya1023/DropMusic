@@ -190,7 +190,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                                 TWTRTwitter.sharedInstance().sessionStore.logOutUserID(session.userID)
                             }
                             UserDefaults.standard.removeObject(forKey: USER_DEFAULT_TWITTER_NAME)
-                            UserDefaults.standard.setNilValueForKey(USER_DEFAULT_TWITTER_NAME)
                             self._sectionTwitter.removeAll()
                             self._tableView.reloadData()
             })
