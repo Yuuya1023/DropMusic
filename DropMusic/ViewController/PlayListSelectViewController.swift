@@ -115,9 +115,10 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         return c
     }
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
-        if c.selectionStyle == .none {
-            return nil
+        if let c = tableView.cellForRow(at: indexPath) {
+            if c.selectionStyle == .none {
+                return nil
+            }
         }
         return indexPath
     }

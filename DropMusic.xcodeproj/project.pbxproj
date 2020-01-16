@@ -40,7 +40,6 @@
 		0533A5D4215003D7006E625A /* UIColor+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5D3215003D7006E625A /* UIColor+UIImage.swift */; };
 		0533A5D7215063F2006E625A /* String+Digest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5D6215063F2006E625A /* String+Digest.swift */; };
 		0533A5DA21513E09006E625A /* AudioPlayStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5D921513E09006E625A /* AudioPlayStatusView.swift */; };
-		0533A5DE21514973006E625A /* no_image.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0533A5DD21514973006E625A /* no_image.gif */; };
 		0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */; };
 		05617F4A215273620025F07E /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F49215273610025F07E /* close.png */; };
 		05617F4C215273B30025F07E /* down.png in Resources */ = {isa = PBXBuildFile; fileRef = 05617F4B215273B30025F07E /* down.png */; };
@@ -64,7 +63,6 @@
 		056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 056AF8DC214D4DF100A5E497 /* icon_playlist.png */; };
 		05841A6B224BB4290054E51C /* MusicPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6A224BB4290054E51C /* MusicPlayerView.xib */; };
 		05841A6D224BBA4B0054E51C /* icon_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6C224BBA4A0054E51C /* icon_menu.png */; };
-		05841A6F224BBB700054E51C /* icon_airplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 05841A6E224BBB700054E51C /* icon_airplay.png */; };
 		05841A71225B99930054E51C /* AudioPlayStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05841A70225B99930054E51C /* AudioPlayStatusView.xib */; };
 		05A016B2213ED0A40057B459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B1213ED0A40057B459 /* AppDelegate.swift */; };
 		05A016B4213ED0A40057B459 /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016B3213ED0A40057B459 /* RootTabBarController.swift */; };
@@ -79,6 +77,8 @@
 		05E108A521650B11001CC35F /* AudioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A421650B11001CC35F /* AudioListViewController.swift */; };
 		05E108A721650C79001CC35F /* AudioListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A621650C78001CC35F /* AudioListViewCell.swift */; };
 		05E108A921679A44001CC35F /* MetadataCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A821679A44001CC35F /* MetadataCacheManager.swift */; };
+		05E4B81423D0A00300DFFF63 /* icon_playlist_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E4B81323D0A00300DFFF63 /* icon_playlist_plus.png */; };
+		05E4B81623D0A11B00DFFF63 /* no_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E4B81523D0A11B00DFFF63 /* no_image.png */; };
 		3174D8F122F177E4006DB79D /* PlayListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3174D8F022F177E4006DB79D /* PlayListViewCell.xib */; };
 		31EB903023B08B90009A2C88 /* AudioListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */; };
 		31EB903223B0A9C0009A2C88 /* FileListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */; };
@@ -134,7 +134,6 @@
 		0533A5D6215063F2006E625A /* String+Digest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Digest.swift"; sourceTree = "<group>"; };
 		0533A5D821506479006E625A /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		0533A5D921513E09006E625A /* AudioPlayStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayStatusView.swift; sourceTree = "<group>"; };
-		0533A5DD21514973006E625A /* no_image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = no_image.gif; sourceTree = "<group>"; };
 		0533A5E021514C14006E625A /* AudioPlayerPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPresentationController.swift; sourceTree = "<group>"; };
 		05617F49215273610025F07E /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		05617F4B215273B30025F07E /* down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down.png; sourceTree = "<group>"; };
@@ -159,7 +158,6 @@
 		056AF8DC214D4DF100A5E497 /* icon_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlist.png; sourceTree = "<group>"; };
 		05841A6A224BB4290054E51C /* MusicPlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicPlayerView.xib; sourceTree = "<group>"; };
 		05841A6C224BBA4A0054E51C /* icon_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_menu.png; sourceTree = "<group>"; };
-		05841A6E224BBB700054E51C /* icon_airplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_airplay.png; sourceTree = "<group>"; };
 		05841A70225B99930054E51C /* AudioPlayStatusView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioPlayStatusView.xib; sourceTree = "<group>"; };
 		05A016AE213ED0A40057B459 /* DropMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A016B1213ED0A40057B459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -176,6 +174,8 @@
 		05E108A421650B11001CC35F /* AudioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioListViewController.swift; sourceTree = "<group>"; };
 		05E108A621650C78001CC35F /* AudioListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioListViewCell.swift; sourceTree = "<group>"; };
 		05E108A821679A44001CC35F /* MetadataCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataCacheManager.swift; sourceTree = "<group>"; };
+		05E4B81323D0A00300DFFF63 /* icon_playlist_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlist_plus.png; sourceTree = "<group>"; };
+		05E4B81523D0A11B00DFFF63 /* no_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_image.png; sourceTree = "<group>"; };
 		3174D8F022F177E4006DB79D /* PlayListViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayListViewCell.xib; sourceTree = "<group>"; };
 		31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioListViewCell.xib; sourceTree = "<group>"; };
 		31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileListViewCell.xib; sourceTree = "<group>"; };
@@ -218,12 +218,11 @@
 				31EB903D23B5AFFF009A2C88 /* tab_favorite.png */,
 				05617F622153DD1B0025F07E /* tab_settings.png */,
 				05617F642153DD1B0025F07E /* twitter.png */,
-				0533A5DD21514973006E625A /* no_image.gif */,
 				31EB903F23B5B201009A2C88 /* icon_favorite.png */,
-				05841A6E224BBB700054E51C /* icon_airplay.png */,
 				05617F71215D028F0025F07E /* icon_nonshuffle.png */,
 				05617F70215D028F0025F07E /* icon_shuffle.png */,
 				056AF8DC214D4DF100A5E497 /* icon_playlist.png */,
+				05E4B81323D0A00300DFFF63 /* icon_playlist_plus.png */,
 				05841A6C224BBA4A0054E51C /* icon_menu.png */,
 				05617F74215D06FD0025F07E /* icon_back.png */,
 				05617F75215D06FD0025F07E /* icon_next.png */,
@@ -232,6 +231,7 @@
 				056AF8C8214BFFA400A5E497 /* icon_cell_audio.png */,
 				056AF8CA214BFFA400A5E497 /* icon_cell_folder.png */,
 				056AF8C9214BFFA400A5E497 /* icon_cell_question.png */,
+				05E4B81523D0A11B00DFFF63 /* no_image.png */,
 				05617F4B215273B30025F07E /* down.png */,
 				05617F49215273610025F07E /* close.png */,
 				05617F4F215290250025F07E /* pause.png */,
@@ -536,6 +536,7 @@
 				0533A59D214D72AE006E625A /* play.png in Resources */,
 				0533A5D1214EAAE3006E625A /* appicon-Small@3x.png in Resources */,
 				31EB904023B5B201009A2C88 /* icon_favorite.png in Resources */,
+				05E4B81423D0A00300DFFF63 /* icon_playlist_plus.png in Resources */,
 				0533A5C7214EAAE3006E625A /* appicon-76.png in Resources */,
 				31EB904823C451E0009A2C88 /* SettingViewCell.xib in Resources */,
 				0533A5D0214EAAE3006E625A /* appicon-83.5@2x.png in Resources */,
@@ -548,10 +549,10 @@
 				0533A5CC214EAAE3006E625A /* appicon-Small@2x.png in Resources */,
 				05617F4A215273620025F07E /* close.png in Resources */,
 				05617F672153DD1C0025F07E /* tab_playlist.png in Resources */,
-				0533A5DE21514973006E625A /* no_image.gif in Resources */,
 				31EB904A23C587FF009A2C88 /* LaunchView.xib in Resources */,
 				31EB903E23B5B000009A2C88 /* tab_favorite.png in Resources */,
 				0533A5C5214EAAE3006E625A /* appicon-72@2x.png in Resources */,
+				05E4B81623D0A11B00DFFF63 /* no_image.png in Resources */,
 				05617F692153DD1C0025F07E /* tab_cloud.png in Resources */,
 				05617F4C215273B30025F07E /* down.png in Resources */,
 				056AF8CC214BFFA400A5E497 /* icon_cell_question.png in Resources */,
@@ -571,7 +572,6 @@
 				05617F76215D06FD0025F07E /* icon_back.png in Resources */,
 				05617F72215D02900025F07E /* icon_shuffle.png in Resources */,
 				056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */,
-				05841A6F224BBB700054E51C /* icon_airplay.png in Resources */,
 				056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */,
 				0533A5CA214EAAE3006E625A /* appicon-Small-50.png in Resources */,
 			);

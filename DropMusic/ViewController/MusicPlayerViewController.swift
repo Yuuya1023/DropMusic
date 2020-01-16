@@ -21,6 +21,7 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _artwork: UIImageView!
     @IBOutlet var _playButton: UIButton!
     @IBOutlet var _nextButton: UIButton!
+    @IBOutlet var _playlistButton: UIButton!
     @IBOutlet var _favoriteButton: UIButton!
     @IBOutlet var _seakBar: UISlider!
     @IBOutlet var _currentTimeLabel: UILabel!
@@ -88,6 +89,10 @@ class MusicPlayerViewController: UIViewController {
         
         // ネクストボタン.
         _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
+        
+        // プレイリストボタン.
+        updatePlaylistButton()
+        _playlistButton.addTarget(self, action: #selector(selectorPlaylistButton(_:)), for: .touchUpInside)
         
         // お気に入りボタン.
         _favoriteButton.addTarget(self, action: #selector(selectorFavoriteButton(_:)), for: .touchUpInside)
@@ -252,13 +257,19 @@ class MusicPlayerViewController: UIViewController {
         _twitterButton.imageView?.tintColor = _color
     }
     
+    private func updatePlaylistButton() {
+        _playlistButton.setImage(UIImage(named: "icon_playlist_plus.png")?.withRenderingMode(.alwaysTemplate),
+                                for: .normal)
+        _playlistButton.imageView?.tintColor = _color
+    }
+    
     private func updateFavoriteButton() {
         guard let playing = AudioPlayManager.sharedManager._playing else {
             return
         }
-        var color = _color
-        if !AppDataManager.sharedManager.favorite.isFavorite(playing) {
-            color = .lightGray
+        var color: UIColor = .lightGray
+        if AppDataManager.sharedManager.favorite.isFavorite(playing) {
+            color = UIColor(displayP3Red: 230/255, green: 92/255, blue: 122/255, alpha: 1)
         }
         _favoriteButton.setImage(UIImage(named: "icon_favorite.png")?.withRenderingMode(.alwaysTemplate),
                                 for: .normal)
@@ -316,6 +327,18 @@ class MusicPlayerViewController: UIViewController {
     @objc func selectorBackButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playBack()
         updateLayout()
+    }
+    
+    @objc func selectorPlaylistButton(_ sender: UIButton) {
+        updatePlaylistButton()
+        guard let playing = AudioPlayManager.sharedManager._playing else {
+            return
+        }
+        let playlistvc = PlayListSelectViewController()
+        playlistvc.setAudioData(data: playing)
+        let vc = UINavigationController(rootViewController: playlistvc)
+        vc.modalTransitionStyle = .coverVertical
+        self.present(vc, animated: true, completion: nil)
     }
     
     @objc func selectorFavoriteButton(_ sender: UIButton) {
