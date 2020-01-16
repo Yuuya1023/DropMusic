@@ -14,15 +14,14 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     // MARK: - Properties.
     //
     var _tableView: UITableView!
-    var _timer: Timer!
     var _refreshControll: UIRefreshControl!
-    
     var _audioData: AudioData? = nil
     
     
     
-    
-    // MARK: -
+    //
+    // MARK: - Override.
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -51,11 +50,6 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                                  target: self,
                                                                  action: #selector(close))
-        
-        // プレイリストの読み込み確認.
-        if !AppDataManager.sharedManager.isLoaded {
-            setScheduler()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,42 +63,27 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
 
     
     
-    // MARK: -
-    private func setScheduler() {
-        _timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                      target: self,
-                                      selector: #selector(selectorLoagingCheck),
-                                      userInfo: nil,
-                                      repeats: true)
-    }
-    
-    
-    func setAudioData(data: AudioData?) {
+    //
+    // MARK: - Public.
+    //
+    func setAudioData(data: AudioData) {
         _audioData = data
     }
     
     
-    func updateScrollView() {
+    
+    //
+    // MARK: - Private.
+    //
+    private func updateScrollView() {
         self._tableView.reloadData()
     }
-    
     
     @objc private func close() {
         dismiss(animated: true, completion: nil)
     }
     
-    
-    
-    // MARK: - Selector
-    @objc func selectorLoagingCheck() {
-        if AppDataManager.sharedManager.isLoaded {
-            _timer.invalidate()
-            updateScrollView()
-        }
-    }
-    
-    
-    @objc func selectorRefreshControll() {
+    @objc private func selectorRefreshControll() {
         AppDataManager.sharedManager.checkFile {
             self.updateScrollView()
             self._refreshControll.endRefreshing()
@@ -126,16 +105,28 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
-        c.set(data: AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row])
-        
+        let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
+        c.set(data: playlist)
+        if let audioData = _audioData {
+            let isInclude = AppDataManager.sharedManager.playlist.isIncludeAudio(playListId: playlist.id, data: audioData)
+            c.selectionStyle = isInclude ? .none : .default
+            c.contentView.backgroundColor = isInclude ? UIColor(displayP3Red: 0/255, green: 0/255, blue: 255/255, alpha: 0.1) : .clear
+        }
         return c
+    }
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
+        if c.selectionStyle == .none {
+            return nil
+        }
+        return indexPath
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 追加.
-        if _audioData != nil {
+        if let audioData = _audioData {
             let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
             AppDataManager.sharedManager.playlist.addAudioToPlayList(playListId: playlist.id,
-                                                                     addList: [_audioData!])
+                                                                     addList: [audioData])
             AppDataManager.sharedManager.save()
         }
         close()
