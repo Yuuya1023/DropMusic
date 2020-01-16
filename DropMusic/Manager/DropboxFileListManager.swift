@@ -29,21 +29,21 @@ class DropboxFileListManager {
     // MARK: -
     //
     /// ファイル一覧取得.
-    func get(pathLower: String) -> (Array<FileInfo>?){
-        return _pathDictionary[pathLower]
+    func get(pathLower: String) -> Array<FileInfo>? {
+        return _pathDictionary[pathLower.lowercased()]
     }
     /// 削除.
     func remove(pathLower: String) {
-        _pathDictionary.removeValue(forKey: pathLower)
+        _pathDictionary.removeValue(forKey: pathLower.lowercased())
     }
     /// 登録.
-    func regist(pathLower: String, list: Array<FileInfo>){
+    func regist(pathLower: String, list: Array<FileInfo>) {
         if get(pathLower: pathLower) == nil {
             update(pathLower: pathLower, list: list)
         }
     }
     /// 更新.
-    func update(pathLower: String, list: Array<FileInfo>){
-        _pathDictionary.updateValue(list, forKey: pathLower)
+    func update(pathLower: String, list: Array<FileInfo>) {
+        _pathDictionary.updateValue(list, forKey: pathLower.lowercased())
     }
 }
