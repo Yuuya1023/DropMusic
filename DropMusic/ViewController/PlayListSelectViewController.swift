@@ -13,9 +13,9 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     //
     // MARK: - Properties.
     //
-    var _tableView: UITableView!
-    var _refreshControll: UIRefreshControl!
-    var _audioData: AudioData? = nil
+    private var _tableView: UITableView!
+    private var _refreshControll: UIRefreshControl!
+    private var _audioData: AudioData? = nil
     
     
     
@@ -99,13 +99,13 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
         return PlayListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AppDataManager.sharedManager.playlist.getPlaylists().count
+        return AppDataManager.sharedManager.playlist.playlists.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
         
         c.index = indexPath.row
-        let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
+        let playlist = AppDataManager.sharedManager.playlist.playlists[indexPath.row]
         c.set(data: playlist)
         if let audioData = _audioData {
             let isInclude = AppDataManager.sharedManager.playlist.isIncludeAudio(playListId: playlist.id, data: audioData)
@@ -125,7 +125,7 @@ class PlayListSelectViewController: UIViewController, UINavigationControllerDele
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 追加.
         if let audioData = _audioData {
-            let playlist = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
+            let playlist = AppDataManager.sharedManager.playlist.playlists[indexPath.row]
             AppDataManager.sharedManager.playlist.addAudioToPlayList(playListId: playlist.id,
                                                                      addList: [audioData])
             AppDataManager.sharedManager.save()

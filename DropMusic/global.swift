@@ -20,6 +20,9 @@ let USER_DEFAULT_TWITTER_NAME = "twittername"
 
 class AppColor {
     
-    static let main = UIColor(displayP3Red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+    static let main     = UIColor(red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
+    static let maintab  = UIColor(red: 20/255, green: 30/255, blue: 80/255, alpha: 1)
+    static let sub      = UIColor.white
+    static let accent   = UIColor(red: 230/255, green: 92/255, blue: 122/255, alpha: 1)
 
 }

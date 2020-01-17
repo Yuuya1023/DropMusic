@@ -16,7 +16,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     private var _pathList: [String] = []
     
     private var _tableView: UITableView!
-    private var _datas: Array<FileInfo> = []
+    private var _datas: [FileInfo] = []
     
     private var _isLoading: Bool = false
     private var _refreshControll: UIRefreshControl!
@@ -43,9 +43,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         self.view.backgroundColor = UIColor.white
         if let navigationController = self.navigationController {
             navigationController.delegate = self
-            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
             navigationController.navigationBar.barTintColor = AppColor.main
-            navigationController.navigationBar.tintColor = .white
+            navigationController.navigationBar.tintColor = AppColor.sub
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
@@ -94,11 +94,9 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
-    
     //
     // MARK: -
     //
-    
     /// 一覧読み込み.
     func load(){
         guard let client = DropboxClientsManager.authorizedClient else {
@@ -186,7 +184,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
         
         if fileInfo.isAudioFile() {
             // ダウンロード.
-            let downloadAction:UIAlertAction =
+            alert.addAction(
                 UIAlertAction(title: isExist ? "Download again" : "Download",
                               style: .default,
                               handler:{
@@ -201,11 +199,11 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                     DownloadFileManager.sharedManager.startDownload()
                                 }
                 })
-            alert.addAction(downloadAction)
+            )
             
             // プレイリスト追加.
             if isExist {
-                let playlistAction:UIAlertAction =
+                alert.addAction(
                     UIAlertAction(title: "Add to playlist",
                                   style: .default,
                                   handler:{
@@ -218,11 +216,11 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                         self.present(vc, animated: true, completion: nil)
                                     }
                     })
-                alert.addAction(playlistAction)
+                )
             }
             
             // キャッシュ削除.
-            let deleteCacheAction:UIAlertAction =
+            alert.addAction(
                 UIAlertAction(title: "Delete cache",
                               style: .destructive,
                               handler:{
@@ -230,39 +228,37 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                                 deleteCache()
                                 sender.setProgress(0)
                 })
-            alert.addAction(deleteCacheAction)
+            )
         }
 
         // お気に入り.
-        if let fav = AppDataManager.sharedManager.favorite {
-            let isFavorite = fav.isFavorite(fileInfo)
-            let favoriteAction:UIAlertAction =
-                UIAlertAction(title: isFavorite ? "Delete favorite" : "Add favorite",
-                              style: isFavorite ? .destructive : .default,
-                              handler:{
-                                (action:UIAlertAction!) -> Void in
-                                if isFavorite {
-                                    fav.deleteFavorite(fileInfo)
-                                }
-                                else {
-                                    fav.addFavorite(fileInfo)
-                                }
-                                AppDataManager.sharedManager.save()
-                })
-            alert.addAction(favoriteAction)
-        }
+        let fav = AppDataManager.sharedManager.favorite
+        let isFavorite = fav.isFavorite(fileInfo)
+        alert.addAction(
+            UIAlertAction(title: isFavorite ? "Delete favorite" : "Add favorite",
+                          style: isFavorite ? .destructive : .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            if isFavorite {
+                                fav.deleteFavorite(fileInfo)
+                            }
+                            else {
+                                fav.addFavorite(fileInfo)
+                            }
+                            AppDataManager.sharedManager.save()
+            })
+        )
         
         
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-        
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     
@@ -276,11 +272,11 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
 
     @objc func selectorMenuButton() {
-        let alert: UIAlertController = UIAlertController(title: nil,
-                                                         message: nil,
-                                                         preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil,
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
         // ダウンロード.
-        let downloadAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Download all",
                           style: .default,
                           handler:{
@@ -292,18 +288,16 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                             }
                             DownloadFileManager.sharedManager.startDownload()
             })
-        
+        )
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-        
-        alert.addAction(downloadAction)
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     

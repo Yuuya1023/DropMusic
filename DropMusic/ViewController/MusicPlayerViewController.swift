@@ -32,10 +32,10 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _twitterButton: UIButton!
     @IBOutlet var _titleView: UIView!
     @IBOutlet var _artistView: UIView!
-    var _titleLabel: MarqueeLabel!
-    var _artistLabel: MarqueeLabel!
     @IBOutlet var _airPlayView: UIView!
     
+    private var _titleLabel: MarqueeLabel!
+    private var _artistLabel: MarqueeLabel!
     private var _timer: Timer = Timer()
     private let _color: UIColor = UIColor(displayP3Red: 29/255, green: 70/255, blue: 143/255, alpha: 0.8)
     
@@ -269,7 +269,7 @@ class MusicPlayerViewController: UIViewController {
         }
         var color: UIColor = .lightGray
         if AppDataManager.sharedManager.favorite.isFavorite(playing) {
-            color = UIColor(displayP3Red: 230/255, green: 92/255, blue: 122/255, alpha: 1)
+            color = AppColor.accent
         }
         _favoriteButton.setImage(UIImage(named: "icon_favorite.png")?.withRenderingMode(.alwaysTemplate),
                                 for: .normal)
@@ -391,7 +391,7 @@ class MusicPlayerViewController: UIViewController {
                                                          message: nil,
                                                          preferredStyle: .actionSheet)
         // プレイリストに追加.
-        let playlistAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Add to playlist",
                           style: .default,
                           handler:{
@@ -401,19 +401,17 @@ class MusicPlayerViewController: UIViewController {
                             let vc = UINavigationController(rootViewController: playlistvc)
                             vc.modalTransitionStyle = .coverVertical
                             self.present(vc, animated: true, completion: nil)
-
             })
+        )
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-        
-        alert.addAction(playlistAction)
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     

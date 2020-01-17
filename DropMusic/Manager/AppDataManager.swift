@@ -66,12 +66,12 @@ class AppDataManager {
     }
     
     private var _manageData: AppManageData = AppManageData()
-    var playlist: PlayListManageData! {
+    var playlist: PlayListManageData {
         get {
             return _manageData.playlist
         }
     }
-    var favorite: FavoriteManageData! {
+    var favorite: FavoriteManageData {
         get {
             return _manageData.favorite
         }

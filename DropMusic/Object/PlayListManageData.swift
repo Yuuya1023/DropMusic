@@ -12,26 +12,16 @@ class PlayListManageData: Codable {
     //
     // MARK: - Properties.
     //
-    private var latestId: String = "0"
-    private var playlists: Array<PlayListData> = []
+    private(set) var latestId: String = "0"
+    private(set) var playlists: [PlayListData] = []
     
     
     
     //
     // MARK: - Public.
     //
-    /// 最終ID取得.
-    func getLatestId() -> String {
-        return latestId
-    }
-    
-    /// プレイリスト取得.
-    func getPlaylists() -> Array<PlayListData> {
-        return playlists
-    }
-    
     /// プレイリスト情報取得.
-    func getPlaylistData(id: String) -> (PlayListData?) {
+    func getPlaylistData(id: String) -> PlayListData? {
         guard let index = getPlayListIndex(playListId: id) else {
             return nil
         }
@@ -39,7 +29,7 @@ class PlayListManageData: Codable {
     }
     
     /// プレイリストを追加.
-    func addPlaylist() -> (String) {
+    func addPlaylist() -> String {
         let id = String(Int(latestId)!+1)
         playlists.append(PlayListData(id: id,
                                       name: "Playlist_" + id,
@@ -53,7 +43,7 @@ class PlayListManageData: Codable {
         guard let index = getPlayListIndex(playListId: id) else {
             return
         }
-        var playlist: PlayListData = playlists[index]
+        var playlist = playlists[index]
         if playlist.id == id {
             if playlist.name != name {
                 playlist.name = name
@@ -69,8 +59,7 @@ class PlayListManageData: Codable {
             return false
         }
         let playlistData = playlists[index]
-        for i in 0..<playlistData.audioList.count {
-            let d = playlistData.audioList[i]
+        for d in playlistData.audioList {
             if d.id == data.id {
                 return true
             }
@@ -79,18 +68,18 @@ class PlayListManageData: Codable {
     }
     
     /// プレイリストの楽曲を追加.
-    func addAudioToPlayList(playListId: String, addList: Array<AudioData>!) {
-        if addList.count == 0 { return }
-        
+    func addAudioToPlayList(playListId: String, addList: [AudioData]) {
+        if addList.count == 0 {
+            return
+        }
         guard let index = getPlayListIndex(playListId: playListId) else {
             return
         }
-        var playlist: PlayListData = playlists[index]
+        var playlist = playlists[index]
         if playlist.id == playListId {
             // 追加する曲リストの判定.
             var isAdd = false
-            for i in 0..<addList.count {
-                let addAudio = addList[i]
+            for addAudio in addList {
                 if !isIncludeAudio(playListId: playListId, data: addAudio) {
                     isAdd = true
                     playlist.audioList = playlist.audioList + [addAudio]
@@ -123,10 +112,7 @@ class PlayListManageData: Codable {
         guard let index = getPlayListIndex(playListId: id) else {
             return
         }
-        let d = playlists[index]
-        if d.id == id {
-            playlists.remove(at: index)
-        }
+        playlists.remove(at: index)
     }
     
     

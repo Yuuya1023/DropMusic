@@ -26,9 +26,9 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         // Do any additional setup after loading the view, typically from a nib.
         self.title = "Playlist"
         self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
         self.navigationController?.navigationBar.barTintColor = AppColor.main
-        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.tintColor = AppColor.sub
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
                                                                  style: .plain,
@@ -107,11 +107,11 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     
     @objc func selectorMenuButton() {
-        let alert: UIAlertController = UIAlertController(title: nil,
-                                                         message: nil,
-                                                         preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil,
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
         // プレイリスト作成.
-        let playlistAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Create playlist",
                           style: .default,
                           handler:{
@@ -121,23 +121,21 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
                             self.updateScrollView()
                             self.editPlaylist(playlistId: playlistId)
             })
-        
+        )
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-        
-        alert.addAction(playlistAction)
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     
     @objc func showEdit(_ sender: PlayListViewCell) {
-        editPlaylist(playlistId: AppDataManager.sharedManager.playlist.getPlaylists()[sender.index].id)
+        editPlaylist(playlistId: AppDataManager.sharedManager.playlist.playlists[sender.index].id)
     }
     
     
@@ -149,7 +147,7 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         return PlayListViewCell.height
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AppDataManager.sharedManager.playlist.getPlaylists().count
+        return AppDataManager.sharedManager.playlist.playlists.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let c = tableView.dequeueReusableCell(withIdentifier: PlayListViewCell.cellIdentifier ) as! PlayListViewCell
@@ -157,14 +155,14 @@ class PlayListViewController: UIViewController, UINavigationControllerDelegate, 
         c.index = indexPath.row
         c.longpressTarget = self
         c.longpressSelector = #selector(showEdit(_:))
-        c.set(data: AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row])
+        c.set(data: AppDataManager.sharedManager.playlist.playlists[indexPath.row])
         
         return c
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(indexPath.row)
         // 曲一覧へ.
-        let d = AppDataManager.sharedManager.playlist.getPlaylists()[indexPath.row]
+        let d = AppDataManager.sharedManager.playlist.playlists[indexPath.row]
+        
         self.navigationController?.pushViewController(AudioListViewController(playListId: d.id),
                                                       animated: true)
     }

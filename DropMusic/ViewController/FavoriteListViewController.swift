@@ -24,7 +24,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     // MARK: - Properties
     //
     private var _tableView: UITableView!
-    private var _datas: Array<FavoriteData> = []
+    private var _datas: [FavoriteData] = []
     private var _listType: ListType = .Folder
 
     private var _refreshControll: UIRefreshControl!
@@ -54,9 +54,9 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         self.view.backgroundColor = UIColor.white
         if let navigationController = self.navigationController {
             navigationController.delegate = self
-            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
             navigationController.navigationBar.barTintColor = AppColor.main
-            navigationController.navigationBar.tintColor = .white
+            navigationController.navigationBar.tintColor = AppColor.sub
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),
@@ -136,29 +136,27 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                                       preferredStyle: .actionSheet)
 
         // お気に入り解除.
-        if let fav = AppDataManager.sharedManager.favorite {
-            let favoriteAction:UIAlertAction =
-                UIAlertAction(title: "Delete favorite",
-                              style: .destructive,
-                              handler:{
-                                (action:UIAlertAction!) -> Void in
-                                fav.deleteFavorite(favoriteData)
-                                AppDataManager.sharedManager.save()
-                                // 更新.
-                                self.sortAndReloadList()
-                })
-            alert.addAction(favoriteAction)
-        }
+        let fav = AppDataManager.sharedManager.favorite
+        alert.addAction(
+            UIAlertAction(title: "Delete favorite",
+                          style: .destructive,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                            fav.deleteFavorite(favoriteData)
+                            AppDataManager.sharedManager.save()
+                            // 更新.
+                            self.sortAndReloadList()
+            })
+        )
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-        
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     
@@ -172,12 +170,12 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
     }
 
     @objc func selectorMenuButton() {
-        let alert: UIAlertController = UIAlertController(title: "Select display type.",
-                                                         message: nil,
-                                                         preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Select display type.",
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
         
         // Folder.
-        let actionFolder:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Folder",
                           style: _listType == .Folder ? .destructive : .default,
                           handler:{
@@ -187,8 +185,9 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                                 self.sortAndReloadList()
                             }
             })
+        )
         // Audio.
-        let actionAudio:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Audio",
                           style: _listType == .Audio ? .destructive : .default,
                           handler:{
@@ -198,19 +197,16 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                                 self.sortAndReloadList()
                             }
             })
-
+        )
         // キャンセル.
-        let cancelAction:UIAlertAction =
+        alert.addAction(
             UIAlertAction(title: "Cancel",
                           style: .cancel,
                           handler:{
                             (action:UIAlertAction!) -> Void in
                             // 閉じるだけ.
             })
-
-        alert.addAction(actionFolder)
-        alert.addAction(actionAudio)
-        alert.addAction(cancelAction)
+        )
         present(alert, animated: true, completion: nil)
     }
     

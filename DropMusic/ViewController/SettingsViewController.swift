@@ -40,13 +40,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        if #available(iOS 10.0, *) {
-            self.navigationController?.navigationBar.barTintColor = AppColor.main
-        } else {
-            // Fallback on earlier versions
-        }
+        self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
+        self.navigationController?.navigationBar.barTintColor = AppColor.main
+        self.navigationController?.navigationBar.tintColor = AppColor.sub
         self.title = "Settings"
         
         // section設定.
@@ -78,13 +75,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                                        sub: AppDataManager.sharedManager.manageDataPath))
         
         _sectionTwitter.removeAll()
-        if let name = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_NAME) {
-            self._sectionTwitter.append(RowInfo(title: "Account",
-                                                sub: name))
-        }
-        else if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
-            self._sectionTwitter.append(RowInfo(title: "Account",
-                                                sub: session.userID))
+        if let session = TWTRTwitter.sharedInstance().sessionStore.session() {
+            if let name = UserDefaults.standard.string(forKey: USER_DEFAULT_TWITTER_NAME) {
+                self._sectionTwitter.append(RowInfo(title: "Account",
+                                                    sub: name))
+            }
+            else {
+                self._sectionTwitter.append(RowInfo(title: "Account",
+                                                    sub: session.userID))
+            }
         }
         
         _sectionCache.removeAll()
