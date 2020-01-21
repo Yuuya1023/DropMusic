@@ -26,14 +26,11 @@ struct FavoriteData: Codable {
     //
     static func createFromFileInfo(_ fileInfo: FileInfo) -> FavoriteData? {
         var ret = FavoriteData()
-        ret.fileId = ""
-        if let id = fileInfo.id() {
-            ret.fileId = id
-        }
-        ret.fileType = fileInfo.getFileType()
+        ret.fileId = fileInfo.id
+        ret.fileType = fileInfo.getType()
         ret.storageType = .DropBox
-        ret.name = fileInfo.name()
-        ret.path = fileInfo.pathDisplay()
+        ret.name = fileInfo.name
+        ret.path = fileInfo.path
         ret.extensionString = ""
         if let str = fileInfo.fileExtension() {
             ret.extensionString = str

@@ -24,15 +24,15 @@ struct AudioData: Codable {
     // MARK: - Static.
     //
     static func createFromFileInfo(_ fileInfo: FileInfo) -> AudioData? {
-        guard fileInfo.isFile() else {
+        guard fileInfo.getType() == .Audio else {
             return nil
         }
         
         var ret: AudioData = AudioData()
-        ret.id = fileInfo.id()!
-        ret.fileName = fileInfo.name()
+        ret.id = fileInfo.id
+        ret.fileName = fileInfo.name
         ret.storageType = .DropBox
-        ret.path = fileInfo.pathDisplay()
+        ret.path = fileInfo.path
         ret.extensionString = fileInfo.fileExtension()!
         
         return ret

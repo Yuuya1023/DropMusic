@@ -98,7 +98,7 @@ class DownloadFileManager  {
     }
     
     func isExistAudioFile(fileInfo: FileInfo) -> (Bool){
-        if fileInfo.isFile() {
+        if fileInfo.getType() == .Audio {
             return FileManager.default.fileExists(atPath: getFileCachePath(fileInfo: fileInfo))
         }
         return false

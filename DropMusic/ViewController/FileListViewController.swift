@@ -121,10 +121,11 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                     self._datas = []
 //                    print("Entries: \(metadata.entries)")
                     for entry in metadata.entries {
-                        let info = FileInfo(metadata: entry)
-                        if info.isFolder() || info.isAudioFile() {
-                            // フォルダか音声ファイルのみ.
-                            self._datas.append(info)
+                        if let info = FileInfo.make(metadata: entry) {
+                            if info.getType() == .Audio || info.getType() == .Folder {
+                                // フォルダか音声ファイルのみ.
+                                self._datas.append(info)
+                            }
                         }
                     }
                 } else {
@@ -150,7 +151,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     
     /// 一覧更新.
     func sortAndReloadList() {
-        self._datas.sort(by: {$0.name().lowercased() < $1.name().lowercased()})
+        self._datas.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
         self._tableView.reloadData()
         _isLoading = false
         _refreshControll.endRefreshing()
@@ -178,7 +179,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
             catch {}
         }
         
-        let alert = UIAlertController(title: fileInfo.name(),
+        let alert = UIAlertController(title: fileInfo.name,
                                       message: nil,
                                       preferredStyle: .actionSheet)
         
@@ -335,14 +336,14 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let fileInfo = _datas[indexPath.row]
-        if fileInfo.isFolder() {
+        if fileInfo.getType() == .Folder {
             // フォルダ.
             var l: [String] = _pathList
-            l.append(fileInfo.name())
+            l.append(fileInfo.name)
             self.navigationController?.pushViewController(FileListViewController(pathList: l),
                                                           animated: true)
         }
-        else if fileInfo.isFile() {
+        else if fileInfo.getType() == .Audio {
             // ファイル.
             guard let audioData = AudioData.createFromFileInfo(fileInfo) else {
                 return

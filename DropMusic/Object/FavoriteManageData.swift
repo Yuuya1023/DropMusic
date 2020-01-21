@@ -22,7 +22,7 @@ class FavoriteManageData: Codable {
     /// お気に入りか.
     func isFavorite(_ fileInfo: FileInfo) -> Bool {
         for item in list {
-            if fileInfo.pathDisplay() == item.path  {
+            if fileInfo.path == item.path  {
                 return true
             }
         }
@@ -71,7 +71,7 @@ class FavoriteManageData: Codable {
  
     /// お気に入りから削除.
     func deleteFavorite(_ fileInfo: FileInfo) {
-        deleteFavorite(path: fileInfo.pathDisplay())
+        deleteFavorite(path: fileInfo.path)
     }
     
     /// お気に入りから削除.

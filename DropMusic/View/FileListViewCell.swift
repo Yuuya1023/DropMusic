@@ -52,6 +52,8 @@ class FileListViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        favorite.isHidden = true
+        setProgress(0.0)
     }
     
     
@@ -64,14 +66,14 @@ class FileListViewCell: UITableViewCell {
             return
         }
         isAudioFile = fileInfo.isAudioFile()
-        nameLabel.text = fileInfo.name()
+        nameLabel.text = fileInfo.name
         nameLabel.lineBreakMode = .byTruncatingTail
         
         var iconName = "icon_cell_question.png"
-        if fileInfo.isFolder() {
+        if fileInfo.getType() == .Folder {
             iconName = "icon_cell_folder.png"
         }
-        else if fileInfo.isAudioFile() {
+        else if fileInfo.getType() == .Audio {
             iconName = "icon_cell_audio.png"
         }
         icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
@@ -85,8 +87,8 @@ class FileListViewCell: UITableViewCell {
         }
         setProgress(progress)
         
-        if fileInfo.isFile() {
-            updateObserber(identifier: fileInfo.id()!)
+        if fileInfo.getType() == .Audio {
+            updateObserber(identifier: fileInfo.id)
         }
     }
     
@@ -115,10 +117,11 @@ class FileListViewCell: UITableViewCell {
     }
     
     func setProgress(_ progress: Float) {
-        var p = progress
-        if p < 0.0 { p = 0.0 }
-        else if p > 1.0 { p = 1.0 }
+        var p: Float = 0.0
         if isAudioFile {
+            p = progress
+            if p < 0.0 { p = 0.0 }
+            else if p > 1.0 { p = 1.0 }
             if 1.0 == p {
                 p = 0.0
                 icon.tintColor = UIColor(displayP3Red: 46/255, green: 123/255, blue: 255/255, alpha: 1)
