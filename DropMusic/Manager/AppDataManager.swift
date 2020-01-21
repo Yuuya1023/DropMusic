@@ -145,7 +145,7 @@ class AppDataManager {
         }
         
         // tempがあれば削除しておく.
-        try! FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
+        try? FileManager.default.removeItem(at: URL(fileURLWithPath: self._localTempFilePath))
         
         // アップロード関数.
         func upload(isFirst: Bool) {
@@ -227,13 +227,14 @@ class AppDataManager {
     /// リセット.
     func reset() {
         DropboxClientsManager.unlinkClients()
+        DropboxFileListManager.sharedManager.reset()
         _isLoaded = false
         _manageData = AppManageData()
         _dropboxUserName = ""
         UserDefaults.standard.removeObject(forKey: USER_DEFAULT_DROPBOX_USERNAME)
         // ファイル削除.
-        try! FileManager.default.removeItem(at: URL(fileURLWithPath: _localFilePath))
-        try! FileManager.default.removeItem(at: URL(fileURLWithPath: _localTempFilePath))
+        try? FileManager.default.removeItem(at: URL(fileURLWithPath: _localFilePath))
+        try? FileManager.default.removeItem(at: URL(fileURLWithPath: _localTempFilePath))
     }
     
 }

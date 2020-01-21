@@ -142,6 +142,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                 if self._datas.count != 0 {
                     // 登録.
                     DropboxFileListManager.sharedManager.regist(pathLower: path, list: self._datas)
+                    DropboxFileListManager.sharedManager.save()
                     // 更新.
                     self.sortAndReloadList()
                 }

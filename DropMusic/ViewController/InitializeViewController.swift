@@ -157,6 +157,8 @@ class InitializeViewController: UIViewController {
                     self.changeState(.Complete)
                 }
             }
+            // ファイルリストのキャッシュを読み込み.
+            DropboxFileListManager.sharedManager.load()
         case .Complete:
             // 画面遷移.
             let vc = RootTabBarController()
