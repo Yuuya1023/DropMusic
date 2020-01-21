@@ -8,93 +8,75 @@
 import Foundation
 import SwiftyDropbox
 
-class FileInfo {
+class FileInfo: Codable {
     
     //
     // MARK: - Properties.
     //
-    var _metaData: Files.Metadata!
+    private(set) var isFile: Bool = false
+    private(set) var id: String = ""
+    private(set) var name: String = ""
+    private(set) var path: String = ""
+    private(set) var hash: String = ""
     
     
     
     //
-    // MARK: - Initialize.
+    // MARK: - Static.
     //
-    init(metadata: Files.Metadata!){
-        _metaData = metadata
-    }
-    
-    
-    
-    //
-    // MARK: -
-    //
-    internal func folderMetadata() -> (Files.FolderMetadata) {
-        return _metaData as! Files.FolderMetadata
-    }
-    
-    internal func fileMetadata() -> (Files.FileMetadata) {
-        return _metaData as! Files.FileMetadata
-    }
-    
-    
-    
-    //
-    // MARK: -
-    //
-    func getFileType() -> AppManageData.FileType {
-        if isFolder() {
-            return .Folder
+    static func make(metadata: Files.Metadata?) -> FileInfo? {
+        guard let metadata = metadata else {
+            return nil
         }
-        else if isAudioFile() {
-            return .Audio
+        
+        let ret = FileInfo()
+        if metadata is Files.FolderMetadata {
+            ret.isFile = false
+            let folder = metadata as! Files.FolderMetadata
+            ret.id = folder.id
+            ret.name = folder.name
+            ret.path = folder.pathDisplay ?? ""
         }
-        return .Other
-    }
-    
-    func isFolder() -> (Bool) {
-        return _metaData is Files.FolderMetadata
-    }
-    
-    func isFile() -> (Bool) {
-        return _metaData is Files.FileMetadata
-    }
-    
-    func id() -> (String?) {
-        if isFile() {
-            return fileMetadata().id
+        else if metadata is Files.FileMetadata {
+            ret.isFile = true
+            let file = metadata as! Files.FileMetadata
+            ret.id = file.id
+            ret.name = file.name
+            ret.path = file.pathLower ?? ""
+            ret.hash = file.contentHash ?? ""
         }
-        return nil
+        return ret
     }
     
-    func name() ->(String) {
-        return _metaData.name
-    }
     
-//    func pathLower() -> (String) {
-//        return _metaData.pathLower!
-//    }
     
-    func pathDisplay() -> String {
-        return _metaData.pathDisplay!
-    }
-    
-    func contentHash() -> (String?) {
-        if isFile() {
-            return fileMetadata().contentHash!
+    //
+    // MARK: - Public.
+    //
+    /// ファイルタイプの取得.
+    func getType() -> AppManageData.FileType {
+        if isFile {
+            if isAudioFile() {
+                return .Audio
+            }
+            else {
+                return .Other
+            }
         }
-        return nil
+        return .Folder
     }
     
+    /// 拡張子の取得.
     func fileExtension() -> (String?) {
-        if isFile() {
-            return NSString(string: name()).pathExtension
+        if isFile {
+            return NSString(string: name).pathExtension
         }
         return nil
     }
     
-    func isAudioFile() -> (Bool) {
-        if isFile() {
+    /// 音楽ファイルか.
+    func isAudioFile() -> Bool {
+        if isFile {
             let ext = fileExtension()
             if ext == "aif" || ext == "aiff" || ext == "caf" || ext == "mp3" || ext == "aac" || ext == "m4a" || ext == "mp4" || ext == "wav" {
                 return true
@@ -103,15 +85,16 @@ class FileInfo {
         return false
     }
     
-    func localFileName() ->(String?) {
-        if isFile() {
-            if var id = self.id() {
-                if let range = id.range(of: "id:") {
-                    id.replaceSubrange(range, with: "")
-                }
-                return id + "." + fileExtension()!
+    /// ローカルファイル名.
+    func localFileName() -> String? {
+        if isFile {
+            var id = self.id
+            if let range = id.range(of: "id:") {
+                id.replaceSubrange(range, with: "")
             }
+            return id + "." + fileExtension()!
         }
         return nil
     }
+    
 }
