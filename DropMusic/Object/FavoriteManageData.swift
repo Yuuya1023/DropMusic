@@ -30,16 +30,6 @@ class FavoriteManageData: Codable {
     }
     
     /// お気に入りか.
-    func isFavorite(_ favoriteData: FavoriteData) -> Bool {
-        for item in list {
-            if favoriteData.path == item.path  {
-                return true
-            }
-        }
-        return false
-    }
-    
-    /// お気に入りか.
     func isFavorite(_ audiodata: AudioData) -> Bool {
         for item in list {
             if item.fileType == .Audio {

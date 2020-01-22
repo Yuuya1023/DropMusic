@@ -28,7 +28,7 @@
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_favorite.png" translatesAutoresizingMaskIntoConstraints="NO" id="SnT-UW-ZbL" userLabel="Favorite">
-                                <rect key="frame" x="16" y="20.5" width="8" height="8.5"/>
+                                <rect key="frame" x="2" y="4.5" width="16" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="SnT-UW-ZbL" secondAttribute="height" multiplier="1:1" id="ARa-L5-U4S"/>
                                 </constraints>
@@ -38,11 +38,11 @@
                             <constraint firstItem="daU-9r-INf" firstAttribute="centerY" secondItem="XVY-cP-ikp" secondAttribute="centerY" id="3qB-JP-q7p"/>
                             <constraint firstItem="daU-9r-INf" firstAttribute="width" relation="lessThanOrEqual" secondItem="XVY-cP-ikp" secondAttribute="width" multiplier="0.8" priority="750" id="3w4-Vb-BEZ"/>
                             <constraint firstItem="daU-9r-INf" firstAttribute="height" secondItem="XVY-cP-ikp" secondAttribute="height" multiplier="0.8" id="Dlh-oA-LaS"/>
-                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerY" secondItem="daU-9r-INf" secondAttribute="centerY" id="XIV-F8-cou"/>
-                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerX" secondItem="daU-9r-INf" secondAttribute="centerX" id="b8Y-uT-3G3"/>
-                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="width" secondItem="XVY-cP-ikp" secondAttribute="width" multiplier="0.2" id="dTc-sJ-qQX"/>
+                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerY" secondItem="daU-9r-INf" secondAttribute="centerY" multiplier="0.5" id="XIV-F8-cou"/>
+                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerX" secondItem="daU-9r-INf" secondAttribute="centerX" multiplier="0.5" id="b8Y-uT-3G3"/>
+                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="width" secondItem="XVY-cP-ikp" secondAttribute="width" multiplier="0.4" id="dTc-sJ-qQX"/>
                             <constraint firstItem="daU-9r-INf" firstAttribute="centerX" secondItem="XVY-cP-ikp" secondAttribute="centerX" id="jQW-bz-6kO"/>
-                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="height" secondItem="XVY-cP-ikp" secondAttribute="height" multiplier="0.2" priority="750" id="oQt-oF-1XR"/>
+                            <constraint firstItem="SnT-UW-ZbL" firstAttribute="height" secondItem="XVY-cP-ikp" secondAttribute="height" multiplier="0.4" priority="750" id="oQt-oF-1XR"/>
                             <constraint firstItem="SnT-UW-ZbL" firstAttribute="width" secondItem="SnT-UW-ZbL" secondAttribute="height" multiplier="1:1" id="sHn-ai-9p2"/>
                         </constraints>
                     </view>

@@ -121,6 +121,7 @@ class MusicPlayerViewController: UIViewController {
         if #available(iOS 11.0, *) {
             let view = AVRoutePickerView()
             view.tintColor = _color
+            view.activeTintColor = AppColor.accent
             view.frame = CGRect(x:0,
                                 y:0,
                                 width:_airPlayView.bounds.width,

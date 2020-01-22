@@ -32,18 +32,20 @@ class FileInfo: Codable {
         let ret = FileInfo()
         if metadata is Files.FolderMetadata {
             ret.isFile = false
-            let folder = metadata as! Files.FolderMetadata
-            ret.id = folder.id
-            ret.name = folder.name
-            ret.path = folder.pathDisplay ?? ""
+            if let folder = metadata as? Files.FolderMetadata {
+                ret.id = folder.id
+                ret.name = folder.name
+                ret.path = folder.pathDisplay ?? ""
+            }
         }
         else if metadata is Files.FileMetadata {
             ret.isFile = true
-            let file = metadata as! Files.FileMetadata
-            ret.id = file.id
-            ret.name = file.name
-            ret.path = file.pathLower ?? ""
-            ret.hash = file.contentHash ?? ""
+            if let file = metadata as? Files.FileMetadata {
+                ret.id = file.id
+                ret.name = file.name
+                ret.path = file.pathLower ?? ""
+                ret.hash = file.contentHash ?? ""
+            }
         }
         return ret
     }

@@ -40,8 +40,8 @@ class FileListViewCell: UITableViewCell {
         
         // お気に入りアイコン.
         favorite.image = favorite.image?.withRenderingMode(.alwaysTemplate)
+        favorite.tintColor = AppColor.accent
         favorite.isHidden = true
-//        favorite.tintColor = .yellow
         
         // 長押し.
         let tapGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -112,7 +112,6 @@ class FileListViewCell: UITableViewCell {
             iconName = "icon_cell_audio.png"
         }
         icon.image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
-//        favorite.isHidden = !AppDataManager.sharedManager.favorite.isFavorite(favoriteData)
         setProgress(0.0)
     }
     
