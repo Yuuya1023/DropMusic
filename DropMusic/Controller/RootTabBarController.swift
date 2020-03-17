@@ -53,7 +53,7 @@ class RootTabBarController: UITabBarController {
         self.view.backgroundColor = .white
         UITabBar.appearance().tintColor = AppColor.sub
         UITabBar.appearance().barTintColor = AppColor.maintab
-
+        
         // タブバーの設定.
         let vc1 = UINavigationController(rootViewController: FileListViewController(pathList: []))
         let vc2 = UINavigationController(rootViewController: PlayListViewController())
@@ -112,8 +112,6 @@ class RootTabBarController: UITabBarController {
     // MARK: - Private.
     //
     @objc private func selectorShowAudioPlayer(notification: Notification) {
-        _playerViewController.modalPresentationStyle = .custom
-        _playerViewController.transitioningDelegate = self
         present(_playerViewController, animated: true, completion: nil)
     }
     
@@ -175,14 +173,14 @@ class RootTabBarController: UITabBarController {
 
 
 
-//
-// MARK: - UIViewControllerTransitioningDelegate.
-//
-extension RootTabBarController: UIViewControllerTransitioningDelegate {
-    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return AudioPlayerPresentationController(presentedViewController: presented, presenting: presenting)
-    }
-}
+////
+//// MARK: - UIViewControllerTransitioningDelegate.
+////
+//extension RootTabBarController: UIViewControllerTransitioningDelegate {
+//    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+//        return AudioPlayerPresentationController(presentedViewController: presented, presenting: presenting)
+//    }
+//}
 
 
 

@@ -15,9 +15,10 @@ import MarqueeLabel
 class MusicPlayerViewController: UIViewController {
     
     //
-    // MARK: - Properties.
+    // MARK: - Outlets.
     //
     @IBOutlet var _effectView: UIVisualEffectView!
+    @IBOutlet var _infoTitle: UILabel!
     @IBOutlet var _artwork: UIImageView!
     @IBOutlet var _playButton: UIButton!
     @IBOutlet var _nextButton: UIButton!
@@ -34,6 +35,11 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _artistView: UIView!
     @IBOutlet var _airPlayView: UIView!
     
+    
+    
+    //
+    // MARK: - Properties.
+    //
     private var _titleLabel: MarqueeLabel!
     private var _artistLabel: MarqueeLabel!
     private var _timer: Timer = Timer()
@@ -175,14 +181,18 @@ class MusicPlayerViewController: UIViewController {
     //
     // MARK: - Private.
     //
+    /// 更新.
     @objc private func update() {
         updateProgress()
     }
     
+    /// レイアウト更新.
     private func updateLayout() {
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
             return
         }
+        // info.
+        _infoTitle.text = AudioPlayManager.sharedManager._manageData.makeTitle()
         // 曲情報.
         _titleLabel.text = metadata.title
         _artistLabel.text = metadata.artist + " ─ " + metadata.album
@@ -200,11 +210,13 @@ class MusicPlayerViewController: UIViewController {
         updatePlayButton()
     }
     
+    /// 再生ボタン更新.
     private func updatePlayButton() {
         _playButton.setImage(UIImage(named: AudioPlayManager.sharedManager.isPlaying() ? "pause.png" : "play.png"),
                              for: .normal)
     }
     
+    /// 進捗更新.
     private func updateProgress() {
         guard let player = AudioPlayManager.sharedManager.audioPlayer else {
             _seakBar.setValue(0.0, animated: false)
@@ -222,48 +234,54 @@ class MusicPlayerViewController: UIViewController {
         _currentTimeLabel.text = String(min) + ":" + String(format: "%02d", sec)
     }
     
+    /// リピートボタン更新.
     private func updateRepeatButton() {
         switch AudioPlayManager.sharedManager._repeatType {
         case .One:
             _repeatButton.setImage(UIImage(named: "icon_repeat_one.png")?.withRenderingMode(.alwaysTemplate),
                                    for: .normal)
-        case .List:
+        case .All:
             _repeatButton.setImage(UIImage(named: "icon_repeat.png")?.withRenderingMode(.alwaysTemplate),
                                    for: .normal)
         }
         _repeatButton.imageView?.tintColor = _color
     }
     
+    /// シャッフルボタン更新.
     private func updateShuffleButton() {
         switch AudioPlayManager.sharedManager._shuffleType {
         case .None:
             _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png")?.withRenderingMode(.alwaysTemplate),
                                     for: .normal)
-        case .List:
+        case .All:
             _shuffleButton.setImage(UIImage(named: "icon_shuffle.png")?.withRenderingMode(.alwaysTemplate),
                                     for: .normal)
         }
         _shuffleButton.imageView?.tintColor = _color
     }
     
+    /// メニューボタン更新.
     private func updateMenuButton() {
         _menuButton.setImage(UIImage(named: "icon_menu.png")?.withRenderingMode(.alwaysTemplate),
                              for: .normal)
         _menuButton.imageView?.tintColor = _color
     }
     
+    /// twitterボタン更新.
     private func updateTwitterButton() {
         _twitterButton.setImage(UIImage(named: "twitter.png")?.withRenderingMode(.alwaysTemplate),
                                 for: .normal)
         _twitterButton.imageView?.tintColor = _color
     }
     
+    /// プレイリストボタン更新.
     private func updatePlaylistButton() {
         _playlistButton.setImage(UIImage(named: "icon_playlist_plus.png")?.withRenderingMode(.alwaysTemplate),
                                 for: .normal)
         _playlistButton.imageView?.tintColor = _color
     }
     
+    /// お気に入りボタン更新.
     private func updateFavoriteButton() {
         guard let playing = AudioPlayManager.sharedManager._playing else {
             return
@@ -277,6 +295,7 @@ class MusicPlayerViewController: UIViewController {
         _favoriteButton.imageView?.tintColor = color
     }
     
+    /// twitter投稿.
     private func postTwitter(withImage: Bool) {
         updateTwitterButton()
         guard let metadata = AudioPlayManager.sharedManager._metadata else {
@@ -357,12 +376,12 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorRepeatButton(_ sender: UIButton) {
-        let next: AudioPlayManager.RepeatType
+        let next: AudioPlayManageData.RepeatType
         let type = AudioPlayManager.sharedManager._repeatType
         switch type {
         case .One:
-            next = .List
-        case .List:
+            next = .All
+        case .All:
             next = .One
         }
         
@@ -371,12 +390,12 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorShuffleButton(_ sender: UIButton) {
-        let next: AudioPlayManager.ShuffleType
+        let next: AudioPlayManageData.ShuffleType
         let type = AudioPlayManager.sharedManager._shuffleType
         switch type {
         case .None:
-            next = .List
-        case .List:
+            next = .All
+        case .All:
             next = .None
         }
         AudioPlayManager.sharedManager._shuffleType = next

@@ -162,6 +162,7 @@ class InitializeViewController: UIViewController {
         case .Complete:
             // 画面遷移.
             let vc = RootTabBarController()
+            vc.modalPresentationStyle = .fullScreen
             vc.modalTransitionStyle = .crossDissolve
             self.present(vc,
                          animated: true,
