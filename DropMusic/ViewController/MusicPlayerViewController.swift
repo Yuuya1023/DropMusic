@@ -22,6 +22,7 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _artwork: UIImageView!
     @IBOutlet var _playButton: UIButton!
     @IBOutlet var _nextButton: UIButton!
+    @IBOutlet var _backButton: UIButton!
     @IBOutlet var _playlistButton: UIButton!
     @IBOutlet var _favoriteButton: UIButton!
     @IBOutlet var _seakBar: UISlider!
@@ -93,8 +94,11 @@ class MusicPlayerViewController: UIViewController {
         updatePlayButton()
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
         
-        // ネクストボタン.
+        // next.
         _nextButton.addTarget(self, action: #selector(selectorNextButton(_:)), for: .touchUpInside)
+        
+        // back.
+        _backButton.addTarget(self, action: #selector(selectorBackButton(_:)), for: .touchUpInside)
         
         // プレイリストボタン.
         updatePlaylistButton()
@@ -218,7 +222,7 @@ class MusicPlayerViewController: UIViewController {
     
     /// 進捗更新.
     private func updateProgress() {
-        guard let player = AudioPlayManager.sharedManager.audioPlayer else {
+        guard let player = AudioPlayManager.sharedManager._audioPlayer else {
             _seakBar.setValue(0.0, animated: false)
             _currentTimeLabel.text = "0:00"
             _durationLabel.text = "0:00"
@@ -236,7 +240,7 @@ class MusicPlayerViewController: UIViewController {
     
     /// リピートボタン更新.
     private func updateRepeatButton() {
-        switch AudioPlayManager.sharedManager._repeatType {
+        switch AudioPlayManager.sharedManager.repeatType {
         case .One:
             _repeatButton.setImage(UIImage(named: "icon_repeat_one.png")?.withRenderingMode(.alwaysTemplate),
                                    for: .normal)
@@ -249,7 +253,7 @@ class MusicPlayerViewController: UIViewController {
     
     /// シャッフルボタン更新.
     private func updateShuffleButton() {
-        switch AudioPlayManager.sharedManager._shuffleType {
+        switch AudioPlayManager.sharedManager.shuffleType {
         case .None:
             _shuffleButton.setImage(UIImage(named: "icon_nonshuffle.png")?.withRenderingMode(.alwaysTemplate),
                                     for: .normal)
@@ -377,7 +381,7 @@ class MusicPlayerViewController: UIViewController {
     
     @objc func selectorRepeatButton(_ sender: UIButton) {
         let next: AudioPlayStatus.RepeatType
-        let type = AudioPlayManager.sharedManager._repeatType
+        let type = AudioPlayManager.sharedManager.repeatType
         switch type {
         case .One:
             next = .All
@@ -385,20 +389,20 @@ class MusicPlayerViewController: UIViewController {
             next = .One
         }
         
-        AudioPlayManager.sharedManager._repeatType = next
+        AudioPlayManager.sharedManager.repeatType = next
         updateRepeatButton()
     }
     
     @objc func selectorShuffleButton(_ sender: UIButton) {
         let next: AudioPlayStatus.ShuffleType
-        let type = AudioPlayManager.sharedManager._shuffleType
+        let type = AudioPlayManager.sharedManager.shuffleType
         switch type {
         case .None:
             next = .All
         case .All:
             next = .None
         }
-        AudioPlayManager.sharedManager._shuffleType = next
+        AudioPlayManager.sharedManager.shuffleType = next
         updateShuffleButton()
     }
     

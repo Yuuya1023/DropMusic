@@ -97,7 +97,7 @@ class AudioPlayStatus: Codable {
         var ret: [AudioData] = []
         switch shuffleType {
         case .None:
-            if exlusion != nil {
+            if let exlusion = exlusion {
                 // プレイ中の曲から追加する.
                 var temp: Array<AudioData> = []
                 var flg: Bool = false
@@ -111,6 +111,14 @@ class AudioPlayStatus: Codable {
                         }
                     }
                 }
+                for d in audioList {
+                    if d.isEqualData(audioData: exlusion) {
+                        break
+                    }
+                    temp.append(d)
+                }
+                // 最後に積む.
+                temp.append(exlusion)
                 ret = temp
             }
             else {

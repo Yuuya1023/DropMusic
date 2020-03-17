@@ -12,6 +12,7 @@
                 <outlet property="_airPlayView" destination="pO2-mp-R9p" id="RTU-tQ-Sfa"/>
                 <outlet property="_artistView" destination="8a1-0t-vGb" id="TSD-6a-QEB"/>
                 <outlet property="_artwork" destination="YeL-lt-bYC" id="Zlv-Ue-Dt7"/>
+                <outlet property="_backButton" destination="ZcK-MI-kdT" id="Tpa-Zk-qqF"/>
                 <outlet property="_currentTimeLabel" destination="Qad-mh-rha" id="nTh-HE-N46"/>
                 <outlet property="_durationLabel" destination="47f-wH-K2a" id="2Ef-tT-7uN"/>
                 <outlet property="_effectView" destination="ocF-ND-fzp" id="fb9-El-A2k"/>
