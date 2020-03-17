@@ -21,7 +21,6 @@ class AppDataManager {
     // MARK: - Constant.
     //
     private let JSON_NAME = "appdata.json"
-    private let USER_DEFAULT_DROPBOX_USERNAME = "dropboxusername"
     
     
     

@@ -95,6 +95,10 @@ class AudioPlayStatus: Codable {
     /// 再生候補を作成.
     func makeQueList(exlusion: AudioData?) -> [AudioData] {
         var ret: [AudioData] = []
+        if audioList.count == 0 {
+            return ret
+        }
+        
         switch shuffleType {
         case .None:
             if let exlusion = exlusion {

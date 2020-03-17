@@ -28,7 +28,6 @@ class DropboxFileListManager {
     //
     // MARK: - Constant.
     //
-    private let USER_DEFAULT_KEY = "filelistcache"
     
     
     
@@ -63,12 +62,12 @@ class DropboxFileListManager {
     /// UserDefaultsに保存.
     func save() {
         if let data = try? JSONEncoder().encode(_pathDictionary) {
-            UserDefaults.standard.set(data, forKey: USER_DEFAULT_KEY)
+            UserDefaults.standard.set(data, forKey: USER_DEFAULT_FILE_LIST_CACHE)
         }
     }
     /// UserDefaultsから取得.
     func load() {
-        if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_KEY) {
+        if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_FILE_LIST_CACHE) {
             do {
                 let dictionary = try JSONDecoder().decode(FileListCache.self, from: data)
                 _pathDictionary = dictionary
@@ -79,7 +78,7 @@ class DropboxFileListManager {
     }
     /// UserDefaultsを削除.
     func reset() {
-        UserDefaults.standard.removeObject(forKey: USER_DEFAULT_KEY)
+        UserDefaults.standard.removeObject(forKey: USER_DEFAULT_FILE_LIST_CACHE)
     }
     
 }

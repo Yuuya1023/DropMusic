@@ -22,8 +22,6 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     //
     // MARK: - Constant.
     //
-    private let USER_DEFAULT_KEY_STATUS = "audio_play_status"
-    private let USER_DEFAULT_KEY_AUDIO = "audio"
     private let MAX_HISTORY_LENGTH: Int = 64
     private let MIN_QUEUE_LENGTH: Int = 16
     
@@ -82,7 +80,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         
         // 前回の設定を引き継ぐ.
-        if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_KEY_STATUS) {
+        if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_AUDIO_STATUS) {
             if let manageData = AudioPlayStatus.makeFromData(data: data) {
                 _manageData = manageData
             }
@@ -90,7 +88,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         
         // 前回再生していた曲情報を取得.
         do {
-            if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_KEY_AUDIO) {
+            if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_PLAY_AUDIO) {
                 let audioData = try JSONDecoder().decode(AudioData.self, from: data)
                 _beginData = audioData
                 setAudio(audioData: audioData, isAddHistory: false, isRefresh: false)
@@ -203,14 +201,14 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         // 曲情報.
         do {
             let data = try JSONEncoder().encode(_playing)
-            UserDefaults.standard.set(data, forKey: USER_DEFAULT_KEY_AUDIO)
+            UserDefaults.standard.set(data, forKey: USER_DEFAULT_PLAY_AUDIO)
         }
         catch{
         }
         // 再生情報.
         do {
             let data = try JSONEncoder().encode(_manageData)
-            UserDefaults.standard.set(data, forKey: USER_DEFAULT_KEY_STATUS)
+            UserDefaults.standard.set(data, forKey: USER_DEFAULT_AUDIO_STATUS)
         }
         catch{
         }
