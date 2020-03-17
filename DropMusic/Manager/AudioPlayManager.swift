@@ -40,18 +40,18 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     var _playing: AudioData?
     var _metadata: AudioMetadata?
-    var _manageData: AudioPlayManageData = AudioPlayManageData()
+    var _manageData: AudioPlayStatus = AudioPlayStatus()
     
     private var _history: Array<AudioData> = []
     private var _queue: Array<AudioData> = []
     
-    var _repeatType: AudioPlayManageData.RepeatType = .One {
+    var _repeatType: AudioPlayStatus.RepeatType = .One {
         didSet(p){
             _manageData.repeatType = p
             self.settingRepeat()
         }
     }
-    var _shuffleType: AudioPlayManageData.ShuffleType = .None {
+    var _shuffleType: AudioPlayStatus.ShuffleType = .None {
         didSet(p){
             _manageData.shuffleType = p
             self.settingShuffle()
@@ -92,7 +92,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         
         // 前回の設定を引き継ぐ.
         if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_KEY_MANAGE) {
-            if let manageData = AudioPlayManageData.makeFromData(data: data) {
+            if let manageData = AudioPlayStatus.makeFromData(data: data) {
                 _manageData = manageData
             }
         }
@@ -123,7 +123,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     /// 曲を設定.
-    func set(selectType: AudioPlayManageData.AudioSelectType,
+    func set(selectType: AudioPlayStatus.AudioSelectType,
              selectPath: String,
              audioList: Array<AudioData>,
              playIndex: Int)

@@ -376,7 +376,7 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorRepeatButton(_ sender: UIButton) {
-        let next: AudioPlayManageData.RepeatType
+        let next: AudioPlayStatus.RepeatType
         let type = AudioPlayManager.sharedManager._repeatType
         switch type {
         case .One:
@@ -390,7 +390,7 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorShuffleButton(_ sender: UIButton) {
-        let next: AudioPlayManageData.ShuffleType
+        let next: AudioPlayStatus.ShuffleType
         let type = AudioPlayManager.sharedManager._shuffleType
         switch type {
         case .None:

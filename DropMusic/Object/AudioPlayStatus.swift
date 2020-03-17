@@ -1,5 +1,5 @@
 //
-//  AudioPlayManageData.swift
+//  AudioPlayStatus.swift
 //  DropMusic
 //
 //  Copyright © 2020 n.yuuya. All rights reserved.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AudioPlayManageData: Codable {
+class AudioPlayStatus: Codable {
     
     //
     // MARK: - Enumeration.
@@ -61,9 +61,9 @@ class AudioPlayManageData: Codable {
     // MARK: - Static.
     //
     /// データ型から変換.
-    static func makeFromData(data: Data) -> AudioPlayManageData? {
+    static func makeFromData(data: Data) -> AudioPlayStatus? {
         do {
-            let newJson: AudioPlayManageData = try JSONDecoder().decode(AudioPlayManageData.self, from: data)
+            let newJson: AudioPlayStatus = try JSONDecoder().decode(AudioPlayStatus.self, from: data)
             return newJson
         } catch {
             print("json convert failed in JSONDecoder", error.localizedDescription)
