@@ -77,10 +77,6 @@ class InitializeViewController: UIViewController {
     //
     // MARK: - Override.
     //
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     override func loadView() {
         let nib = UINib(nibName: "InitializeView", bundle: .main)
         self.view = nib.instantiate(withOwner: self).first as? UIView
