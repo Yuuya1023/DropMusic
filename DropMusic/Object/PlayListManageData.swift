@@ -43,13 +43,11 @@ class PlayListManageData: Codable {
         guard let index = getPlayListIndex(playListId: id) else {
             return
         }
-        var playlist = playlists[index]
-        if playlist.id == id {
-            if playlist.name != name {
-                playlist.name = name
-                playlists[index] = playlist
+        
+        if playlists[index].id == id {
+            if playlists[index].name != name {
+                playlists[index].name = name
             }
-            return
         }
     }
     
@@ -58,36 +56,16 @@ class PlayListManageData: Codable {
         guard let index = getPlayListIndex(playListId: playListId) else {
             return false
         }
-        let playlistData = playlists[index]
-        for d in playlistData.audioList {
-            if d.id == data.id {
-                return true
-            }
-        }
-        return false
+        return playlists[index].isIncludeAudio(audioId: data.id)
     }
     
     /// プレイリストの楽曲を追加.
     func addAudioToPlayList(playListId: String, addList: [AudioData]) {
-        if addList.count == 0 {
-            return
-        }
         guard let index = getPlayListIndex(playListId: playListId) else {
             return
         }
-        var playlist = playlists[index]
-        if playlist.id == playListId {
-            // 追加する曲リストの判定.
-            var isAdd = false
-            for addAudio in addList {
-                if !isIncludeAudio(playListId: playListId, data: addAudio) {
-                    isAdd = true
-                    playlist.audioList = playlist.audioList + [addAudio]
-                }
-            }
-            if isAdd {
-                playlists[index] = playlist
-            }
+        for addAudio in addList {
+            playlists[index].addAudio(audioData: addAudio)
         }
     }
     
@@ -96,15 +74,7 @@ class PlayListManageData: Codable {
         guard let index = getPlayListIndex(playListId: playListId) else {
             return
         }
-        var playlist = playlists[index]
-        for i in 0..<playlist.audioList.count {
-            let d = playlist.audioList[i]
-            if d.id == audioId {
-                playlist.audioList.remove(at: i)
-                playlists[index] = playlist
-                return
-            }
-        }
+        playlists[index].removeAudio(audioId: audioId)
     }
     
     /// プレイリスト削除.

@@ -64,8 +64,8 @@ class PlayListViewCell: UITableViewCell {
         }
         _artwork.image = UIImage()
         _titleLabel.text = data.name
-        _tracksLabel.text = String(data.audioList.count) + " tracks."
-        if (data.audioList.count) > 0 {
+        _tracksLabel.text = String(data.tracks()) + " tracks."
+        if (data.tracks()) > 0 {
             let d: AudioData = data.audioList[0]
             if let metadata = MetadataCacheManager.sharedManager.get(audioData: d) {
                 if let artwork = metadata.artwork {

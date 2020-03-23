@@ -153,7 +153,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     /// 次へ.
-    func playNext() {
+    func playNext(isContinuePlay: Bool) {
         if _queue.count == 0 {
             setAudio(audioData:_playing!, isAddHistory: false, isRefresh: false)
         }
@@ -163,13 +163,16 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             setAudio(audioData: d, isAddHistory: true, isRefresh: false)
             _queue.remove(at: 0)
         }
-        if isPlaying() {
+        if isContinuePlay {
             _ = play()
         }
     }
     
     /// 前へ.
     func playBack() {
+        // 変更前の再生状況を確認しておく.
+        let playing = isPlaying()
+        
         if _history.count == 0 {
             setAudio(audioData:_playing!, isAddHistory: false, isRefresh: false)
         }
@@ -183,7 +186,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             setAudio(audioData: d, isAddHistory: false, isRefresh: false)
             _history.remove(at: 0)
         }
-        if isPlaying() {
+        if playing {
             _ = play()
         }
     }
@@ -417,7 +420,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             updateInfoCenter()
         case .All:
             // 次へ.
-            playNext()
+            playNext(isContinuePlay: true)
         }
     }
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

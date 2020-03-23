@@ -344,7 +344,7 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorNextButton(_ sender: UIButton) {
-        AudioPlayManager.sharedManager.playNext()
+        AudioPlayManager.sharedManager.playNext(isContinuePlay: AudioPlayManager.sharedManager.isPlaying())
         updateLayout()
     }
     
