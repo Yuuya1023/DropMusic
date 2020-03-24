@@ -258,7 +258,7 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
                 // 再生.
                 AudioPlayManager.sharedManager.set(selectType: .Playlist,
-                                                   selectPath: playlist.name,
+                                                   selectValue: playlist.id,
                                                    audioList: playlist.audioList,
                                                    playIndex: indexPath.row)
                 _ = AudioPlayManager.sharedManager.play()

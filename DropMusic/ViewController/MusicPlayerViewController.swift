@@ -196,7 +196,7 @@ class MusicPlayerViewController: UIViewController {
             return
         }
         // info.
-        _infoTitle.text = AudioPlayManager.sharedManager._manageData.makeTitle()
+        _infoTitle.text = AudioPlayManager.sharedManager._status.makeTitle()
         // 曲情報.
         _titleLabel.text = metadata.title
         _artistLabel.text = metadata.artist + " ─ " + metadata.album

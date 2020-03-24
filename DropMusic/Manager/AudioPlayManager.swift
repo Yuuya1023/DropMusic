@@ -33,7 +33,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     private(set) var _audioPlayer: AVAudioPlayer!
     private(set) var _playing: AudioData?
     private(set) var _metadata: AudioMetadata?
-    private(set) var _manageData: AudioPlayStatus = AudioPlayStatus()
+    private(set) var _status: AudioPlayStatus = AudioPlayStatus()
     private(set) var _duration: Int = 0
     private(set) var _deviceName: String = ""
     
@@ -43,19 +43,19 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     var repeatType: AudioPlayStatus.RepeatType {
         get {
-            _manageData.repeatType
+            _status.repeatType
         }
         set {
-            _manageData.repeatType = newValue
+            _status.repeatType = newValue
             self.settingRepeat()
         }
     }
     var shuffleType: AudioPlayStatus.ShuffleType {
         get {
-            return _manageData.shuffleType
+            return _status.shuffleType
         }
         set {
-            _manageData.shuffleType = newValue
+            _status.shuffleType = newValue
             self.settingShuffle()
         }
     }
@@ -81,8 +81,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         
         // 前回の設定を引き継ぐ.
         if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_AUDIO_STATUS) {
-            if let manageData = AudioPlayStatus.makeFromData(data: data) {
-                _manageData = manageData
+            if let status = AudioPlayStatus.makeFromData(data: data) {
+                _status = status
             }
         }
         
@@ -124,15 +124,15 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     /// 曲を設定.
     func set(selectType: AudioPlayStatus.AudioSelectType,
-             selectPath: String,
+             selectValue: String,
              audioList: Array<AudioData>,
              playIndex: Int)
     {
-        if _manageData.isChanged(selectType: selectType, selectName: selectPath) {
+        if _status.isChanged(selectType: selectType, selectValue: selectValue) {
             // 選択した場所が変わった場合は新しいリストを保存しておく.
-            _manageData.selectType = selectType
-            _manageData.selectName = selectPath
-            _manageData.setAudioList(audioList)
+            _status.selectType = selectType
+            _status.selectValue = selectValue
+            _status.setAudioList(audioList)
         }
         if audioList.indices.contains(playIndex) {
             // 初回選択されたデータを保存.
@@ -210,7 +210,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         // 再生情報.
         do {
-            let data = try JSONEncoder().encode(_manageData)
+            let data = try JSONEncoder().encode(_status)
             UserDefaults.standard.set(data, forKey: USER_DEFAULT_AUDIO_STATUS)
         }
         catch{
@@ -295,7 +295,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     /// リピート設定.
     private func settingRepeat() {
-        switch _manageData.repeatType {
+        switch _status.repeatType {
         case .One:
             _audioPlayer.numberOfLoops = 0
         case .All:
@@ -342,7 +342,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         // キューの残数が多い時はなにもしない.
         if _queue.count > MIN_QUEUE_LENGTH { return }
         
-        let add = _manageData.makeQueList(exlusion: _beginData)
+        let add = _status.makeQueList(exlusion: _beginData)
         if add.count == 0 { return }
         
         // 追加.

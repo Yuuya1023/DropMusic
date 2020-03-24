@@ -365,7 +365,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                 
                 // 再生.
                 AudioPlayManager.sharedManager.set(selectType: .Cloud,
-                                                   selectPath: makePath(),
+                                                   selectValue: makePath(),
                                                    audioList: list,
                                                    playIndex: index)
                 _ = AudioPlayManager.sharedManager.play()

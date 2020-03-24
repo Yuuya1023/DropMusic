@@ -50,7 +50,7 @@ class AudioPlayStatus: Codable {
     // MARK: - Properties.
     //
     var selectType: AudioSelectType = .None
-    var selectName: String = ""
+    var selectValue: String = ""
     var repeatType: RepeatType = .One
     var shuffleType: ShuffleType = .None
     private var audioList: [AudioData] = []
@@ -82,11 +82,11 @@ class AudioPlayStatus: Codable {
     }
     
     /// 選択場所が変更されたか.
-    func isChanged(selectType: AudioSelectType, selectName: String) -> Bool {
+    func isChanged(selectType: AudioSelectType, selectValue: String) -> Bool {
         if self.selectType != selectType {
             return true
         }
-        if self.selectName != selectName {
+        if self.selectValue != selectValue {
             return true
         }        
         return false
@@ -142,7 +142,9 @@ class AudioPlayStatus: Codable {
         case .Cloud:
             ret = "from " + selectType.description() + " \"" + makeDisplayName() + "\" "
         case .Playlist:
-            ret = "from " + selectType.description() + " \"" + selectName + "\" "
+            if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: selectValue) {
+                ret = "from " + selectType.description() + " \"" + playlist.name + "\" "
+            }
         case .Favorite:
             ret = "from " + selectType.description()
         default:
@@ -159,7 +161,7 @@ class AudioPlayStatus: Codable {
     /// 表示名作成.
     private func makeDisplayName() -> String {
         var ret = ""
-        var list = selectName.components(separatedBy: "/")
+        var list = selectValue.components(separatedBy: "/")
         // 空文字を削除.
         list.removeAll { (str) -> Bool in
             if str == "" {

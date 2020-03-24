@@ -291,7 +291,7 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                 
                 // 再生.
                 AudioPlayManager.sharedManager.set(selectType: .Favorite,
-                                                   selectPath: "",
+                                                   selectValue: "",
                                                    audioList: list,
                                                    playIndex: index)
                 _ = AudioPlayManager.sharedManager.play()
