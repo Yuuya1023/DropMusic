@@ -64,10 +64,7 @@ class MusicPlayerViewController: UIViewController {
         _artwork.layer.shadowOpacity = 0.5
         _artwork.layer.shadowOffset = CGSize(width: 10, height: 10)
         // 曲名.
-        _titleLabel = MarqueeLabel(frame: CGRect(x:0,
-                                                 y:0,
-                                                 width:_titleView.bounds.width,
-                                                 height:_titleView.bounds.height),
+        _titleLabel = MarqueeLabel(frame: _titleView.bounds,
                                    duration: 10,
                                    fadeLength: 10)
         _titleLabel.animationDelay = 2.0
@@ -75,10 +72,7 @@ class MusicPlayerViewController: UIViewController {
         _titleLabel.font = UIFont(name: "Avenir Heavy", size: 30.0)
         _titleView.addSubview(_titleLabel)
         // アーティスト.
-        _artistLabel = MarqueeLabel(frame: CGRect(x:0,
-                                                  y:0,
-                                                  width:_artistView.bounds.width,
-                                                  height:_artistView.bounds.height),
+        _artistLabel = MarqueeLabel(frame: _artistView.bounds,
                                    duration: 10,
                                    fadeLength: 10)
         _artistLabel.animationDelay = 2.0
@@ -175,10 +169,18 @@ class MusicPlayerViewController: UIViewController {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        _titleLabel.frame = _titleView.bounds
+        _artistLabel.frame = _artistView.bounds
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     
     

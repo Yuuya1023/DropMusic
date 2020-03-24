@@ -35,10 +35,9 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ocF-ND-fzp">
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ocF-ND-fzp">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="ieH-3h-VBl">
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ieH-3h-VBl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
@@ -337,8 +336,12 @@
             <constraints>
                 <constraint firstItem="Ct7-bZ-5jw" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="7h1-84-8Rn"/>
                 <constraint firstItem="Ct7-bZ-5jw" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="CeB-3p-nsT"/>
+                <constraint firstItem="ocF-ND-fzp" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="T5R-wz-Fhd"/>
+                <constraint firstItem="ocF-ND-fzp" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aCf-MU-dMx"/>
                 <constraint firstItem="Ct7-bZ-5jw" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="bYh-IW-aeR"/>
+                <constraint firstItem="ocF-ND-fzp" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="pek-3D-NyZ"/>
                 <constraint firstItem="Ct7-bZ-5jw" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="t4j-a9-SQY"/>
+                <constraint firstItem="ocF-ND-fzp" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="tWL-4U-tow"/>
             </constraints>
             <point key="canvasLocation" x="55.072463768115945" y="47.544642857142854"/>
         </view>

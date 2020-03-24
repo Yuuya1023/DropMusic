@@ -92,12 +92,17 @@ class RootTabBarController: UITabBarController {
     }
     
     override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         // ステータス表示初期化.
         let tabbarHeight = self.tabBar.frame.size.height+_statusView.frame.height
         let frame = CGRect(x: 0,
                            y: self.view.bounds.height-tabbarHeight,
-                           width: _statusView.frame.width,
-                           height: _statusView.frame.height)
+                           width: self.view.bounds.width,
+                           height: AudioPlayStatusView._height)
         _statusView.frame = frame
     }
 
