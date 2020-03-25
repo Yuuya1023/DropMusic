@@ -86,6 +86,18 @@ class FavoriteManageData: Codable {
         return ret
     }
     
+    /// AudioDataの一覧取得.
+    func getAudioList() -> [AudioData] {
+        var ret: [AudioData] = []
+        let list = self.getList(.Audio)
+        for favorite in list {
+            if let data = AudioData.createFromFavorite(favorite) {
+                ret.append(data)
+            }
+        }
+        return ret
+    }
+    
     
     
     //

@@ -45,6 +45,18 @@ class DropboxFileListManager {
     func get(pathLower: String) -> [FileInfo]? {
         return _pathDictionary[pathLower.lowercased()]
     }
+    /// AudioDataとして一覧を取得する.
+    func getAudioList(pathLower: String) -> [AudioData] {
+        var ret: [AudioData] = []
+        if let fileList = get(pathLower: pathLower) {
+            for file in fileList {
+                if let d = AudioData.createFromFileInfo(file) {
+                    ret.append(d)
+                }
+            }
+        }
+        return ret
+    }
     /// 削除.
     func remove(pathLower: String) {
         _pathDictionary.removeValue(forKey: pathLower.lowercased())

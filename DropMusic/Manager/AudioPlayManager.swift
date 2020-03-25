@@ -11,7 +11,7 @@ import AVFoundation
 import MediaPlayer
 
 class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
-    
+
     //
     // MARK: - Singleton.
     //
@@ -31,19 +31,30 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     // MARK: - Properties.
     //
     private(set) var _audioPlayer: AVAudioPlayer!
-    private(set) var _playing: AudioData?
     private(set) var _metadata: AudioMetadata?
     private(set) var _status: AudioPlayStatus = AudioPlayStatus()
     private(set) var _duration: Int = 0
     private(set) var _deviceName: String = ""
     
-    private var _beginData: AudioData?
-    private var _history: Array<AudioData> = []
-    private var _queue: Array<AudioData> = []
+    private var _playing: AudioPlayItem?
+    private var _beginData: AudioPlayItem?
+    private var _history: [AudioPlayItem] = []
+    private var _queue: [AudioPlayItem] = []
+    
+    var playing: AudioData? {
+        get {
+            if let playing = _playing {
+                if let d = playing.audioData {
+                    return d
+                }
+            }
+            return nil
+        }
+    }
     
     var repeatType: AudioPlayStatus.RepeatType {
         get {
-            _status.repeatType
+            return _status.repeatType
         }
         set {
             _status.repeatType = newValue
@@ -89,9 +100,9 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         // 前回再生していた曲情報を取得.
         do {
             if let data = UserDefaults.standard.data(forKey: USER_DEFAULT_PLAY_AUDIO) {
-                let audioData = try JSONDecoder().decode(AudioData.self, from: data)
-                _beginData = audioData
-                setAudio(audioData: audioData, isAddHistory: false, isRefresh: false)
+                let item = try JSONDecoder().decode(AudioPlayItem.self, from: data)
+                _beginData = item
+                setAudio(item: item, isAddHistory: false, isRefresh: false)
             }
         } catch {
             print("json convert failed in JSONDecoder", error.localizedDescription)
@@ -128,17 +139,17 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
              audioList: Array<AudioData>,
              playIndex: Int)
     {
-        if _status.isChanged(selectType: selectType, selectValue: selectValue) {
-            // 選択した場所が変わった場合は新しいリストを保存しておく.
-            _status.selectType = selectType
-            _status.selectValue = selectValue
-            _status.setAudioList(audioList)
-        }
         if audioList.indices.contains(playIndex) {
+            let data = audioList[playIndex]
+            // キュー作成.
+            var item = AudioPlayItem()
+            item.audioData = data
+            item.selectType = selectType
+            item.selectValue = selectValue
             // 初回選択されたデータを保存.
-            _beginData = audioList[playIndex]
+            _beginData = item
             // 再生.
-            setAudio(audioData: audioList[playIndex], isAddHistory: true, isRefresh: true)
+            setAudio(item: item, isAddHistory: true, isRefresh: true)
         }
     }
     
@@ -155,14 +166,14 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     /// 次へ.
     func playNext(isContinuePlay: Bool) {
         if _queue.count == 0 {
-            setAudio(audioData:_playing!, isAddHistory: false, isRefresh: false)
+            return
         }
-        else {
-            // キュー操作.
-            let d = _queue[0]
-            setAudio(audioData: d, isAddHistory: true, isRefresh: false)
-            _queue.remove(at: 0)
-        }
+        
+        // キュー操作.
+        let d = _queue[0]
+        setAudio(item: d, isAddHistory: true, isRefresh: false)
+        _queue.remove(at: 0)
+        
         if isContinuePlay {
             _ = play()
         }
@@ -170,23 +181,22 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     
     /// 前へ.
     func playBack() {
-        // 変更前の再生状況を確認しておく.
-        let playing = isPlaying()
-        
         if _history.count == 0 {
-            setAudio(audioData:_playing!, isAddHistory: false, isRefresh: false)
+            return
         }
-        else {
-            // キューに追加.
-            if let playing = _playing {
-                _queue.insert(playing, at: 0)
-            }
-            // 履歴操作.
-            let d = _history[0]
-            setAudio(audioData: d, isAddHistory: false, isRefresh: false)
-            _history.remove(at: 0)
+        // 変更前の再生状況を確認しておく.
+        let isContinuePlay = isPlaying()
+        
+        // キューに追加.
+        if let playing = _playing {
+            _queue.insert(playing, at: 0)
         }
-        if playing {
+        // 履歴操作.
+        let d = _history[0]
+        setAudio(item: d, isAddHistory: false, isRefresh: false)
+        _history.remove(at: 0)
+        
+        if isContinuePlay {
             _ = play()
         }
     }
@@ -223,8 +233,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     // MARK: - Private.
     //
     /// 曲を設定.
-    private func setAudio(audioData: AudioData?, isAddHistory: Bool, isRefresh: Bool) {
-        guard let audioData = audioData else {
+    private func setAudio(item: AudioPlayItem?, isAddHistory: Bool, isRefresh: Bool) {
+        guard let item = item else {
+            return
+        }
+        guard let audioData = item.audioData else {
             return
         }
         let cachePath = DownloadFileManager.sharedManager.getFileCachePath(audioData: audioData)
@@ -235,9 +248,16 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         // 同じのだったら再生しない.
         if let playing =  _playing {
-            if playing.isEqualData(audioData: audioData) {
+            if playing.isEqual(item) {
                 return
             }
+        }
+        
+        // 選択場所が変更された.
+        if _status.isChanged(selectType: item.selectType, selectValue: item.selectValue) {
+            _status.selectType = item.selectType
+            _status.selectValue = item.selectValue
+            _status.setAudioList(getAudioList(selectType: item.selectType, selectValue: item.selectValue))
         }
         
         // 履歴に追加.
@@ -245,7 +265,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             addHistory(_playing)
         }
         // 再生中を保持.
-        _playing = audioData
+        _playing = item
         // 曲情報の取得.
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
         do {
@@ -309,11 +329,11 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     /// 履歴に追加.
-    private func addHistory(_ d: AudioData?) {
-        guard let d = d else {
+    private func addHistory(_ queue: AudioPlayItem?) {
+        guard let queue = queue else {
             return
         }
-        _history.insert(d, at: 0)
+        _history.insert(queue, at: 0)
         
         // 多すぎるので消す.
         if _history.count > MAX_HISTORY_LENGTH {
@@ -324,10 +344,15 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     /// キューに追加.
     private func addQueue(_ add: Array<AudioData>) {
         // ファイルが存在しない楽曲を候補から除外
-        var list: Array<AudioData> = []
+        var list: [AudioPlayItem] = []
         for d in add {
             if DownloadFileManager.sharedManager.isExistAudioFile(audioData: d) {
-                list.append(d)
+                var item = AudioPlayItem()
+                item.audioData = d
+                item.selectType = _status.selectType
+                item.selectValue = _status.selectValue
+                
+                list.append(item)
             }
         }
         // 追加.
@@ -342,13 +367,31 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         // キューの残数が多い時はなにもしない.
         if _queue.count > MIN_QUEUE_LENGTH { return }
         
-        let add = _status.makeQueList(exlusion: _beginData)
+        let add = _status.makeQueList(exlusion: _beginData?.audioData)
         if add.count == 0 { return }
         
         // 追加.
         addQueue(add)
         // もっかいチェック.
         updateCheckQueue(isRefresh: false)
+    }
+    
+    /// AudioData一覧.
+    private func getAudioList(selectType: AudioPlayStatus.AudioSelectType, selectValue: String) -> [AudioData] {
+        var ret: [AudioData] = []
+        switch selectType {
+        case .Cloud:
+            ret = DropboxFileListManager.sharedManager.getAudioList(pathLower: selectValue)
+        case .Playlist:
+            if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: selectValue) {
+                ret = playlist.audioList
+            }
+        case .Favorite:
+            ret = AppDataManager.sharedManager.favorite.getAudioList()
+        case .None:
+            break
+        }
+        return ret
     }
     
     

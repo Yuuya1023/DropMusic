@@ -81,6 +81,11 @@ class AudioPlayStatus: Codable {
         audioList = list
     }
     
+    /// 楽曲リスト取得.
+    func getAudioList() -> [AudioData] {
+        return audioList
+    }
+    
     /// 選択場所が変更されたか.
     func isChanged(selectType: AudioSelectType, selectValue: String) -> Bool {
         if self.selectType != selectType {

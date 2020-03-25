@@ -289,7 +289,7 @@ class MusicPlayerViewController: UIViewController {
     
     /// お気に入りボタン更新.
     private func updateFavoriteButton() {
-        guard let playing = AudioPlayManager.sharedManager._playing else {
+        guard let playing = AudioPlayManager.sharedManager.playing else {
             return
         }
         var color: UIColor = .lightGray
@@ -357,7 +357,7 @@ class MusicPlayerViewController: UIViewController {
     
     @objc func selectorPlaylistButton(_ sender: UIButton) {
         updatePlaylistButton()
-        guard let playing = AudioPlayManager.sharedManager._playing else {
+        guard let playing = AudioPlayManager.sharedManager.playing else {
             return
         }
         let playlistvc = PlayListSelectViewController()
@@ -368,7 +368,7 @@ class MusicPlayerViewController: UIViewController {
     }
     
     @objc func selectorFavoriteButton(_ sender: UIButton) {
-        guard let playing = AudioPlayManager.sharedManager._playing else {
+        guard let playing = AudioPlayManager.sharedManager.playing else {
             return
         }
         if AppDataManager.sharedManager.favorite.isFavorite(playing) {
@@ -410,7 +410,7 @@ class MusicPlayerViewController: UIViewController {
     
     @objc func selectorMenuButton(_ sender: UIButton) {
         updateMenuButton()
-        guard let playing = AudioPlayManager.sharedManager._playing else {
+        guard let playing = AudioPlayManager.sharedManager.playing else {
             return
         }
         let alert: UIAlertController = UIAlertController(title: playing.fileName,
