@@ -157,6 +157,15 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                             // 閉じるだけ.
             })
         )
+        // ipad.
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alert.popoverPresentationController?.sourceView = self.view
+            let screenSize = UIScreen.main.bounds
+            alert.popoverPresentationController?.sourceRect = CGRect(x: screenSize.size.width / 2,
+                                                                     y: screenSize.size.height,
+                                                                     width: 0,
+                                                                     height: 0)
+        }
         present(alert, animated: true, completion: nil)
     }
     
@@ -207,6 +216,15 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
                             // 閉じるだけ.
             })
         )
+        // ipad.
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alert.popoverPresentationController?.sourceView = self.view
+            let screenSize = UIScreen.main.bounds
+            alert.popoverPresentationController?.sourceRect = CGRect(x: screenSize.size.width / 2,
+                                                                     y: screenSize.size.height,
+                                                                     width: 0,
+                                                                     height: 0)
+        }
         present(alert, animated: true, completion: nil)
     }
     

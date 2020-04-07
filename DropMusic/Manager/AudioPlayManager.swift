@@ -317,7 +317,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     private func settingRepeat() {
         switch _status.repeatType {
         case .One:
-            _audioPlayer.numberOfLoops = 0
+            _audioPlayer.numberOfLoops = -1
         case .All:
             _audioPlayer.numberOfLoops = 0
         }

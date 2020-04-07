@@ -104,6 +104,12 @@ class RootTabBarController: UITabBarController {
                            width: self.view.bounds.width,
                            height: AudioPlayStatusView._height)
         _statusView.frame = frame
+        // レイアウト更新.
+        _statusView.setNeedsDisplay()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {

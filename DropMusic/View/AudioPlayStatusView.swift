@@ -15,6 +15,7 @@ class AudioPlayStatusView: UIView {
     //
     // MARK: - Properties
     //
+    private var _view: UIView!
     static let _height: CGFloat = 50.0
     
     @IBOutlet var _touchView: UIView!
@@ -53,24 +54,14 @@ class AudioPlayStatusView: UIView {
     // xibファイルを読み込んでviewに重ねる
     fileprivate func nibInit() {
         // File's OwnerをXibViewにしたので ownerはself になる
-        guard let view = UINib(nibName: "AudioPlayStatusView", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView else {
+        _view = UINib(nibName: "AudioPlayStatusView", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView
+        guard _view != nil else {
             return
         }
         
-        self.bounds = view.bounds
-        
-//        view.frame = self.bounds
-//        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        self.bounds = _view.bounds
         self.layer.shadowOpacity = 0.3
         self.layer.shadowOffset = CGSize(width: 0, height: -3)
-        //
-//        _effectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
-//        _effectView.frame = self.bounds
-//        self.addSubview(_effectView)
-        // タッチ.
-//        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self,
-//                                                                       action: #selector(selectorTouchLayer(_:)))
-//        view.addGestureRecognizer(tapGesture)
         
         // アートワーク.
         _artwork.contentMode = .scaleAspectFit
@@ -78,10 +69,7 @@ class AudioPlayStatusView: UIView {
         _artwork.layer.shadowOffset = CGSize(width: 3, height: 3)
         
         // タイトル.
-        _titleLabel = MarqueeLabel(frame: CGRect(x: 0,
-                                                 y: 0,
-                                                 width: _titleView.frame.width,
-                                                 height: _titleView.frame.height),
+        _titleLabel = MarqueeLabel(frame: _titleView.bounds,
                                    duration: 10,
                                    fadeLength: 10)
         _titleLabel.textColor = .black
@@ -89,13 +77,12 @@ class AudioPlayStatusView: UIView {
         _titleView.addSubview(_titleLabel)
         
         // 情報.
-        _detailLabel = MarqueeLabel(frame: CGRect(x: 0, y: 0, width: _descView.frame.width, height: _descView.frame.height),
-                                    duration: 10,
-                                    fadeLength: 10)
+        _detailLabel = MarqueeLabel(frame: _descView.bounds)
         _detailLabel.font = UIFont.systemFont(ofSize: 12)
         _detailLabel.textColor = .darkGray
         _detailLabel.font = UIFont(name: "Avenir Book", size: 15.0)
         _descView.addSubview(_detailLabel)
+        
         // 再生.
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
         layoutPlayButton()
@@ -111,12 +98,33 @@ class AudioPlayStatusView: UIView {
                                                selector: #selector(selectorDidChangeAudio),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
-        // 初回チェック.
-        set()
         //
-        self.addSubview(view)
+        self.addSubview(_view)
     }
-
+    
+    override func layerWillDraw(_ layer: CALayer) {
+        super.layerWillDraw(layer)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // チェック.
+        set()
+    }
+    
+    override func draw(_ rect: CGRect) {
+        _titleLabel.frame = _titleView.bounds
+        _detailLabel.frame = _descView.bounds
+        super.draw(rect)
+    }
+    
+    
+    
+    
+    //
+    // MARK: - Private.
+    //
+    
     
 //    override func intrinsicContentSize() -> CGSize {
 //        return CGSize(width: 210, height: 100)
