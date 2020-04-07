@@ -79,6 +79,8 @@
 		05E108A921679A44001CC35F /* MetadataCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E108A821679A44001CC35F /* MetadataCacheManager.swift */; };
 		05E4B81423D0A00300DFFF63 /* icon_playlist_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E4B81323D0A00300DFFF63 /* icon_playlist_plus.png */; };
 		05E4B81623D0A11B00DFFF63 /* no_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E4B81523D0A11B00DFFF63 /* no_image.png */; };
+		316964B0243CD67200B2BBC3 /* AudioPlayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316964AF243CD67200B2BBC3 /* AudioPlayStatus.swift */; };
+		316964B2243CD67C00B2BBC3 /* AudioPlayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316964B1243CD67B00B2BBC3 /* AudioPlayItem.swift */; };
 		3174D8F122F177E4006DB79D /* PlayListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3174D8F022F177E4006DB79D /* PlayListViewCell.xib */; };
 		31EB903023B08B90009A2C88 /* AudioListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */; };
 		31EB903223B0A9C0009A2C88 /* FileListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */; };
@@ -176,6 +178,8 @@
 		05E108A821679A44001CC35F /* MetadataCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataCacheManager.swift; sourceTree = "<group>"; };
 		05E4B81323D0A00300DFFF63 /* icon_playlist_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlist_plus.png; sourceTree = "<group>"; };
 		05E4B81523D0A11B00DFFF63 /* no_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_image.png; sourceTree = "<group>"; };
+		316964AF243CD67200B2BBC3 /* AudioPlayStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayStatus.swift; sourceTree = "<group>"; };
+		316964B1243CD67B00B2BBC3 /* AudioPlayItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayItem.swift; sourceTree = "<group>"; };
 		3174D8F022F177E4006DB79D /* PlayListViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayListViewCell.xib; sourceTree = "<group>"; };
 		31EB902F23B08B8F009A2C88 /* AudioListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioListViewCell.xib; sourceTree = "<group>"; };
 		31EB903123B0A9C0009A2C88 /* FileListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileListViewCell.xib; sourceTree = "<group>"; };
@@ -250,6 +254,8 @@
 				31EB903723B2003B009A2C88 /* FavoriteData.swift */,
 				0502798A214809580094CC40 /* AudioData.swift */,
 				05E10898215E7287001CC35F /* AudioMetadata.swift */,
+				316964B1243CD67B00B2BBC3 /* AudioPlayItem.swift */,
+				316964AF243CD67200B2BBC3 /* AudioPlayStatus.swift */,
 				05027994214BE87E0094CC40 /* FileInfo.swift */,
 			);
 			path = Object;
@@ -669,6 +675,7 @@
 				31EB903A23B47885009A2C88 /* AppDataManager.swift in Sources */,
 				05E108A32164FCFC001CC35F /* PlayListSelectViewController.swift in Sources */,
 				05E108A721650C79001CC35F /* AudioListViewCell.swift in Sources */,
+				316964B0243CD67200B2BBC3 /* AudioPlayStatus.swift in Sources */,
 				05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */,
 				31EB903C23B594E3009A2C88 /* FavoriteListViewController.swift in Sources */,
 				31EB904623C450E2009A2C88 /* SettingViewCell.swift in Sources */,
@@ -683,6 +690,7 @@
 				05027993214BDCE30094CC40 /* DropboxFileListManager.swift in Sources */,
 				31EB903823B2003B009A2C88 /* FavoriteData.swift in Sources */,
 				0533A5E121514C14006E625A /* AudioPlayerPresentationController.swift in Sources */,
+				316964B2243CD67C00B2BBC3 /* AudioPlayItem.swift in Sources */,
 				050279822142AFA50094CC40 /* SettingsViewController.swift in Sources */,
 				05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */,
 				31EB903423B1FF59009A2C88 /* AppManageData.swift in Sources */,
@@ -836,7 +844,6 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Dropmusic/BridgingHeader.h;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -860,7 +867,6 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Dropmusic/BridgingHeader.h;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
