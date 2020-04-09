@@ -69,6 +69,13 @@
 		05A016BB213ED0AA0057B459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BA213ED0AA0057B459 /* Assets.xcassets */; };
 		05A016BE213ED0AA0057B459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */; };
 		05A016C6214164300057B459 /* MusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A016C5214164300057B459 /* MusicPlayerViewController.swift */; };
+		05AB5FA0243D9E4100F34521 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F9F243D9E4100F34521 /* NotificationCenter.framework */; };
+		05AB5FA3243D9E4100F34521 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AB5FA2243D9E4100F34521 /* TodayViewController.swift */; };
+		05AB5FA6243D9E4100F34521 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05AB5FA4243D9E4100F34521 /* MainInterface.storyboard */; };
+		05AB5FAA243D9E4100F34521 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 05AB5F9E243D9E4100F34521 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5FBE243E107E00F34521 /* TodayExtensionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AB5FBD243E107D00F34521 /* TodayExtensionData.swift */; };
+		05AB5FBF243E107E00F34521 /* TodayExtensionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AB5FBD243E107D00F34521 /* TodayExtensionData.swift */; };
+		05AB5FC5243EF5C500F34521 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5FC4243EF5C500F34521 /* Pods_DropMusic.framework */; };
 		05E10897215D12BB001CC35F /* Array+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10896215D12BB001CC35F /* Array+Shuffle.swift */; };
 		05E10899215E7287001CC35F /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E10898215E7287001CC35F /* AudioMetadata.swift */; };
 		05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */; };
@@ -100,6 +107,30 @@
 		31EB904E23C58C06009A2C88 /* InitializeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EB904D23C58C06009A2C88 /* InitializeView.xib */; };
 		648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05AB5FA8243D9E4100F34521 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05A016A6213ED0A40057B459 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05AB5F9D243D9E4100F34521;
+			remoteInfo = TodayExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		05AB5FAB243D9E4100F34521 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				05AB5FAA243D9E4100F34521 /* TodayExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0502797D2142AFA40094CC40 /* PlayListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListViewController.swift; sourceTree = "<group>"; };
@@ -168,6 +199,17 @@
 		05A016BD213ED0AA0057B459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		05A016BF213ED0AA0057B459 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05A016C5214164300057B459 /* MusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewController.swift; sourceTree = "<group>"; };
+		05AB5F9E243D9E4100F34521 /* TodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		05AB5F9F243D9E4100F34521 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		05AB5FA2243D9E4100F34521 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		05AB5FA5243D9E4100F34521 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		05AB5FA7243D9E4100F34521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05AB5FAF243DA04500F34521 /* TodayExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TodayExtension.entitlements; sourceTree = "<group>"; };
+		05AB5FB0243DA06500F34521 /* DropMusic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DropMusic.entitlements; sourceTree = "<group>"; };
+		05AB5FBB243DD5F600F34521 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		05AB5FBD243E107D00F34521 /* TodayExtensionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayExtensionData.swift; sourceTree = "<group>"; };
+		05AB5FC0243EF59300F34521 /* MarqueeLabel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MarqueeLabel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		05AB5FC4243EF5C500F34521 /* Pods_DropMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_DropMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E10896215D12BB001CC35F /* Array+Shuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Shuffle.swift"; sourceTree = "<group>"; };
 		05E10898215E7287001CC35F /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
 		05E1089C216102E2001CC35F /* PlayListEditPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayListEditPresentationController.swift; sourceTree = "<group>"; };
@@ -208,6 +250,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				648F18C27746D169254CAAE9 /* Pods_DropMusic.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05AB5F9B243D9E4100F34521 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AB5FA0243D9E4100F34521 /* NotificationCenter.framework in Frameworks */,
+				05AB5FC5243EF5C500F34521 /* Pods_DropMusic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +424,7 @@
 			children = (
 				05A016B0213ED0A40057B459 /* DropMusic */,
 				050848F521417EC300D365C7 /* Resources */,
+				05AB5FA1243D9E4100F34521 /* TodayExtension */,
 				05A016AF213ED0A40057B459 /* Products */,
 				66B9959940F605930F982B27 /* Pods */,
 				796D1EF9D724E63419863BE1 /* Frameworks */,
@@ -383,6 +435,7 @@
 			isa = PBXGroup;
 			children = (
 				05A016AE213ED0A40057B459 /* DropMusic.app */,
+				05AB5F9E243D9E4100F34521 /* TodayExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -390,6 +443,7 @@
 		05A016B0213ED0A40057B459 /* DropMusic */ = {
 			isa = PBXGroup;
 			children = (
+				05AB5FB0243DA06500F34521 /* DropMusic.entitlements */,
 				05841A69224BB3F60054E51C /* Interface */,
 				05617F5D2153C8AD0025F07E /* Manager */,
 				0533A59F214D7B60006E625A /* Extension */,
@@ -436,6 +490,18 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		05AB5FA1243D9E4100F34521 /* TodayExtension */ = {
+			isa = PBXGroup;
+			children = (
+				05AB5FAF243DA04500F34521 /* TodayExtension.entitlements */,
+				05AB5FA2243D9E4100F34521 /* TodayViewController.swift */,
+				05AB5FBD243E107D00F34521 /* TodayExtensionData.swift */,
+				05AB5FA4243D9E4100F34521 /* MainInterface.storyboard */,
+				05AB5FA7243D9E4100F34521 /* Info.plist */,
+			);
+			path = TodayExtension;
+			sourceTree = "<group>";
+		};
 		05E10895215D1286001CC35F /* Array */ = {
 			isa = PBXGroup;
 			children = (
@@ -456,8 +522,12 @@
 		796D1EF9D724E63419863BE1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05AB5FC4243EF5C500F34521 /* Pods_DropMusic.framework */,
+				05AB5FC0243EF59300F34521 /* MarqueeLabel.framework */,
+				05AB5FBB243DD5F600F34521 /* Pods_DropMusic.framework */,
 				05617F562152967A0025F07E /* QuartzCore.framework */,
 				D041FDFC378A8B4F452B13A2 /* Pods_DropMusic.framework */,
+				05AB5F9F243D9E4100F34521 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -475,15 +545,34 @@
 				05A016AC213ED0A40057B459 /* Resources */,
 				E972D711799F4E6DA4FC8A05 /* [CP] Embed Pods Frameworks */,
 				77027347F72CF0AAC86FC3C3 /* [CP] Copy Pods Resources */,
+				05AB5FAB243D9E4100F34521 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				05AB5FA9243D9E4100F34521 /* PBXTargetDependency */,
 			);
 			name = DropMusic;
 			productName = DropMusic;
 			productReference = 05A016AE213ED0A40057B459 /* DropMusic.app */;
 			productType = "com.apple.product-type.application";
+		};
+		05AB5F9D243D9E4100F34521 /* TodayExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05AB5FAE243D9E4100F34521 /* Build configuration list for PBXNativeTarget "TodayExtension" */;
+			buildPhases = (
+				05AB5F9A243D9E4100F34521 /* Sources */,
+				05AB5F9B243D9E4100F34521 /* Frameworks */,
+				05AB5F9C243D9E4100F34521 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TodayExtension;
+			productName = TodayExtension;
+			productReference = 05AB5F9E243D9E4100F34521 /* TodayExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -491,7 +580,7 @@
 		05A016A6213ED0A40057B459 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = n.yuuya;
 				TargetAttributes = {
@@ -502,6 +591,9 @@
 								enabled = 1;
 							};
 						};
+					};
+					05AB5F9D243D9E4100F34521 = {
+						CreatedOnToolsVersion = 11.3.1;
 					};
 				};
 			};
@@ -519,6 +611,7 @@
 			projectRoot = "";
 			targets = (
 				05A016AD213ED0A40057B459 /* DropMusic */,
+				05AB5F9D243D9E4100F34521 /* TodayExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -580,6 +673,14 @@
 				056AF8CB214BFFA400A5E497 /* icon_cell_audio.png in Resources */,
 				056AF8DD214D4DF100A5E497 /* icon_playlist.png in Resources */,
 				0533A5CA214EAAE3006E625A /* appicon-Small-50.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05AB5F9C243D9E4100F34521 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AB5FA6243D9E4100F34521 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +775,7 @@
 				31EB904223C316AF009A2C88 /* InitializeViewController.swift in Sources */,
 				31EB903A23B47885009A2C88 /* AppDataManager.swift in Sources */,
 				05E108A32164FCFC001CC35F /* PlayListSelectViewController.swift in Sources */,
+				05AB5FBE243E107E00F34521 /* TodayExtensionData.swift in Sources */,
 				05E108A721650C79001CC35F /* AudioListViewCell.swift in Sources */,
 				316964B0243CD67200B2BBC3 /* AudioPlayStatus.swift in Sources */,
 				05E1089D216102E2001CC35F /* PlayListEditPresentationController.swift in Sources */,
@@ -697,7 +799,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05AB5F9A243D9E4100F34521 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AB5FA3243D9E4100F34521 /* TodayViewController.swift in Sources */,
+				05AB5FBF243E107E00F34521 /* TodayExtensionData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05AB5FA9243D9E4100F34521 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05AB5F9D243D9E4100F34521 /* TodayExtension */;
+			targetProxy = 05AB5FA8243D9E4100F34521 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		05A016BC213ED0AA0057B459 /* LaunchScreen.storyboard */ = {
@@ -706,6 +825,14 @@
 				05A016BD213ED0AA0057B459 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		05AB5FA4243D9E4100F34521 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AB5FA5243D9E4100F34521 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -829,7 +956,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4ED4CFB47C50BB9B98B4A72C /* Pods-DropMusic.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DropMusic/DropMusic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6BQK829PNM;
@@ -852,7 +981,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 33A1A2041E8731977E01F5D6 /* Pods-DropMusic.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DropMusic/DropMusic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6BQK829PNM;
@@ -866,6 +997,53 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Dropmusic/BridgingHeader.h;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		05AB5FAC243D9E4100F34521 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6BQK829PNM;
+				INFOPLIST_FILE = TodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		05AB5FAD243D9E4100F34521 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6BQK829PNM;
+				INFOPLIST_FILE = TodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.yn.DropMusic.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -888,6 +1066,15 @@
 			buildConfigurations = (
 				05A016C3213ED0AA0057B459 /* Debug */,
 				05A016C4213ED0AA0057B459 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05AB5FAE243D9E4100F34521 /* Build configuration list for PBXNativeTarget "TodayExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05AB5FAC243D9E4100F34521 /* Debug */,
+				05AB5FAD243D9E4100F34521 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

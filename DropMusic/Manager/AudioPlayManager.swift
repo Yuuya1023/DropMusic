@@ -268,6 +268,24 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         _playing = item
         // 曲情報の取得.
         _metadata = MetadataCacheManager.sharedManager.get(audioData: audioData)
+        // TodayExtensionへのデータ提供.
+        do {
+            if let metadata = _metadata {
+                var extensionData = TodayExtensionData()
+                extensionData.title = metadata.title
+                extensionData.artist = metadata.artist
+                extensionData.album = metadata.album
+                if let artwork = metadata.artwork {
+                    extensionData.artwork = UIImagePNGRepresentation(artwork)
+                }
+                let data = try JSONEncoder().encode(extensionData)
+                if let defaults = UserDefaults(suiteName: "group.DropMusic") {
+                    defaults.setValue(data, forKey: "data")
+                }
+            }
+        }
+        catch {
+        }
         do {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
 //            _audioPlayer.isMeteringEnabled = true
