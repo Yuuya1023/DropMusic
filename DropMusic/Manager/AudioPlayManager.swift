@@ -35,6 +35,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     private(set) var _status: AudioPlayStatus = AudioPlayStatus()
     private(set) var _duration: Int = 0
     private(set) var _deviceName: String = ""
+    private var _volume: Float = 1.0
     
     private var _playing: AudioPlayItem?
     private var _beginData: AudioPlayItem?
@@ -68,6 +69,17 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         set {
             _status.shuffleType = newValue
             self.settingShuffle()
+        }
+    }
+    var volume: Float {
+        get {
+            return _volume
+        }
+        set {
+            _volume = newValue
+            if let player = _audioPlayer {
+                player.volume = _volume
+            }
         }
     }
     
@@ -292,8 +304,10 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             _audioPlayer = try AVAudioPlayer(contentsOf: url)
 //            _audioPlayer.isMeteringEnabled = true
             _audioPlayer.currentTime = 0
+            _audioPlayer.volume = _volume
             _audioPlayer.delegate = self
             _audioPlayer.prepareToPlay()
+            
             _duration = Int(_audioPlayer.duration)
             
             settingRepeat()

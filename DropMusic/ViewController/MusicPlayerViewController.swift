@@ -33,6 +33,7 @@ class MusicPlayerViewController: UIViewController {
     @IBOutlet var _menuButton: UIButton!
     @IBOutlet var _twitterButton: UIButton!
     @IBOutlet var _titleView: UIView!
+    @IBOutlet var _volumeSlider: UISlider!
     @IBOutlet var _artistView: UIView!
     @IBOutlet var _airPlayView: UIView!
     
@@ -45,7 +46,6 @@ class MusicPlayerViewController: UIViewController {
     private var _artistLabel: MarqueeLabel!
     private var _timer: Timer = Timer()
     private let _color: UIColor = UIColor(displayP3Red: 29/255, green: 70/255, blue: 143/255, alpha: 0.8)
-    
     
     
     //
@@ -134,6 +134,13 @@ class MusicPlayerViewController: UIViewController {
         } else {
             // Fallback on earlier versions
         }
+        
+        // ボリューム.
+//        _volumeSlider.setThumbImage(UIImage(), for: .highlighted)
+        _volumeSlider.minimumValue = 0.0
+        _volumeSlider.maximumValue = 1.0
+        _volumeSlider.value = AudioPlayManager.sharedManager.volume
+        _volumeSlider.addTarget(self, action: #selector(sliderDidChangeValue(_:)), for: .valueChanged)
         
         // イヤホン接続監視.
         NotificationCenter.default.addObserver(self,
@@ -458,6 +465,13 @@ class MusicPlayerViewController: UIViewController {
     
     @objc func selectorLongpressTwitterButton(_ sender: UILongPressGestureRecognizer) {
         postTwitter(withImage: false)
+    }
+    
+    ///
+    @objc func sliderDidChangeValue(_ sender: UISlider) {
+        let value = sender.value
+        print(value)
+        AudioPlayManager.sharedManager.volume = Float(value)
     }
     
     @objc func selectorAudioSessionRouteChanged(_ notification: Notification) {
