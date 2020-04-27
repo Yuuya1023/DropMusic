@@ -145,6 +145,11 @@ class MusicPlayerViewController: UIViewController {
                                                selector: #selector(selectorDidChangeAudio),
                                                name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_AUDIO),
                                                object: nil)
+        // 再生状況監視.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(selectorDidChangeStatus),
+                                               name: NSNotification.Name(rawValue: NOTIFICATION_DID_CHANGE_PLAY_STATUS),
+                                               object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -214,6 +219,8 @@ class MusicPlayerViewController: UIViewController {
         
         // 再生ボタン.
         updatePlayButton()
+        // お気に入り.
+        updateFavoriteButton()
     }
     
     /// 再生ボタン更新.
@@ -342,17 +349,14 @@ class MusicPlayerViewController: UIViewController {
         else {
             _ = AudioPlayManager.sharedManager.play()
         }
-        updatePlayButton()
     }
     
     @objc func selectorNextButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playNext(isContinuePlay: AudioPlayManager.sharedManager.isPlaying())
-        updateLayout()
     }
     
     @objc func selectorBackButton(_ sender: UIButton) {
         AudioPlayManager.sharedManager.playBack()
-        updateLayout()
     }
     
     @objc func selectorPlaylistButton(_ sender: UIButton) {
@@ -392,7 +396,6 @@ class MusicPlayerViewController: UIViewController {
         }
         
         AudioPlayManager.sharedManager.repeatType = next
-        updateRepeatButton()
     }
     
     @objc func selectorShuffleButton(_ sender: UIButton) {
@@ -405,7 +408,6 @@ class MusicPlayerViewController: UIViewController {
             next = .None
         }
         AudioPlayManager.sharedManager.shuffleType = next
-        updateShuffleButton()
     }
     
     @objc func selectorMenuButton(_ sender: UIButton) {
@@ -474,7 +476,16 @@ class MusicPlayerViewController: UIViewController {
         }
     }
     
+    ///
     @objc func selectorDidChangeAudio(_ notification: Notification) {
         updateLayout()
     }
+    
+    ///
+    @objc func selectorDidChangeStatus(_ notification: Notification) {
+        updatePlayButton()
+        updateShuffleButton()
+        updateRepeatButton()
+    }
+    
 }

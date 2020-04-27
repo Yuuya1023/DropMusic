@@ -158,6 +158,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if !isPlaying() {
             _audioPlayer.play()
             updateInfoCenter()
+            notificationDidChangePlayStatus()
             return true
         }
         return false
@@ -206,6 +207,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         if isPlaying() {
             _audioPlayer.pause()
             updateInfoCenter()
+            notificationDidChangePlayStatus()
         }
     }
     
@@ -339,11 +341,13 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         case .All:
             _audioPlayer.numberOfLoops = 0
         }
+        notificationDidChangePlayStatus()
     }
     
     /// シャッフル設定.
     private func settingShuffle() {
         updateCheckQueue(isRefresh: true)
+        notificationDidChangePlayStatus()
     }
     
     /// 履歴に追加.
@@ -412,6 +416,10 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         return ret
     }
     
+    /// 再生状況変更通知.
+    private func notificationDidChangePlayStatus() {
+        NotificationCenter.default.post(name: Notification.Name(NOTIFICATION_DID_CHANGE_PLAY_STATUS), object: nil)
+    }
     
     
     //

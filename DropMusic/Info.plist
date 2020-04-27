@@ -33,6 +33,8 @@
 	<array>
 		<string>dbapi-8-emm</string>
 		<string>dbapi-2</string>
+		<string>twitter</string>
+		<string>twitterauth</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
