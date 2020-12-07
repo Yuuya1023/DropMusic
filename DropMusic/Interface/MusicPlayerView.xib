@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -71,10 +71,7 @@
                                     <rect key="frame" x="20.666666666666657" y="44.666666666666657" width="372.66666666666674" height="403.33333333333337"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YeL-lt-bYC">
-                                            <rect key="frame" x="-5.3333333333333428" y="10.333333333333343" width="383.33333333333337" height="383"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="YeL-lt-bYC" secondAttribute="height" multiplier="1:1" id="eiv-M3-H9K"/>
-                                            </constraints>
+                                            <rect key="frame" x="9.3333333333333428" y="10.333333333333343" width="354" height="383"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -82,6 +79,7 @@
                                         <constraint firstItem="YeL-lt-bYC" firstAttribute="height" secondItem="5IK-MO-iPP" secondAttribute="height" multiplier="0.95" id="V3h-71-uGw"/>
                                         <constraint firstItem="YeL-lt-bYC" firstAttribute="centerY" secondItem="5IK-MO-iPP" secondAttribute="centerY" id="bJk-ps-vh2"/>
                                         <constraint firstItem="YeL-lt-bYC" firstAttribute="centerX" secondItem="5IK-MO-iPP" secondAttribute="centerX" id="g4t-A2-c1F"/>
+                                        <constraint firstItem="YeL-lt-bYC" firstAttribute="width" secondItem="5IK-MO-iPP" secondAttribute="width" multiplier="0.95" id="pd7-km-hqD"/>
                                     </constraints>
                                 </view>
                             </subviews>
