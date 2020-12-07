@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,17 +13,14 @@
             <rect key="frame" x="0.0" y="0.0" width="404" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ClQ-V1-WnG" id="gA2-xp-mt6">
-                <rect key="frame" x="0.0" y="0.0" width="404" height="49.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="404" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XVY-cP-ikp" userLabel="Base_Icon">
-                        <rect key="frame" x="0.0" y="0.0" width="40.5" height="49.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="40.5" height="50"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="daU-9r-INf" userLabel="Icon">
-                                <rect key="frame" x="0.5" y="5" width="39.5" height="39.5"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="daU-9r-INf" secondAttribute="height" multiplier="1:1" id="C2Q-lt-E8K"/>
-                                </constraints>
+                                <rect key="frame" x="4" y="5" width="32.5" height="40"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_favorite.png" translatesAutoresizingMaskIntoConstraints="NO" id="SnT-UW-ZbL" userLabel="Favorite">
                                 <rect key="frame" x="2" y="4.5" width="16" height="16"/>
@@ -36,7 +31,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="daU-9r-INf" firstAttribute="centerY" secondItem="XVY-cP-ikp" secondAttribute="centerY" id="3qB-JP-q7p"/>
-                            <constraint firstItem="daU-9r-INf" firstAttribute="width" relation="lessThanOrEqual" secondItem="XVY-cP-ikp" secondAttribute="width" multiplier="0.8" priority="750" id="3w4-Vb-BEZ"/>
+                            <constraint firstItem="daU-9r-INf" firstAttribute="width" secondItem="XVY-cP-ikp" secondAttribute="width" multiplier="0.8" id="3w4-Vb-BEZ"/>
                             <constraint firstItem="daU-9r-INf" firstAttribute="height" secondItem="XVY-cP-ikp" secondAttribute="height" multiplier="0.8" id="Dlh-oA-LaS"/>
                             <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerY" secondItem="daU-9r-INf" secondAttribute="centerY" multiplier="0.5" id="XIV-F8-cou"/>
                             <constraint firstItem="SnT-UW-ZbL" firstAttribute="centerX" secondItem="daU-9r-INf" secondAttribute="centerX" multiplier="0.5" id="b8Y-uT-3G3"/>
@@ -47,7 +42,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vi8-GL-Zd3" userLabel="Base_Text">
-                        <rect key="frame" x="40.5" y="0.0" width="363.5" height="49.5"/>
+                        <rect key="frame" x="40.5" y="0.0" width="363.5" height="50"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzU-Re-y29" userLabel="LabelTitle">
                                 <rect key="frame" x="0.0" y="13" width="363.5" height="24"/>
@@ -66,7 +61,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y1l-Wg-B1s" userLabel="Base_Progress">
-                        <rect key="frame" x="0.0" y="48.5" width="404" height="1"/>
+                        <rect key="frame" x="0.0" y="49" width="404" height="1"/>
                         <subviews>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="muf-BV-pKL" userLabel="ProgressView">
                                 <rect key="frame" x="0.0" y="0.0" width="404" height="1"/>
