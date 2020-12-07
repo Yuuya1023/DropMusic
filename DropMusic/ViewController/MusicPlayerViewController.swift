@@ -69,7 +69,8 @@ class MusicPlayerViewController: UIViewController {
                                    fadeLength: 10)
         _titleLabel.animationDelay = 2.0
         _titleLabel.textAlignment = .center
-        _titleLabel.font = UIFont(name: "Avenir Heavy", size: 30.0)
+        _titleLabel.font = UIFont(name: "Avenir Book", size: 30.0)
+        _titleLabel.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         _titleView.addSubview(_titleLabel)
         // アーティスト.
         _artistLabel = MarqueeLabel(frame: _artistView.bounds,
@@ -79,6 +80,7 @@ class MusicPlayerViewController: UIViewController {
         _artistLabel.textAlignment = .center
         _artistLabel.font = UIFont(name: "Avenir Book", size: 17.0)
         _artistLabel.textColor = _color
+        _artistLabel.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         _artistView.addSubview(_artistLabel)
         
         // シークバーまわり.
@@ -183,9 +185,10 @@ class MusicPlayerViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        _titleLabel.frame = _titleView.bounds
-        _artistLabel.frame = _artistView.bounds
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
     }
     
     override func didReceiveMemoryWarning() {

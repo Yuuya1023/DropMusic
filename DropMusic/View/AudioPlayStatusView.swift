@@ -73,7 +73,7 @@ class AudioPlayStatusView: UIView {
                                    duration: 10,
                                    fadeLength: 10)
         _titleLabel.textColor = .black
-        _titleLabel.font = UIFont(name: "Avenir Heavy", size: 17.0)
+        _titleLabel.font = UIFont(name: "Avenir Book", size: 17.0)
         _titleView.addSubview(_titleLabel)
         
         // 情報.
