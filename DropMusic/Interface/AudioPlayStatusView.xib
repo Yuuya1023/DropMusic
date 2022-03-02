@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,6 +14,7 @@
                 <outlet property="_descView" destination="sFk-sV-ms2" id="agb-jZ-Ul7"/>
                 <outlet property="_effectView" destination="Mlv-17-YD2" id="6Qm-fc-qrv"/>
                 <outlet property="_playButton" destination="9pz-LM-UO0" id="W8g-AK-XKc"/>
+                <outlet property="_seakBar" destination="oog-IJ-TRW" id="3zs-vb-w2q"/>
                 <outlet property="_titleView" destination="mbM-81-LTO" id="Hab-LG-WOz"/>
                 <outlet property="_touchView" destination="NIQ-DD-tUk" id="D8m-zP-eBZ"/>
                 <outlet property="tapGesture" destination="zS6-a2-cvr" id="cXj-sV-22U"/>
@@ -90,6 +92,25 @@
                         <constraint firstItem="9pz-LM-UO0" firstAttribute="height" secondItem="IOn-Pg-KXu" secondAttribute="height" multiplier="0.7" id="nkU-Xb-QtW"/>
                     </constraints>
                 </view>
+                <view opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XA1-fQ-rFh" userLabel="Base_Seak">
+                    <rect key="frame" x="0.0" y="44" width="595" height="6"/>
+                    <subviews>
+                        <slider opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="oog-IJ-TRW">
+                            <rect key="frame" x="0.0" y="0.0" width="599" height="5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" systemColor="linkColor"/>
+                        </slider>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="oog-IJ-TRW" secondAttribute="bottom" id="6R8-k1-GLN"/>
+                        <constraint firstItem="oog-IJ-TRW" firstAttribute="width" secondItem="XA1-fQ-rFh" secondAttribute="width" id="APY-yv-ZyV"/>
+                        <constraint firstItem="oog-IJ-TRW" firstAttribute="height" secondItem="XA1-fQ-rFh" secondAttribute="height" id="f1S-ba-y1Q"/>
+                        <constraint firstItem="oog-IJ-TRW" firstAttribute="centerX" secondItem="XA1-fQ-rFh" secondAttribute="centerX" id="lz7-M1-k2t"/>
+                        <constraint firstAttribute="height" constant="6" id="nVc-yF-bTx"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIQ-DD-tUk" userLabel="touchView">
                     <rect key="frame" x="0.0" y="0.0" width="511.5" height="50"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -106,8 +127,11 @@
                 <constraint firstItem="IOn-Pg-KXu" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="5cw-IU-hXo"/>
                 <constraint firstItem="qAH-dJ-9if" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.72" id="62q-8s-ipM"/>
                 <constraint firstItem="3lu-dq-sgK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="9MZ-NY-GJe"/>
+                <constraint firstItem="XA1-fQ-rFh" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="Feh-3o-kFm"/>
                 <constraint firstItem="NIQ-DD-tUk" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.86" id="I3g-Lv-cll"/>
                 <constraint firstItem="3lu-dq-sgK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="J1z-jb-Kxo"/>
+                <constraint firstAttribute="bottom" secondItem="XA1-fQ-rFh" secondAttribute="bottom" id="J49-b3-3M2"/>
+                <constraint firstItem="XA1-fQ-rFh" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="RNq-05-hKY"/>
                 <constraint firstItem="3lu-dq-sgK" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.14" id="Sqa-cJ-vhq"/>
                 <constraint firstItem="NIQ-DD-tUk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="WDk-sR-lTb"/>
                 <constraint firstItem="Mlv-17-YD2" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="XPF-dj-zSu"/>
@@ -123,7 +147,7 @@
                 <constraint firstItem="Mlv-17-YD2" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="yhH-BP-Gpz"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="282.39999999999998" y="132.23388305847078"/>
+            <point key="canvasLocation" x="277.60000000000002" y="165.06746626686657"/>
         </view>
         <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="zS6-a2-cvr">
             <connections>
@@ -134,5 +158,8 @@
     </objects>
     <resources>
         <image name="play.png" width="48" height="48"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

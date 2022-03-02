@@ -13,11 +13,8 @@ import MarqueeLabel
 class AudioPlayStatusView: UIView {
     
     //
-    // MARK: - Properties
+    // MARK: - Outlets
     //
-    private var _view: UIView!
-    static let _height: CGFloat = 50.0
-    
     @IBOutlet var _touchView: UIView!
     @IBOutlet var tapGesture:UITapGestureRecognizer!
     
@@ -28,6 +25,14 @@ class AudioPlayStatusView: UIView {
     @IBOutlet var _descView: UIView!
     
     @IBOutlet var _playButton: UIButton!
+    @IBOutlet var _seakBar: UISlider!
+    
+    
+    //
+    // MARK: - Properties
+    //
+    private var _view: UIView!
+    static let _height: CGFloat = 50.0
     
     var _titleLabel: MarqueeLabel!
     var _detailLabel: MarqueeLabel!
@@ -83,14 +88,18 @@ class AudioPlayStatusView: UIView {
         _detailLabel.font = UIFont(name: "Avenir Book", size: 15.0)
         _descView.addSubview(_detailLabel)
         
+        // シークバー.
+        _seakBar.tintColor = AppColor.accent
+        _seakBar.setThumbImage(UIImage(), for: .normal)
+        
         // 再生.
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
         layoutPlayButton()
         
         // 曲情報監視.
-        _timer = Timer.scheduledTimer(timeInterval: 1.0,
+        _timer = Timer.scheduledTimer(timeInterval: 1.0 / 30.0,
                                       target: self,
-                                      selector: #selector(selectorCheckAudioInformation),
+                                      selector: #selector(update),
                                       userInfo: nil,
                                       repeats: true)
         // 曲監視.
@@ -124,7 +133,23 @@ class AudioPlayStatusView: UIView {
     //
     // MARK: - Private.
     //
+    /// 更新.
+    @objc private func update() {
+        updateProgress()
+        layoutPlayButton()
+    }
     
+    /// 進捗更新.
+    private func updateProgress() {
+        guard let player = AudioPlayManager.sharedManager._audioPlayer else {
+            _seakBar.setValue(0.0, animated: false)
+            return
+        }
+        let current = Double((player.currentTime))
+        let duration = Double(AudioPlayManager.sharedManager._duration)
+        let v = current/duration
+        _seakBar.setValue(Float(v), animated: true)
+    }
     
 //    override func intrinsicContentSize() -> CGSize {
 //        return CGSize(width: 210, height: 100)
