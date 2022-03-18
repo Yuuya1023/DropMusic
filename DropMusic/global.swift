@@ -44,8 +44,8 @@ let USER_DEFAULT_FILE_LIST_CACHE = "filelistcache"
 //
 class AppColor {
     
-    static let main     = UIColor(red: 40/255, green: 50/255, blue: 100/255, alpha: 1)
-    static let maintab  = UIColor(red: 20/255, green: 30/255, blue: 80/255, alpha: 1)
+    static let main     = UIColor(red: 60/255, green: 70/255, blue: 120/255, alpha: 1)
+    static let maintab  = UIColor(red: 50/255, green: 60/255, blue: 110/255, alpha: 1)
     static let sub      = UIColor.white
     static let accent   = UIColor(red: 230/255, green: 92/255, blue: 122/255, alpha: 1)
 

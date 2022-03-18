@@ -52,11 +52,19 @@ class FavoriteListViewController: UIViewController, UINavigationControllerDelega
         
         self.title = "Favorite"
         self.view.backgroundColor = UIColor.white
-        if let navigationController = self.navigationController {
-            navigationController.delegate = self
-            navigationController.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
-            navigationController.navigationBar.barTintColor = AppColor.main
-            navigationController.navigationBar.tintColor = AppColor.sub
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = AppColor.main
+            appearance.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
+        } else {
+            self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            self.navigationController?.navigationBar.barTintColor = AppColor.main
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_menu.png")?.resizeImage(reSize: CGSize(width:30,height:30)),

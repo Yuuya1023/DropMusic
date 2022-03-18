@@ -36,10 +36,18 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor.white
-        if let navigationController = self.navigationController {
-            navigationController.delegate = self
-            navigationController.navigationBar.barTintColor = AppColor.main
-            navigationController.navigationBar.tintColor = AppColor.sub
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = AppColor.main
+            appearance.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
+        } else {
+            self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            self.navigationController?.navigationBar.barTintColor = AppColor.main
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
         }
         
         if let image = UIImage(named: "icon_menu.png") {

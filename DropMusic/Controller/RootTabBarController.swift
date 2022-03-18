@@ -52,8 +52,16 @@ class RootTabBarController: UITabBarController {
         self.delegate = self
         self.view.backgroundColor = .white
         UITabBar.appearance().tintColor = AppColor.sub
-        UITabBar.appearance().barTintColor = AppColor.maintab
-        
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.backgroundColor = AppColor.maintab
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        else {
+            UITabBar.appearance().backgroundColor = AppColor.maintab
+            UITabBar.appearance().barTintColor = AppColor.maintab
+        }
         // タブバーの設定.
         let vc1 = UINavigationController(rootViewController: FileListViewController(pathList: []))
         let vc2 = UINavigationController(rootViewController: PlayListViewController())

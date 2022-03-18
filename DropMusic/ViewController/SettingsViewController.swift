@@ -40,11 +40,21 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = .white
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
-        self.navigationController?.navigationBar.barTintColor = AppColor.main
-        self.navigationController?.navigationBar.tintColor = AppColor.sub
         self.title = "Settings"
+        self.view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = AppColor.main
+            appearance.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
+        } else {
+            self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: AppColor.sub]
+            self.navigationController?.navigationBar.barTintColor = AppColor.main
+            self.navigationController?.navigationBar.tintColor = AppColor.sub
+        }
         
         // section設定.
         _sections.append("Cache")
