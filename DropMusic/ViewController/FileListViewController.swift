@@ -108,6 +108,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
     /// 一覧読み込み.
     func load(){
         guard let client = DropboxClientsManager.authorizedClient else {
+            Utility.alertLinkDropbox(viewController: self, title: "Error", message: nil)
             return
         }
         if _isLoading {
@@ -139,6 +140,7 @@ class FileListViewController: UIViewController, UINavigationControllerDelegate, 
                 } else {
                     if let error = error {
                         print(error)
+                        Utility.alertLinkDropbox(viewController: self, title: "Error", message: error.description)
                     }
                     if let controller = self.navigationController {
                         controller.popViewController(animated: true)

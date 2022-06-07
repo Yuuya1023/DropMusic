@@ -213,8 +213,13 @@ class DownloadFileManager  {
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
                                                         object: 1.0)
                     } else {
+                        // ダウンロードの進捗を通知.
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: audioData.id),
+                                                        object: 0.0)
                         if (error != nil) {
                             print(error!)
+                            let vc = Utility.topViewController()
+                            Utility.alertLinkDropbox(viewController: vc, title: "Download Error", message: error!.description)
                             // キューから消す.
                             self.removeQueue(audioData: audioData)
                         }

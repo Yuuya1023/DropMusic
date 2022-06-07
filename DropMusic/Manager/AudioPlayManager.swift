@@ -41,6 +41,7 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     private var _beginData: AudioPlayItem?
     private var _history: [AudioPlayItem] = []
     private var _queue: [AudioPlayItem] = []
+    private var _isInterruptionPlaying: Bool = false
     
     var playing: AudioData? {
         get {
@@ -448,19 +449,23 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         if type == .began {
             // Interruption began, take appropriate actions
+            _isInterruptionPlaying = true
         }
         else if type == .ended {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSessionInterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     // Interruption Ended - playback should resume
-                    if _audioPlayer != nil {
-                        _audioPlayer.play()
+                    if _isInterruptionPlaying {
+                        if _audioPlayer != nil {
+                            _audioPlayer.play()
+                        }
                     }
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }
             }
+            _isInterruptionPlaying = false
         }
     }
     

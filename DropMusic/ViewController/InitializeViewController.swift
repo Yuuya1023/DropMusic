@@ -134,8 +134,9 @@ class InitializeViewController: UIViewController {
             else {
                 // ログインへ.
                 _messageLabel.text = ""
-                _launchView.isHidden = true
-                _loginButton.isHidden = false
+//                _launchView.isHidden = true
+//                _loginButton.isHidden = false
+                loginDropbox()
             }
         case .CheckDropboxUser:
             // Dropboxユーザー確認.
@@ -175,6 +176,9 @@ class InitializeViewController: UIViewController {
 
     /// ログイン.
     @objc func loginDropbox(_ sender: UIButton) {
+        loginDropbox()
+    }
+    func loginDropbox() {
         DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                       controller: self,
                                                       openURL: { (url: URL) -> Void in

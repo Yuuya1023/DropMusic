@@ -164,8 +164,12 @@ class AppDataManager {
                         // おわり.
                         print(response)
                     } else {
-                        // おわり.
-                        print(error!)
+                        // しっぱい.
+                        if let error = error {
+                            print(error)
+                            let vc = Utility.topViewController()
+                            Utility.alertLinkDropbox(viewController: vc, title: "Error", message: error.description)
+                        }
                     }
                 }
             }
@@ -204,6 +208,8 @@ class AppDataManager {
                     } else {
                         if let error = error {
                             print(error)
+                            let vc = Utility.topViewController()
+                            Utility.alertLinkDropbox(viewController: vc, title: "Error", message: error.description)
                         }
                         
                         if let localFile = localFile {
