@@ -441,6 +441,37 @@ class MusicPlayerViewController: UIViewController {
                             self.present(vc, animated: true, completion: nil)
             })
         )
+        // サジェスト表示.
+        alert.addAction(
+            UIAlertAction(title: "Show suggest",
+                          style: .default,
+                          handler:{
+                            (action:UIAlertAction!) -> Void in
+                              let suggestvc = MusicSuggestViewController()
+                              
+                              let vc = UINavigationController(rootViewController: suggestvc)
+                              suggestvc.modalTransitionStyle = .coverVertical
+                              self.present(vc, animated: true, completion: nil)
+                              
+                              // 情報設定.
+                              let t = AudioPlayManager.sharedManager._status.selectType
+                              let value =  AudioPlayManager.sharedManager._status.selectValue
+                              switch (t) {
+                              case .None:
+                                  break
+                              case .Cloud:
+                                  suggestvc.setupForCloud(path: value)
+                                  break
+                              case .Playlist:
+                                  suggestvc.setupForPlayList(playListId: value)
+                              case .Favorite:
+                                  break
+                              case .Suggest:
+                                  break
+                                
+                              }
+            })
+        )
         // キャンセル.
         alert.addAction(
             UIAlertAction(title: "Cancel",

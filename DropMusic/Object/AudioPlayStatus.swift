@@ -17,6 +17,7 @@ class AudioPlayStatus: Codable {
         case Cloud      = 1
         case Playlist   = 2
         case Favorite   = 3
+        case Suggest    = 4
         
         /// description.
         func description() -> String {

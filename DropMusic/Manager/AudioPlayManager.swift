@@ -147,6 +147,17 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
     }
     
     /// 曲を設定.
+    func set(audioData: AudioData) {
+        // キュー作成.
+        var item = AudioPlayItem()
+        item.audioData = audioData
+        item.selectType = .Suggest
+        // 再生.
+        setAudio(item: item, isAddHistory: true, isRefresh: true)
+        
+    }
+    
+    /// 曲を設定.
     func set(selectType: AudioPlayStatus.AudioSelectType,
              selectValue: String,
              audioList: Array<AudioData>,
@@ -242,6 +253,16 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
     }
     
+    /// 再生キューリストを取得.
+    func getQueueAudioList() -> Array<AudioData> {
+        var ret: Array<AudioData> = []
+        for d in _queue {
+            if let data = d.audioData {
+                ret.append(data)
+            }
+        }
+        return ret
+    }
     
     
     //
@@ -269,10 +290,12 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
         }
         
         // 選択場所が変更された.
-        if _status.isChanged(selectType: item.selectType, selectValue: item.selectValue) {
-            _status.selectType = item.selectType
-            _status.selectValue = item.selectValue
-            _status.setAudioList(getAudioList(selectType: item.selectType, selectValue: item.selectValue))
+        if item.selectType != .Suggest {
+            if _status.isChanged(selectType: item.selectType, selectValue: item.selectValue) {
+                _status.selectType = item.selectType
+                _status.selectValue = item.selectValue
+                _status.setAudioList(getAudioList(selectType: item.selectType, selectValue: item.selectValue))
+            }
         }
         
         // 履歴に追加.
@@ -425,6 +448,8 @@ class AudioPlayManager: NSObject, AVAudioPlayerDelegate {
             }
         case .Favorite:
             ret = AppDataManager.sharedManager.favorite.getAudioList()
+        case .Suggest:
+            break
         case .None:
             break
         }

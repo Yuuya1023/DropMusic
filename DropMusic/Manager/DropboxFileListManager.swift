@@ -64,7 +64,9 @@ class DropboxFileListManager {
     /// 登録.
     func regist(pathLower: String, list: [FileInfo]) {
         if get(pathLower: pathLower) == nil {
-            update(pathLower: pathLower, list: list)
+            var l = list
+            l.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
+            update(pathLower: pathLower, list: l)
         }
     }
     /// 更新.
