@@ -7,12 +7,12 @@
 
 import UIKit
 
-class AudioListViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+class AudioListViewController: UIViewController, UINavigationControllerDelegate, AudioListViewDelegate {
     
     //
     // MARK: - Properties.
     //
-    private var _tableView: UITableView!
+    private var _tableView: AudioListView!
     private var _playListId: String!
     
     
@@ -57,16 +57,11 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                                                                      action: #selector(selectorMenuButton))
         }
         // tableview.
-        _tableView = UITableView()
-        _tableView.backgroundColor = UIColor.clear
-        _tableView.autoresizingMask = [
-            .flexibleWidth,
-            .flexibleHeight
-        ]
-        _tableView.delegate = self
-        _tableView.dataSource = self
-        _tableView.register(UINib(nibName: AudioListViewCell.cellIdentifier, bundle: nil),
-                            forCellReuseIdentifier: AudioListViewCell.cellIdentifier)
+        _tableView = AudioListView()
+        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
+            _tableView.setAudioList(list: playlist.audioList)
+        }
+        _tableView.audioListViewDelegate = self
         
         self.view.addSubview(_tableView)
         
@@ -145,16 +140,36 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     }
     
     
+    //
+    // MARK: - AudioListViewDelegate.
+    //
+    func touchCell(index: Int) {
+        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
+            let audioData = playlist.audioList[index]
+            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
+                // 再生.
+                AudioPlayManager.sharedManager.set(selectType: .Playlist,
+                                                   selectValue: playlist.id,
+                                                   audioList: playlist.audioList,
+                                                   playIndex: index)
+                _ = AudioPlayManager.sharedManager.play()
+            }
+            else {
+                // ダウンロード.
+                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
+                DownloadFileManager.sharedManager.startDownload()
+            }
+        }
+    }
     
-    // MARK: -
-    @objc func showActionSheet(_ sender: AudioListViewCell) {
+    func longpressCell(index: Int) {
         guard let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) else {
             return
         }
-        guard playlist.audioList.indices.contains(sender.index) else {
+        guard playlist.audioList.indices.contains(index) else {
             return
         }
-        let audioData = playlist.audioList[sender.index]
+        let audioData = playlist.audioList[index]
         let isExist = DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData)
         func deleteCache() {
             do {
@@ -189,7 +204,6 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
                             (action:UIAlertAction!) -> Void in
                             if isExist {
                                 deleteCache()
-                                sender._progressView.progress = 0
                             }
                             MetadataCacheManager.sharedManager.remove(audioData: audioData)
                             DownloadFileManager.sharedManager.addQueue(audioData: audioData)
@@ -257,52 +271,5 @@ class AudioListViewController: UIViewController, UINavigationControllerDelegate,
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-    }
-
-
-    
-    //
-    // MARK: - TableViewController Delegate.
-    //
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return AudioListViewCell.height
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId)
-        if playlist != nil {
-            return (playlist?.audioList.count)!
-        }
-        return 0
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCell(withIdentifier: AudioListViewCell.cellIdentifier ) as! AudioListViewCell
-        
-        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
-            let audioData = playlist.audioList[indexPath.row]
-            
-            c.set(audioData: audioData)
-            c.index = indexPath.row
-            c.longpressTarget = self
-            c.longpressSelector = #selector(showActionSheet(_:))
-        }
-        return c
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let playlist = AppDataManager.sharedManager.playlist.getPlaylistData(id: _playListId) {
-            let audioData = playlist.audioList[indexPath.row]
-            if DownloadFileManager.sharedManager.isExistAudioFile(audioData: audioData) {
-                // 再生.
-                AudioPlayManager.sharedManager.set(selectType: .Playlist,
-                                                   selectValue: playlist.id,
-                                                   audioList: playlist.audioList,
-                                                   playIndex: indexPath.row)
-                _ = AudioPlayManager.sharedManager.play()
-            }
-            else {
-                // ダウンロード.
-                DownloadFileManager.sharedManager.addQueue(audioData: audioData)
-                DownloadFileManager.sharedManager.startDownload()
-            }
-        }
     }
 }
