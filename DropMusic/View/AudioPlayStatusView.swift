@@ -25,7 +25,7 @@ class AudioPlayStatusView: UIView {
     @IBOutlet var _descView: UIView!
     
     @IBOutlet var _playButton: UIButton!
-    @IBOutlet var _seakBar: UISlider!
+    @IBOutlet var _progress: UIProgressView!
     
     
     //
@@ -83,14 +83,12 @@ class AudioPlayStatusView: UIView {
         
         // 情報.
         _detailLabel = MarqueeLabel(frame: _descView.bounds)
-        _detailLabel.font = UIFont.systemFont(ofSize: 12)
         _detailLabel.textColor = .darkGray
         _detailLabel.font = UIFont(name: "Avenir Book", size: 15.0)
         _descView.addSubview(_detailLabel)
         
         // シークバー.
-        _seakBar.tintColor = AppColor.accent
-        _seakBar.setThumbImage(UIImage(), for: .normal)
+        _progress.tintColor = AppColor.accent
         
         // 再生.
         _playButton.addTarget(self, action: #selector(selectorPlayButton(_:)), for: .touchUpInside)
@@ -142,13 +140,13 @@ class AudioPlayStatusView: UIView {
     /// 進捗更新.
     private func updateProgress() {
         guard let player = AudioPlayManager.sharedManager._audioPlayer else {
-            _seakBar.setValue(0.0, animated: false)
+            _progress.progress = 0.0
             return
         }
         let current = Double((player.currentTime))
         let duration = Double(AudioPlayManager.sharedManager._duration)
         let v = current/duration
-        _seakBar.setValue(Float(v), animated: true)
+        _progress.progress = Float(v)
     }
     
 //    override func intrinsicContentSize() -> CGSize {
@@ -194,7 +192,7 @@ class AudioPlayStatusView: UIView {
             _artwork.image = metadata.artwork
         }
         _titleLabel.text = metadata.title
-        _detailLabel.text = metadata.artist + " ─ " + metadata.album
+        _detailLabel.text = metadata.artist + " ─ " + metadata.album + "  "
     }
     
     @objc func selectorCheckAudioInformation(_ sender: UIButton) {
